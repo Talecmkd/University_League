@@ -9,12 +9,11 @@ import java.util.List;
 
 @Setter
 @Getter
-public class Team {
+public class FootballTeam {
     private String teamName;
-    private List<Player> players;
-    private Sport sport;
-    private List<Match> fixtures;
-    private List<Match> results;
+    private List<FootballPlayer> players;
+    private List<FootballMatch> fixtures;
+    private List<FootballMatch> results;
     private int teamMatchesPlayed;
     private int teamLeaguePoints;
     private int teamWins;
@@ -22,10 +21,9 @@ public class Team {
     private int teamDraws;
     private Image logo;
 
-    public Team(String teamName, List<Player> players, Sport sport, Image logo) {
+    public FootballTeam(String teamName, List<FootballPlayer> players, Image logo) {
         this.teamName = teamName;
         this.players = players;
-        this.sport = sport;
         this.fixtures = new ArrayList<>();
         this.results = new ArrayList<>();
         this.teamMatchesPlayed = 0;

@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 @Getter
 public class Standings {
-    private List<Team> teams;
+    private List<BasketballTeam> teams;
 
     public Standings() {
         this.teams = new ArrayList<>();

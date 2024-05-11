@@ -1,9 +1,7 @@
 package mk.ukim.finki.wp.liga.model;
 
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
 
 import java.awt.*;
 import java.util.Date;
@@ -11,7 +9,7 @@ import java.util.Date;
 @Setter
 @Getter
 
-public class Player {
+public class VolleyballPlayer {
 
     private Long id;
     private Image image;
@@ -20,30 +18,32 @@ public class Player {
     private Date birthdate;
     private int index;
     private String city;
-    private Sport sport;
     private String position;
-    private Team team;
+    private VolleyballTeam team;
     private int appearances;
-    private int pointsScored;
+    private int servings;
     private int assists;
+    private int scoredPoints;
+    private int blocks;
 
-    public Player(Image image, String name, String surname, Date birthdate, int index,
-                  String city, Sport sport, String position, Team team) {
+    public VolleyballPlayer(Image image, String name, String surname, Date birthdate, int index,
+                            String city, String position, VolleyballTeam team) {
         this.image = image;
         this.name = name;
         this.surname = surname;
         this.birthdate = birthdate;
         this.index = index;
         this.city = city;
-        this.sport = sport;
         this.position = position;
         this.team = team;
         this.appearances = 0;
-        this.pointsScored = 0;
+        this.servings = 0;
         this.assists = 0;
+        this.scoredPoints = 0;
+        this.blocks = 0;
     }
 
-    public Player() {
+    public VolleyballPlayer() {
 
     }
 

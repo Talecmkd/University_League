@@ -9,17 +9,17 @@ import java.util.List;
 
 @Setter
 @Getter
-public class Match {
-    private Team homeTeam;
-    private Team awayTeam;
+public class FootballMatch {
+    private BasketballTeam homeTeam;
+    private BasketballTeam awayTeam;
     private int homeTeamPoints;
     private int awayTeamPoints;
-    private List<PlayerScored> playersWhoScored;
+    private List<FootballPlayerScored> playersWhoScored;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 
-    public Match(Team homeTeam, Team awayTeam, int homeTeamPoints,
-                 int awayTeamPoints, LocalDateTime startTime, LocalDateTime endTime) {
+    public FootballMatch(BasketballTeam homeTeam, BasketballTeam awayTeam, int homeTeamPoints,
+                         int awayTeamPoints, LocalDateTime startTime, LocalDateTime endTime) {
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
         this.homeTeamPoints = homeTeamPoints;

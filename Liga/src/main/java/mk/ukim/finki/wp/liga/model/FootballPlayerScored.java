@@ -7,11 +7,11 @@ import java.time.LocalDateTime;
 
 @Setter
 @Getter
-public class PlayerScored {
-    private Player player;
+public class FootballPlayerScored {
+    private FootballPlayer player;
     private LocalDateTime timeScored;
 
-    public PlayerScored(Player player, LocalDateTime timeScored) {
+    public FootballPlayerScored(FootballPlayer player, LocalDateTime timeScored) {
         this.player = player;
         this.timeScored = timeScored;
     }

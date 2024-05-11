@@ -9,10 +9,10 @@ import java.util.List;
 @Getter
 @Setter
 public class Playoff {
-    private List<Match> playoffMatches;
-    private List<Team> qualifiedTeams;
+    private List<FootballMatch> playoffMatches;
+    private List<BasketballTeam> qualifiedTeams;
 
-    public Playoff(List<Match> playoffMatches) {
+    public Playoff(List<FootballMatch> playoffMatches) {
         this.playoffMatches = playoffMatches;
         this.qualifiedTeams = new ArrayList<>();
     }
