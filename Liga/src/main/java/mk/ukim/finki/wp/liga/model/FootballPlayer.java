@@ -1,5 +1,9 @@
 package mk.ukim.finki.wp.liga.model;
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +16,8 @@ import java.util.Date;
 
 public class FootballPlayer {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Image image;
     private String name;
@@ -20,6 +26,7 @@ public class FootballPlayer {
     private int index;
     private String city;
     private String position;
+    @ManyToOne
     private FootballTeam team;
     private int appearances;
     private int goals;

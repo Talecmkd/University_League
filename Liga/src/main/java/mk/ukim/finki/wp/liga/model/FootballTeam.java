@@ -1,5 +1,6 @@
 package mk.ukim.finki.wp.liga.model;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,10 +11,27 @@ import java.util.List;
 @Setter
 @Getter
 public class FootballTeam {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String teamName;
+    @OneToMany
     private List<FootballPlayer> players;
+    @ManyToMany
+    @JoinTable(
+            name = "team_fixtures",
+            joinColumns = @JoinColumn(name = "team_id"),
+            inverseJoinColumns = @JoinColumn(name = "match_id")
+    )
     private List<FootballMatch> fixtures;
+    @ManyToMany
+    @JoinTable(
+            name = "team_results",
+            joinColumns = @JoinColumn(name = "team_id"),
+            inverseJoinColumns = @JoinColumn(name = "match_id")
+    )
     private List<FootballMatch> results;
+
     private int teamMatchesPlayed;
     private int teamLeaguePoints;
     private int teamWins;
