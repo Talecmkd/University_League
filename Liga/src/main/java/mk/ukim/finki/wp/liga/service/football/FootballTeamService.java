@@ -1,5 +1,6 @@
 package mk.ukim.finki.wp.liga.service.football;
 
+import mk.ukim.finki.wp.liga.model.FootballMatch;
 import mk.ukim.finki.wp.liga.model.FootballPlayer;
 import mk.ukim.finki.wp.liga.model.FootballTeam;
 
@@ -22,7 +23,7 @@ public interface FootballTeamService {
 
     FootballTeam delete(Long id);
 
-    FootballTeam addFixtures(Long id);
+    FootballTeam addFixtures(Long id, List<FootballMatch> fixtures);
 
     FootballTeam updateStats(Long id);
 

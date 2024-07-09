@@ -26,5 +26,5 @@ public interface FootballPlayerScoredService {
 
     FootballPlayerScored delete(Long id);
 
-    void updateStats(Long id);
+
 }

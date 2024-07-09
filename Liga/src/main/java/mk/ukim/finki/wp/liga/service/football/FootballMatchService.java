@@ -24,5 +24,4 @@ public interface FootballMatchService {
 
     void updateTeamStatistics(FootballMatch match, List<FootballPlayerScored> playerStatsList, int homeTeamScore, int awayTeamScore);
 
-    void updateTeamPoints(FootballTeam team, int pointsToAdd);
 }
