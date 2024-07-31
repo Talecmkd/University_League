@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Football Teams</title>
+</head>
+<body>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th scope="col">Product name</th>
+        <th scope="col">Price</th>
+        <th scope="col">Manufacturer</th>
+        <th scope="col">Category</th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="player : ${footballPlayers}" class="product"> <!--we show every information of each product in the products attribute -->
+        <td th:text="${player.getName()}"></td>
+
+    </tr>
+    </tbody>
+    <a type="button" class="btn btn-secondary" href="/players/add-form">Add Player</a>
+</table>
+</body>
+</html>

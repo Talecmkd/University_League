@@ -19,16 +19,16 @@ public class FootballTeam {
     private List<FootballPlayer> players;
     @ManyToMany
     @JoinTable(
-            name = "team_fixtures",
-            joinColumns = @JoinColumn(name = "team_id"),
-            inverseJoinColumns = @JoinColumn(name = "match_id")
+            name = "football_team_fixtures",
+            joinColumns = @JoinColumn(name = "football_team_id"),
+            inverseJoinColumns = @JoinColumn(name = "football_match_id")
     )
-    private List<FootballMatch> fixtures;
+    private List<FootballMatch> footballFixtures;
     @ManyToMany
     @JoinTable(
-            name = "team_results",
-            joinColumns = @JoinColumn(name = "team_id"),
-            inverseJoinColumns = @JoinColumn(name = "match_id")
+            name = "football_team_results",
+            joinColumns = @JoinColumn(name = "football_team_id"),
+            inverseJoinColumns = @JoinColumn(name = "football_match_id")
     )
     private List<FootballMatch> results;
 

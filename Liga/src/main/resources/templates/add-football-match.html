@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Match</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Add New Match</h1>
+    <form action="/matches/add" method="post">
+        <div class="form-group">
+            <label for="homeTeam">Home Team</label>
+            <select class="form-control" id="homeTeam" name="homeTeamId" required>
+                <!-- Replace with dynamic options -->
+                <option value="1">Team 1</option>
+                <option value="2">Team 2</option>
+                <option value="3">Team 3</option>
+                <!-- Add more options dynamically from server -->
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="awayTeam">Away Team</label>
+            <select class="form-control" id="awayTeam" name="awayTeamId" required>
+                <!-- Replace with dynamic options -->
+                <option value="2">Team 2</option>
+                <option value="3">Team 3</option>
+                <option value="4">Team 4</option>
+                <!-- Add more options dynamically from server -->
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="homeTeamPoints">Home Team Points</label>
+            <input type="number" class="form-control" id="homeTeamPoints" name="homeTeamPoints" min="0" required>
+        </div>
+        <div class="form-group">
+            <label for="awayTeamPoints">Away Team Points</label>
+            <input type="number" class="form-control" id="awayTeamPoints" name="awayTeamPoints" min="0" required>
+        </div>
+        <div class="form-group">
+            <label for="startTime">Start Time</label>
+            <input type="datetime-local" class="form-control" id="startTime" name="startTime" required>
+        </div>
+        <div class="form-group">
+            <label for="endTime">End Time</label>
+            <input type="datetime-local" class="form-control" id="endTime" name="endTime" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Match</button>
+    </form>
+</div>
+</body>
+</html>

@@ -27,7 +27,7 @@ public interface FootballTeamService {
 
     FootballTeam updateStats(Long id);
 
-
+    FootballTeam findByName(String teamName);
 
 
 }

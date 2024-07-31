@@ -43,7 +43,7 @@ public class FootballPlayerScoredServiceImpl implements FootballPlayerScoredServ
         FootballPlayerScored playerScored = footballPlayerScoredRepository.findById(id).orElseThrow(InvalidFootballPlayerWhoScoredException::new);
         playerScored.setPlayer(player);
         playerScored.setTimeScored(timeScored);
-        playerScored.setMatch(match);
+        playerScored.setFootballMatch(match);
         return footballPlayerScoredRepository.save(playerScored);
     }
 

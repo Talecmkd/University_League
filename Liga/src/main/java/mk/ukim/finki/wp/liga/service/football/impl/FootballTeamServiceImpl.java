@@ -57,7 +57,7 @@ public class FootballTeamServiceImpl implements FootballTeamService {
     public FootballTeam addFixtures(Long id, List<FootballMatch> fixtures) {
         FootballTeam team = footballTeamRepository.findById(id).orElseThrow(InvalidFootballTeamException::new);
 
-        team.getFixtures().addAll(fixtures);
+        team.getFootballFixtures().addAll(fixtures);
         return footballTeamRepository.save(team);
     }
 
@@ -94,6 +94,11 @@ public class FootballTeamServiceImpl implements FootballTeamService {
         team.setTeamLeaguePoints(leaguePoints);
 
         return footballTeamRepository.save(team);
+    }
+
+    @Override
+    public FootballTeam findByName(String teamName) {
+        return footballTeamRepository.findFootballTeamByTeamName(teamName).get(0);
     }
 
 }

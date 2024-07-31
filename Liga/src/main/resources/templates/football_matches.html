@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Football Matches</title>
+    <link rel="stylesheet" href="/css/style.css"> <!-- Link to your CSS file -->
+</head>
+<body>
+<header>
+    <h1>Football Matches</h1>
+    <nav>
+        <a href="/matches/add-form">Add Match</a> <!-- Link to add match form -->
+        <a href="/players">View Players</a> <!-- Link to view players (example) -->
+    </nav>
+</header>
+
+<section>
+    <table>
+        <thead>
+        <tr>
+            <th>Home Team</th>
+            <th>Away Team</th>
+            <th>Home Team Points</th>
+            <th>Away Team Points</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="match : ${footballMatches}">
+            <td th:text="${match.homeTeam.teamName}">Home Team Name</td>
+            <td th:text="${match.awayTeam.teamName}">Away Team Name</td>
+            <td th:text="${match.homeTeamPoints}">Home Team Points</td>
+            <td th:text="${match.awayTeamPoints}">Away Team Points</td>
+            <td th:text="${#temporals.format(match.startTime, 'dd-MM-yyyy HH:mm')}">Start Time</td>
+            <td th:text="${#temporals.format(match.startTime, 'dd-MM-yyyy HH:mm')}">End Time</td>
+            <td>
+                <a th:href="@{/matches/edit-form/{id}(id=${match.id})}">Edit</a> |
+                <a th:href="@{/matches/delete/{id}(id=${match.id})}" onclick="return confirm('Are you sure you want to delete this match?');">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+</body>
+</html>
