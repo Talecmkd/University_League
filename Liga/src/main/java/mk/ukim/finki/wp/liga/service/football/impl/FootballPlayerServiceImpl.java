@@ -32,14 +32,14 @@ public class FootballPlayerServiceImpl implements FootballPlayerService {
     }
 
     @Override
-    public FootballPlayer create(Image image, String name, String surname, Date birthdate, int index, String city, String position, FootballTeam team) {
+    public FootballPlayer create(byte [] image, String name, String surname, Date birthdate, int index, String city, String position, FootballTeam team) {
         FootballTeam playerTeam = footballTeamRepository.findById(team.getId()).orElseThrow(InvalidFootballTeamException::new);
         FootballPlayer player = new FootballPlayer(image,name, surname, birthdate, index, city, position, playerTeam);
         return footballPlayerRepository.save(player);
     }
 
     @Override
-    public FootballPlayer update(Long id, Image image, String name, String surname, Date birthdate, int index, String city, String position, FootballTeam team) {
+    public FootballPlayer update(Long id, byte [] image, String name, String surname, Date birthdate, int index, String city, String position, FootballTeam team) {
         FootballPlayer p = this.findById(id);
         p.setImage(image);
         p.setName(name);

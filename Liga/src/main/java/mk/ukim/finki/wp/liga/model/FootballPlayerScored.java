@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 
 @Setter
 @Getter
+@Entity
 public class FootballPlayerScored {
 
     @Id
@@ -35,4 +36,7 @@ public class FootballPlayerScored {
     }
 
 
+    public FootballPlayerScored() {
+
+    }
 }

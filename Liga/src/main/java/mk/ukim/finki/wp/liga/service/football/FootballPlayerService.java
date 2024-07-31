@@ -15,10 +15,10 @@ public interface FootballPlayerService {
     FootballPlayer findById(Long id);
 
 
-    FootballPlayer create(Image image, String name, String surname, Date birthdate, int index, String city, String position, FootballTeam team);
+    FootballPlayer create(byte [] image, String name, String surname, Date birthdate, int index, String city, String position, FootballTeam team);
 
 
-    FootballPlayer update(Long id, Image image, String name, String surname, Date birthdate, int index, String city, String position, FootballTeam team);
+    FootballPlayer update(Long id, byte [] image, String name, String surname, Date birthdate, int index, String city, String position, FootballTeam team);
 
 
     FootballPlayer delete(Long id);

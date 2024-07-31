@@ -1,5 +1,7 @@
 package mk.ukim.finki.wp.liga.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,9 +10,8 @@ import java.util.Date;
 
 @Setter
 @Getter
-
 public class BasketballPlayer {
-
+    @Id
     private Long id;
     private Image image;
     private String name;

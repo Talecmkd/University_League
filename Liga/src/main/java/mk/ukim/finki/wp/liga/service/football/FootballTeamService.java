@@ -15,10 +15,10 @@ public interface FootballTeamService {
     FootballTeam findById(Long id);
 
 
-    FootballTeam create(String teamName, List<FootballPlayer> players, Image logo);
+    FootballTeam create(String teamName, List<FootballPlayer> players, byte [] logo);
 
 
-    FootballTeam update(Long id, String teamName, List<FootballPlayer> players, Image logo);
+    FootballTeam update(Long id, String teamName, List<FootballPlayer> players, byte [] logo);
 
 
     FootballTeam delete(Long id);

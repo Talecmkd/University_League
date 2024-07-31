@@ -10,6 +10,7 @@ import java.util.List;
 
 @Setter
 @Getter
+@Entity
 public class FootballMatch {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +27,7 @@ public class FootballMatch {
     private List<FootballPlayerScored> playersWhoScored;
     @ManyToMany(mappedBy = "footballFixtures")
     private List<FootballTeam> upcomingMatches;
-    @ManyToMany(mappedBy = "results")
+    @ManyToMany(mappedBy = "footballResults")
     private List<FootballTeam> playedMatches;
     private LocalDateTime startTime;
     private LocalDateTime endTime;

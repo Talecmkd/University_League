@@ -30,15 +30,13 @@ public class FootballTeamServiceImpl implements FootballTeamService {
     public FootballTeam findById(Long id) {
         return footballTeamRepository.findById(id).orElseThrow(InvalidFootballTeamException::new);
     }
-
     @Override
-    public FootballTeam create(String teamName, List<FootballPlayer> players, Image logo) {
+    public FootballTeam create(String teamName, List<FootballPlayer> players, byte [] logo) {
         FootballTeam team = new FootballTeam(teamName, players, logo);
         return footballTeamRepository.save(team);
     }
 
-    @Override
-    public FootballTeam update(Long id, String teamName, List<FootballPlayer> players, Image logo) {
+    public FootballTeam update(Long id, String teamName, List<FootballPlayer> players, byte [] logo) {
         FootballTeam team = footballTeamRepository.findById(id).orElseThrow(InvalidFootballTeamException::new);
         team.setTeamName(teamName);
         team.setPlayers(players);
@@ -69,7 +67,7 @@ public class FootballTeamServiceImpl implements FootballTeamService {
         int draws = 0;
         int leaguePoints = 0;
 
-        for (FootballMatch match : team.getResults()) {
+        for (FootballMatch match : team.getFootballResults()) {
             if (match.getEndTime().isBefore(java.time.LocalDateTime.now())) { // Match has been played
                 boolean isHomeTeam = match.getHomeTeam().equals(team);
                 int teamPoints = isHomeTeam ? match.getHomeTeamPoints() : match.getAwayTeamPoints();

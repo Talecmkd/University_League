@@ -10,6 +10,7 @@ import java.util.List;
 
 @Setter
 @Getter
+@Entity
 public class FootballTeam {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,20 +31,20 @@ public class FootballTeam {
             joinColumns = @JoinColumn(name = "football_team_id"),
             inverseJoinColumns = @JoinColumn(name = "football_match_id")
     )
-    private List<FootballMatch> results;
+    private List<FootballMatch> footballResults;
 
     private int teamMatchesPlayed;
     private int teamLeaguePoints;
     private int teamWins;
     private int teamLoses;
     private int teamDraws;
-    private Image logo;
+    private byte [] logo;
 
-    public FootballTeam(String teamName, List<FootballPlayer> players, Image logo) {
+    public FootballTeam(String teamName, List<FootballPlayer> players, byte [] logo) {
         this.teamName = teamName;
         this.players = players;
-        this.fixtures = new ArrayList<>();
-        this.results = new ArrayList<>();
+        this.footballFixtures = new ArrayList<>();
+        this.footballResults = new ArrayList<>();
         this.teamMatchesPlayed = 0;
         this.teamLeaguePoints = 0;
         this.teamWins = 0;
@@ -53,4 +54,7 @@ public class FootballTeam {
     }
 
 
+    public FootballTeam() {
+
+    }
 }

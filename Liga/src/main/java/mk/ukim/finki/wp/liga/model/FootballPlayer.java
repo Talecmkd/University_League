@@ -1,9 +1,6 @@
 package mk.ukim.finki.wp.liga.model;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,13 +10,13 @@ import java.util.Date;
 
 @Setter
 @Getter
-
+@Entity
 public class FootballPlayer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private Image image;
+    private Long football_player_id;
+    private  byte [] image;
     private String name;
     private String surname;
     private Date birthdate;
@@ -33,7 +30,7 @@ public class FootballPlayer {
     private int assists;
     private int saves;
 
-    public FootballPlayer(Image image, String name, String surname, Date birthdate, int index,
+    public FootballPlayer(byte [] image, String name, String surname, Date birthdate, int index,
                           String city, String position, FootballTeam team) {
         this.image = image;
         this.name = name;

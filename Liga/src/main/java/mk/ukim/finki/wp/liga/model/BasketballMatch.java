@@ -1,5 +1,6 @@
 package mk.ukim.finki.wp.liga.model;
 
+import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -29,4 +30,7 @@ public class BasketballMatch {
         this.endTime = endTime;
     }
 
+    public BasketballMatch() {
+
+    }
 }
