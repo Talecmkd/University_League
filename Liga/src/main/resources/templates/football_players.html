@@ -20,7 +20,13 @@
     <tbody>
     <tr th:each="player : ${footballPlayers}" class="product"> <!--we show every information of each product in the products attribute -->
         <td th:text="${player.getName()}"></td>
-
+        <td style="display:inline">
+            <a th:href="@{/players/edit/{id}(id=${player.football_player_id})}" class="btn btn-primary">Edit</a>
+            <a th:href="@{/players/details/{id}(id=${player.football_player_id})}" class="btn btn-info">Details</a>
+            <form th:method="POST" th:action="@{'/players/delete/{id}'(id=${player.football_player_id})}">
+                <button type="submit" class="delete-item">Delete</button>
+            </form>
+        </td>
     </tr>
     </tbody>
     <a type="button" class="btn btn-secondary" href="/players/add-form">Add Player</a>

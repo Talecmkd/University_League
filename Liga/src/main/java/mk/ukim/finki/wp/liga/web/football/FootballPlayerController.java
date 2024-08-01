@@ -3,8 +3,10 @@ package mk.ukim.finki.wp.liga.web.football;
 import lombok.AllArgsConstructor;
 import mk.ukim.finki.wp.liga.model.FootballPlayer;
 import mk.ukim.finki.wp.liga.model.FootballTeam;
+import mk.ukim.finki.wp.liga.model.Playoff;
 import mk.ukim.finki.wp.liga.service.football.FootballPlayerService;
 import mk.ukim.finki.wp.liga.service.football.FootballTeamService;
+import org.springframework.boot.Banner;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -80,6 +84,52 @@ public class FootballPlayerController {
 
         return "redirect:/players";
     }
+    @GetMapping("/details/{id}")
+    public String getPlayerDetails(@PathVariable Long id, Model model){
+        FootballPlayer footballPlayer = footballPlayerService.findById(id);
+        if (footballPlayer == null) {
+            // Handle the case where the player does not exist (e.g., return a 404 page or redirect to an error page)
+            return "redirect:/players"; // Redirect to the list of players or another appropriate page
+        }
+        model.addAttribute("footballPlayer", footballPlayer);
+        return "football_player_details";
+    }
+    @PostMapping("/delete/{id}")
+    public String deletePlayer(@PathVariable Long id){
+        footballPlayerService.delete(id);
+        return "redirect:/players";
+    }
 
+    @GetMapping("/edit/{id}")
+    public String showEditForm(@PathVariable Long id, Model model){
+        FootballPlayer footballPlayer = footballPlayerService.findById(id);
+        if (footballPlayer == null) {
+            // Handle the case where the player does not exist (e.g., return a 404 page or redirect to an error page)
+            return "redirect:/players"; // Redirect to the list of players or another appropriate page
+        }
+        model.addAttribute("footballPlayer", footballPlayer);
+        return "football_player_edit";
+    }
+    @PostMapping("/edit/{id}")
+    public String editPlayer(@PathVariable Long id, @RequestParam String name, @RequestParam String surname, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date birthdate, @RequestParam int index, @RequestParam String city, @RequestParam String position, @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
+        FootballPlayer existingPlayer = footballPlayerService.findById(id);
+        if (existingPlayer == null) {
+            // Handle the case where the player does not exist
+            return "redirect:/players";
+        }
+        byte[] imageBytes = existingPlayer.getImage();
+        if (imageFile != null && !imageFile.isEmpty()) {
+            try {
+                imageBytes = imageFile.getBytes();
+            } catch (IOException e) {
+                e.printStackTrace();
+                // Handle the error (e.g., return an error page)
+            }
+        }
+
+        // Update the player's details
+        footballPlayerService.update(id, existingPlayer.getImage(), name, surname, birthdate, index, city, position, existingPlayer.getTeam());
+        return "redirect:/players"; // Redirect to th
+    }
 
 }
