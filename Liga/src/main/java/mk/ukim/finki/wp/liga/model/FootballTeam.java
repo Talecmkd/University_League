@@ -16,7 +16,7 @@ public class FootballTeam {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String teamName;
-    @OneToMany
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<FootballPlayer> players;
     @ManyToMany
     @JoinTable(

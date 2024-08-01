@@ -3,45 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <title>Football Matches</title>
-    <link rel="stylesheet" href="/css/style.css"> <!-- Link to your CSS file -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> <!-- Bootstrap CSS -->
 </head>
 <body>
-<header>
-    <h1>Football Matches</h1>
-    <nav>
-        <a href="/matches/add-form">Add Match</a> <!-- Link to add match form -->
-        <a href="/players">View Players</a> <!-- Link to view players (example) -->
-    </nav>
+<header class="bg-primary text-white p-3">
+    <div class="container">
+        <h1 class="mb-0">Football Matches</h1>
+    </div>
 </header>
 
-<section>
-    <table>
-        <thead>
-        <tr>
-            <th>Home Team</th>
-            <th>Away Team</th>
-            <th>Home Team Points</th>
-            <th>Away Team Points</th>
-            <th>Start Time</th>
-            <th>End Time</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="match : ${footballMatches}">
-            <td th:text="${match.homeTeam.teamName}">Home Team Name</td>
-            <td th:text="${match.awayTeam.teamName}">Away Team Name</td>
-            <td th:text="${match.homeTeamPoints}">Home Team Points</td>
-            <td th:text="${match.awayTeamPoints}">Away Team Points</td>
-            <td th:text="${#temporals.format(match.startTime, 'dd-MM-yyyy HH:mm')}">Start Time</td>
-            <td th:text="${#temporals.format(match.startTime, 'dd-MM-yyyy HH:mm')}">End Time</td>
-            <td>
-                <a th:href="@{/matches/edit-form/{id}(id=${match.id})}">Edit</a> |
-                <a th:href="@{/matches/delete/{id}(id=${match.id})}" onclick="return confirm('Are you sure you want to delete this match?');">Delete</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a href="/matches/add-form" class="nav-link">Add Match</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/matches/fixtures" class="nav-link">Fixtures</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/matches/results" class="nav-link">Results</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/players" class="nav-link">View Players</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="container mt-4">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-dark">
+            <tr>
+                <th>Home Team</th>
+                <th>Away Team</th>
+                <th>Home Team Points</th>
+                <th>Away Team Points</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="match : ${footballMatches}">
+                <td th:text="${match.homeTeam.teamName}">Home Team Name</td>
+                <td th:text="${match.awayTeam.teamName}">Away Team Name</td>
+                <td th:text="${match.homeTeamPoints}">Home Team Points</td>
+                <td th:text="${match.awayTeamPoints}">Away Team Points</td>
+                <td th:text="${#temporals.format(match.startTime, 'dd-MM-yyyy HH:mm')}">Start Time</td>
+                <td th:text="${#temporals.format(match.endTime, 'dd-MM-yyyy HH:mm')}">End Time</td>
+                <td>
+                    <a th:href="@{/matches/edit-form/{id}(id=${match.id})}" class="btn btn-warning btn-sm">Edit</a>
+                    <form th:method="POST" th:action="@{'/matches/delete/{id}'(id=${match.id})}" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </section>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </body>
 </html>

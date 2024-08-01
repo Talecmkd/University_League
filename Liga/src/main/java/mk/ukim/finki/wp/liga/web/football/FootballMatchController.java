@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @AllArgsConstructor
@@ -28,10 +29,29 @@ public class FootballMatchController {
         return "football_matches";
     }
 
+    @GetMapping("/fixtures")
+    public String showFixtures(Model model) {
+
+        List<FootballMatch> fixtures = footballMatchService.listAllFootballMatches().stream()
+                .filter(match -> match.getEndTime().isAfter(LocalDateTime.now()))
+                .collect(Collectors.toList());
+        model.addAttribute("fixtures", fixtures);
+        return "football_fixtures";
+    }
+
+    @GetMapping("/results")
+    public String showResults(Model model) {
+        List<FootballMatch> results = footballMatchService.listAllFootballMatches().stream()
+                .filter(match -> match.getEndTime().isBefore(LocalDateTime.now()))
+                .collect(Collectors.toList());
+        model.addAttribute("results", results);
+        return "football_results";
+    }
+
     @GetMapping("/add-form")
     public String addMatch(Model model) {
         List<FootballTeam> teams = footballTeamService.listAllTeams();
-        model.addAttribute("footballTeams", teams);
+        model.addAttribute("teams", teams);
         return "add-football-match";
     }
 
@@ -59,8 +79,8 @@ public class FootballMatchController {
     public String editMatch(@PathVariable Long id, Model model) {
         FootballMatch match = footballMatchService.findById(id);
         List<FootballTeam> teams = footballTeamService.listAllTeams();
-        model.addAttribute("footballMatch", match);
-        model.addAttribute("footballTeams", teams);
+        model.addAttribute("match", match);
+        model.addAttribute("teams", teams);
         return "edit-football-match";
     }
 
@@ -74,10 +94,12 @@ public class FootballMatchController {
             @RequestParam String startTime,
             @RequestParam String endTime) {
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        LocalDateTime start = LocalDateTime.parse(startTime, formatter);
+        LocalDateTime end = LocalDateTime.parse(endTime, formatter);
+
         FootballTeam homeTeam = footballTeamService.findById(homeTeamId);
         FootballTeam awayTeam = footballTeamService.findById(awayTeamId);
-        LocalDateTime start = LocalDateTime.parse(startTime);
-        LocalDateTime end = LocalDateTime.parse(endTime);
 
         footballMatchService.update(id, homeTeam, awayTeam, homeTeamPoints, awayTeamPoints, start, end);
         return "redirect:/matches";
@@ -88,4 +110,6 @@ public class FootballMatchController {
         footballMatchService.delete(id);
         return "redirect:/matches";
     }
+
+
 }

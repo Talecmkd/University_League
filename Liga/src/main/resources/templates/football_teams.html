@@ -3,29 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <title>Football Teams</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 </head>
 <body>
-<table class="table table-striped">
-    <thead>
-    <tr>
-        <th scope="col">Product name</th>
-        <th scope="col">Price</th>
-        <th scope="col">Manufacturer</th>
-        <th scope="col">Category</th>
-        <th scope="col"></th>
-        <th scope="col"></th>
-        <th scope="col"></th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="team : ${footballTeams}" class="product"> <!--we show every information of each product in the products attribute -->
-        <td th:text="${team?.getTeamName()}"></td>
-<!--        <td th:text="${team.getPlayers()}"></td>-->
-
-
-
-    </tr>
-    </tbody>
-</table>
+<div class="container mt-5">
+    <h1>Football Teams</h1>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Team Name</th>
+            <th scope="col">Matches Played</th>
+            <th scope="col">League Points</th>
+            <th scope="col">Wins</th>
+            <th scope="col">Losses</th>
+            <th scope="col">Draws</th>
+            <th scope="col">Details</th> <!-- New column for details button -->
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="team : ${footballTeams}">
+            <td th:text="${team.teamName}"></td>
+            <td th:text="${team.teamMatchesPlayed}"></td>
+            <td th:text="${team.teamLeaguePoints}"></td>
+            <td th:text="${team.teamWins}"></td>
+            <td th:text="${team.teamLoses}"></td>
+            <td th:text="${team.teamDraws}"></td>
+            <td>
+                <!-- Details button linking to the team details page -->
+                <a th:href="@{/teams/team/{id}(id=${team.id})}" class="btn btn-info">Players</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>

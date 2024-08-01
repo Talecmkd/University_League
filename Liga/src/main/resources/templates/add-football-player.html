@@ -78,7 +78,7 @@
         <select name="team" class="form-control">
             <option th:if="${player} != null"
                     th:selected="${player.getTeam() != null &&
-                                player.getTeam().getI() == team.getId()}"
+                                player.getTeam().getId() == team.getId()}"
                     th:each="team : ${teams}"
                     th:value="${team.getId()}"
                     th:text="${team.getTeamName()()}">

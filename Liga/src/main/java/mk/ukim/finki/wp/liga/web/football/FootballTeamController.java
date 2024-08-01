@@ -14,7 +14,7 @@ import java.util.List;
 
 @Controller
 @AllArgsConstructor
-@RequestMapping("/")
+@RequestMapping("/teams")
 public class FootballTeamController{
     private final FootballPlayerService footballPlayerService;
     private final FootballTeamService footballTeamService;
@@ -32,6 +32,20 @@ public class FootballTeamController{
     //model.addAttribute("bodyContent","football_teams");
     return "football_teams";
 }
+
+@GetMapping("team/{id}")
+    public String getTeam(@PathVariable Long id, Model model){
+    FootballTeam team = footballTeamService.findById(id);
+    if (team != null) {
+        model.addAttribute("team", team);
+        model.addAttribute("players", team.getPlayers());
+    } else {
+        model.addAttribute("hasError", true);
+        model.addAttribute("error", "Team not found");
+    }
+    return "football_team_details";
+}
+
 //@GetMapping("teams/team/{id}")
 //    public String getTeam(@PathVariable Long id, Model model){
 //    if(this.footballTeamService.findById(id)!=null){
