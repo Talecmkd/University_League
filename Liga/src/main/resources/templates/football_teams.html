@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Football Teams</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Football Teams</h1>
+    <div class="mb-3">
+        <!-- Add Team button linking to the add team form -->
+        <a th:href="@{/teams/add}" class="btn btn-success">Add Team</a>
+    </div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Team Name</th>
+            <th scope="col">Matches Played</th>
+            <th scope="col">League Points</th>
+            <th scope="col">Wins</th>
+            <th scope="col">Losses</th>
+            <th scope="col">Draws</th>
+            <th scope="col">Details</th> <!-- New column for details button -->
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="team : ${footballTeams}">
+            <td th:text="${team.teamName}"></td>
+            <td th:text="${team.teamMatchesPlayed}"></td>
+            <td th:text="${team.teamLeaguePoints}"></td>
+            <td th:text="${team.teamWins}"></td>
+            <td th:text="${team.teamLoses}"></td>
+            <td th:text="${team.teamDraws}"></td>
+            <td>
+                <!-- Details button linking to the team details page -->
+                <a th:href="@{/teams/team/{id}(id=${team.id})}" class="btn btn-info">Players</a>
+            </td>
+            <td>
+                <!-- Edit button linking to the edit form -->
+                <a th:href="@{/teams/edit/{id}(id=${team.id})}" class="btn btn-warning">Edit</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

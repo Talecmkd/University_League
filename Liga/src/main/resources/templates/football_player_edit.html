@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Player</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Edit Player</h1>
+
+    <form th:action="@{/players/edit/{id}(id=${footballPlayer.football_player_id})}" th:object="${footballPlayer}" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" class="form-control" th:field="*{name}" />
+        </div>
+        <div class="form-group">
+            <label for="surname">Surname:</label>
+            <input type="text" id="surname" class="form-control" th:field="*{surname}" />
+        </div>
+        <div class="form-group">
+            <label for="birthdate">Birthdate:</label>
+            <input type="date" id="birthdate" class="form-control" th:field="*{birthdate}" />
+        </div>
+        <div class="form-group">
+            <label for="index">Index:</label>
+            <input type="number" id="index" class="form-control" th:field="*{index}" />
+        </div>
+        <div class="form-group">
+            <label for="city">City:</label>
+            <input type="text" id="city" class="form-control" th:field="*{city}" />
+        </div>
+        <div class="form-group">
+            <label for="position">Position:</label>
+            <input type="text" id="position" class="form-control" th:field="*{position}" />
+        </div>
+        <div class="form-group">
+            <label for="team">Team:</label>
+            <input type="text" id="team" class="form-control" th:field="*{team.teamName}" /> <!-- Adjust this if you have a dropdown of teams -->
+        </div>
+        <div class="form-group">
+            <label for="imageFile">Image:</label>
+            <input type="file" id="imageFile" class="form-control-file" name="imageFile" />
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a th:href="@{/players}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

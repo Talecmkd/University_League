@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Player Details</title>
+</head>
+<body>
+<h1>Player Details</h1>
+
+<div>
+    <h2 th:text="${footballPlayer.name} + ' ' + ${footballPlayer.surname}">Player Name</h2>
+    <p><strong>Birthdate:</strong> <span th:text="${#dates.format(footballPlayer.birthdate, 'yyyy-MM-dd')}">Player Birthdate</span></p>
+    <p><strong>Index:</strong> <span th:text="${footballPlayer.index}">Player Index</span></p>
+    <p><strong>City:</strong> <span th:text="${footballPlayer.city}">Player City</span></p>
+    <p><strong>Position:</strong> <span th:text="${footballPlayer.position}">Player Position</span></p>
+    <p><strong>Team:</strong> <span th:text="${footballPlayer.team.teamName}">Player Team</span></p>
+    <p><strong>Appearances:</strong> <span th:text="${footballPlayer.appearances}">Player Appearances</span></p>
+    <p><strong>Goals:</strong> <span th:text="${footballPlayer.goals}">Player Goals</span></p>
+    <p><strong>Assists:</strong> <span th:text="${footballPlayer.assists}">Player Assists</span></p>
+    <p><strong>Saves:</strong> <span th:text="${footballPlayer.saves}">Player Saves</span></p>
+</div>
+    <!-- Add more attributes as needed -->
+</div>
+
+<div>
+    <a th:href="@{/players/edit/{id}(id=${footballPlayer.football_player_id})}" class="btn btn-primary">Edit</a>
+    <a th:href="@{/players}" class="btn btn-secondary">Back to List</a>
+</div>
+</body>
+</html>
