@@ -2,8 +2,12 @@ package mk.ukim.finki.wp.liga.web.football;
 
 import lombok.AllArgsConstructor;
 import mk.ukim.finki.wp.liga.model.FootballMatch;
+import mk.ukim.finki.wp.liga.model.FootballPlayer;
+import mk.ukim.finki.wp.liga.model.FootballPlayerScored;
 import mk.ukim.finki.wp.liga.model.FootballTeam;
 import mk.ukim.finki.wp.liga.service.football.FootballMatchService;
+import mk.ukim.finki.wp.liga.service.football.FootballPlayerScoredService;
+import mk.ukim.finki.wp.liga.service.football.FootballPlayerService;
 import mk.ukim.finki.wp.liga.service.football.FootballTeamService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +25,8 @@ public class FootballMatchController {
 
     private final FootballMatchService footballMatchService;
     private final FootballTeamService footballTeamService;
+    private final FootballPlayerService footballPlayerService;
+    private final FootballPlayerScoredService footballPlayerScoredService;
 
     @GetMapping
     public String showAllMatches(Model model) {
@@ -92,7 +98,45 @@ public class FootballMatchController {
         List<FootballTeam> teams = footballTeamService.listAllTeams();
         model.addAttribute("match", match);
         model.addAttribute("teams", teams);
-        return "edit-football-match";
+        return "edit_football_match";
+    }
+
+    @GetMapping("/edit_live/{id}")
+    public String editLiveMatch(@PathVariable Long id, Model model) {
+        FootballMatch match = footballMatchService.findById(id);
+        List<FootballTeam> teams = footballTeamService.listAllTeams();
+        List<FootballPlayer> players = footballPlayerService.listAllPlayers();
+        model.addAttribute("match", match);
+        model.addAttribute("teams", teams);
+        model.addAttribute("players", players);
+        return "edit_live_football_match";
+    }
+
+    @PostMapping("/add_live")
+    public String addLiveMatch(@RequestParam FootballPlayer player,
+                               @RequestParam LocalDateTime timeScored,
+                               @RequestParam Long footballMatchId,
+                               @RequestParam int goalsScored,
+                               @RequestParam int assistsScored,
+                               @RequestParam int saves){
+
+        FootballMatch footballMatch = footballMatchService.findById(footballMatchId);
+        FootballPlayerScored newPlayer = new FootballPlayerScored();
+        newPlayer.setPlayer(player);
+        newPlayer.setFootballMatch(footballMatch);
+        newPlayer.setSaves(saves);
+        newPlayer.setTimeScored(timeScored);
+        newPlayer.setGoalsScored(goalsScored);
+        newPlayer.setAssistsScored(assistsScored);
+        Long playerId = player.getFootball_player_id();
+
+        footballPlayerScoredService.create(player, timeScored, footballMatch);
+        footballPlayerService.addAppearances(playerId);
+        footballPlayerService.addAssists(playerId,assistsScored);
+        footballPlayerService.addGoals(playerId, goalsScored);
+        footballPlayerService.addSaves(playerId, saves);
+        
+        return "redirect:/matches";
     }
 
     @PostMapping("/edit")

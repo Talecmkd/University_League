@@ -30,7 +30,7 @@ public class DataInitializer {
         }
 
         for (int i = 1; i <= 5; i++) {
-            this.footballPlayerService.create(null, "Player " + i, null, null, i, null, null, this.footballTeamService.findById((long) i));
+            this.footballPlayerService.create(null, "Player " + i, "Surname"+i, null, i, null, null, this.footballTeamService.findById((long) i));
         }
         for (int i = 1; i <= 5; i++) {
             FootballTeam home = this.footballTeamService.findByName("Team " + i);

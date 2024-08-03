@@ -81,7 +81,7 @@
                                 player.getTeam().getId() == team.getId()}"
                     th:each="team : ${teams}"
                     th:value="${team.getId()}"
-                    th:text="${team.getTeamName()()}">
+                    th:text="${team.getTeamName()}">
             </option>
             <option th:if="${player} == null"
                     th:each="team : ${teams}"

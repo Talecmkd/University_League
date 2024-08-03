@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Football Player Scored</title>
+</head>
+<body>
+<h1>Add Football Player Scored</h1>
+<form th:action="@{/matches/add_live}" method="post">
+    <label for="player">Player:</label>
+    <select id="player" name="player">
+        <option th:each="player : ${players}" th:value="${player.getFootball_player_id()}" th:text="${player.name}"></option>
+    </select>
+    <br/>
+
+    <label for="timeScored">Time Scored:</label>
+    <input type="datetime-local" id="timeScored" name="timeScored"/>
+    <br/>
+
+    <label for="goalsScored">Goals Scored:</label>
+    <input type="number" id="goalsScored" name="goalsScored"/>
+    <br/>
+
+    <label for="assistsScored">Assists Scored:</label>
+    <input type="number" id="assistsScored" name="assistsScored"/>
+    <br/>
+
+    <label for="saves">Saves:</label>
+    <input type="number" id="saves" name="saves"/>
+    <br/>
+
+    <label for="footballMatchId">Match:</label>
+    <select id="footballMatchId" name="footballMatchId">
+        <option th:value="${match.getId()}" th:text="${match.getId()}"></option>
+    </select>
+
+    <br/>
+
+    <button type="submit">Save</button>
+</form>
+</body>
+</html>
