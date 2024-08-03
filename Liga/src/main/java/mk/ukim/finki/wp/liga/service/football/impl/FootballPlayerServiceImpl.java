@@ -88,4 +88,9 @@ public class FootballPlayerServiceImpl implements FootballPlayerService {
         p.setSaves(p.getSaves() + savesToAdd);
         return footballPlayerRepository.save(p);
     }
+
+    @Override
+    public List<FootballPlayer> getPlayersByIds(List<Long> ids) {
+        return footballPlayerRepository.findAllById(ids);
+    }
 }

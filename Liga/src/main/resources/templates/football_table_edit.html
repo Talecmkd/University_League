@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Team</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Edit Team</h1>
+
+    <form th:action="@{/teams/edit/{id}(id=${team.id})}" method="post">
+        <div class="form-group">
+            <label for="teamName">Team Name:</label>
+            <input type="text" id="teamName" class="form-control" th:field="*{team.teamName}" readonly />
+        </div>
+        <div class="form-group">
+            <label for="teamLeaguePoints">League Points:</label>
+            <input type="number" id="teamLeaguePoints" class="form-control" th:field="*{team.teamLeaguePoints}" />
+        </div>
+        <div class="form-group">
+            <label for="teamMatchesPlayed">Matches Played:</label>
+            <input type="number" id="teamMatchesPlayed" class="form-control" th:field="*{team.teamMatchesPlayed}" readonly />
+        </div>
+        <div class="form-group">
+            <label for="teamWins">Wins:</label>
+            <input type="number" id="teamWins" class="form-control" th:field="*{team.teamWins}" readonly />
+        </div>
+        <div class="form-group">
+            <label for="teamLoses">Losses:</label>
+            <input type="number" id="teamLoses" class="form-control" th:field="*{team.teamLoses}" readonly />
+        </div>
+        <div class="form-group">
+            <label for="teamDraws">Draws:</label>
+            <input type="number" id="teamDraws" class="form-control" th:field="*{team.teamDraws}" readonly />
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a th:href="@{/teams}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+</html>

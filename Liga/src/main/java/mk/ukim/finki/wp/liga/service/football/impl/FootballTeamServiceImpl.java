@@ -32,7 +32,7 @@ public class FootballTeamServiceImpl implements FootballTeamService {
     }
     @Override
     public FootballTeam create(String teamName, List<FootballPlayer> players, byte [] logo) {
-        FootballTeam team = new FootballTeam(teamName, players, logo);
+        FootballTeam team = new FootballTeam(teamName,players, logo);
         return footballTeamRepository.save(team);
     }
 
@@ -97,6 +97,17 @@ public class FootballTeamServiceImpl implements FootballTeamService {
     @Override
     public FootballTeam findByName(String teamName) {
         return footballTeamRepository.findFootballTeamByTeamName(teamName).get(0);
+    }
+
+    @Override
+    public FootballTeam saveTable(Long id, int teamPoints) {
+        FootballTeam ft = footballTeamRepository.findById(id).orElseThrow(InvalidFootballTeamException::new);
+        ft.setTeamLeaguePoints(teamPoints);
+        return footballTeamRepository.save(ft);
+    }
+    @Override
+    public List<FootballTeam> findAllOrderByPointsDesc() {
+        return footballTeamRepository.findAllByOrderByTeamLeaguePointsDesc();
     }
 
 }

@@ -29,5 +29,7 @@ public interface FootballTeamService {
 
     FootballTeam findByName(String teamName);
 
+    FootballTeam saveTable(Long id, int teamPoints);
+    List<FootballTeam> findAllOrderByPointsDesc();
 
 }
