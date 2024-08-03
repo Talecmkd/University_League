@@ -16,10 +16,10 @@ public class FootballMatch {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
-    @JoinColumn(name = "football_home_id")
+    @JoinColumn(name = "football_home_id", nullable = false)
     private FootballTeam homeTeam;
     @ManyToOne
-    @JoinColumn(name = "football_away_id")
+    @JoinColumn(name = "football_away_id", nullable = false)
     private FootballTeam awayTeam;
     private int homeTeamPoints;
     private int awayTeamPoints;
@@ -33,14 +33,14 @@ public class FootballMatch {
     private LocalDateTime endTime;
 
     public FootballMatch(FootballTeam homeTeam, FootballTeam awayTeam, int homeTeamPoints,
-                         int awayTeamPoints, LocalDateTime startTime, LocalDateTime endTime) {
+                         int awayTeamPoints, LocalDateTime startTime) {
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
         this.homeTeamPoints = homeTeamPoints;
         this.awayTeamPoints = awayTeamPoints;
         this.playersWhoScored = new ArrayList<>();
         this.startTime = startTime;
-        this.endTime = endTime;
+        this.endTime = startTime.plusHours(2);
     }
 
     public FootballMatch() {

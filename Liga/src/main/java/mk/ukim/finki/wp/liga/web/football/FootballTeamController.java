@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -70,7 +69,7 @@ public class FootballTeamController{
             return "redirect:/teams";
         }
         model.addAttribute("team", team);
-        return "football_table_edit";
+        return "edit_football_table";
     }
 
     @PostMapping("/edit/{id}")
@@ -89,7 +88,7 @@ public class FootballTeamController{
     public String showAddTeamForm(Model model) {
         List<FootballPlayer> players = footballPlayerService.listAllPlayers();
         model.addAttribute("players", players);
-        return "add-team";
+        return "add_team";
     }
 
     @PostMapping("/add")
@@ -104,6 +103,18 @@ public class FootballTeamController{
 
         // Redirect to the teams list page
         return "redirect:/teams";
+    }
+
+    @GetMapping("/show/{id}")
+    public String getTeamMatches(@PathVariable Long id, Model model) {
+        FootballTeam team = footballTeamService.findById(id);
+        if (team == null) {
+            return "redirect:/teams";
+        }
+        model.addAttribute("team", team);
+        model.addAttribute("fixtures", team.getFootballFixtures());
+        model.addAttribute("results", team.getFootballResults());
+        return "show_football_team_matches";
     }
 
 }

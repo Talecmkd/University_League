@@ -22,7 +22,7 @@
             <td th:text="${match.homeTeam.teamName}"></td>
             <td th:text="${match.awayTeam.teamName}"></td>
             <td th:text="${match.homeTeamPoints} + ' - ' + ${match.awayTeamPoints}"></td>
-            <td th:text="${#dates.format(match.endTime, 'yyyy-MM-dd HH:mm')}"></td>
+            <td th:text="${#temporals.format(match.endTime, 'dd-MM-yyyy HH:mm')}"></td>
         </tr>
         </tbody>
     </table>

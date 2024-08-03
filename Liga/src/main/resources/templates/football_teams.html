@@ -37,6 +37,10 @@
                 <a th:href="@{/teams/team/{id}(id=${team.id})}" class="btn btn-info">Players</a>
             </td>
             <td>
+                <!-- Details button linking to the team details page -->
+                <a th:href="@{/teams/show/{id}(id=${team.id})}" class="btn btn-info">Fixtures/Results</a>
+            </td>
+            <td>
                 <!-- Edit button linking to the edit form -->
                 <a th:href="@{/teams/edit/{id}(id=${team.id})}" class="btn btn-warning">Edit</a>
             </td>

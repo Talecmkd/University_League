@@ -14,14 +14,14 @@ public interface FootballMatchService {
     FootballMatch findById(Long id);
 
 
-    FootballMatch create(FootballTeam homeTeam, FootballTeam awayTeam, int homeTeamPoints, int awayTeamPoints, LocalDateTime startTime, LocalDateTime endTime);
+    FootballMatch create(FootballTeam homeTeam, FootballTeam awayTeam, int homeTeamPoints, int awayTeamPoints, LocalDateTime startTime);
 
 
-    FootballMatch update(Long id, FootballTeam homeTeam, FootballTeam awayTeam, int homeTeamPoints, int awayTeamPoints, LocalDateTime startTime, LocalDateTime endTime);
+    FootballMatch update(Long id, FootballTeam homeTeam, FootballTeam awayTeam, int homeTeamPoints, int awayTeamPoints, LocalDateTime startTime);
 
 
     FootballMatch delete(Long id);
 
-    void updateTeamStatistics(FootballMatch match, List<FootballPlayerScored> playerStatsList, int homeTeamScore, int awayTeamScore);
+    void updateTeamStatistics(FootballMatch match);
 
 }

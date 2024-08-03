@@ -44,15 +44,26 @@ public class FootballMatchController {
         List<FootballMatch> results = footballMatchService.listAllFootballMatches().stream()
                 .filter(match -> match.getEndTime().isBefore(LocalDateTime.now()))
                 .collect(Collectors.toList());
+        results.forEach(footballMatchService::updateTeamStatistics);
         model.addAttribute("results", results);
         return "football_results";
+    }
+
+    @GetMapping("/live")
+    public String showLive(Model model) {
+        List<FootballMatch> live = footballMatchService.listAllFootballMatches().stream()
+                .filter(match -> (match.getStartTime().isBefore(LocalDateTime.now()) && match.getEndTime().isAfter(LocalDateTime
+                        .now())))
+                .collect(Collectors.toList());
+        model.addAttribute("live", live);
+        return "football_live";
     }
 
     @GetMapping("/add-form")
     public String addMatch(Model model) {
         List<FootballTeam> teams = footballTeamService.listAllTeams();
         model.addAttribute("teams", teams);
-        return "add-football-match";
+        return "add_football_match";
     }
 
     @PostMapping("/add")
@@ -71,7 +82,7 @@ public class FootballMatchController {
         FootballTeam homeTeam = footballTeamService.findById(homeTeamId);
         FootballTeam awayTeam = footballTeamService.findById(awayTeamId);
 
-        footballMatchService.create(homeTeam, awayTeam, homeTeamPoints, awayTeamPoints, start, end);
+        footballMatchService.create(homeTeam, awayTeam, homeTeamPoints, awayTeamPoints, start);
         return "redirect:/matches";
     }
 
@@ -101,7 +112,7 @@ public class FootballMatchController {
         FootballTeam homeTeam = footballTeamService.findById(homeTeamId);
         FootballTeam awayTeam = footballTeamService.findById(awayTeamId);
 
-        footballMatchService.update(id, homeTeam, awayTeam, homeTeamPoints, awayTeamPoints, start, end);
+        footballMatchService.update(id, homeTeam, awayTeam, homeTeamPoints, awayTeamPoints, start);
         return "redirect:/matches";
     }
 

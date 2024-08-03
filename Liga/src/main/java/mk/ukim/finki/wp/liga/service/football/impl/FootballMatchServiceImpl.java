@@ -34,15 +34,15 @@ public class FootballMatchServiceImpl implements FootballMatchService {
     }
 
     @Override
-    public FootballMatch create(FootballTeam homeTeam, FootballTeam awayTeam, int homeTeamPoints, int awayTeamPoints, LocalDateTime startTime, LocalDateTime endTime) {
+    public FootballMatch create(FootballTeam homeTeam, FootballTeam awayTeam, int homeTeamPoints, int awayTeamPoints, LocalDateTime startTime) {
         FootballTeam home = teamRepository.findById(homeTeam.getId()).orElseThrow(InvalidFootballTeamException::new);
         FootballTeam away = teamRepository.findById(awayTeam.getId()).orElseThrow(InvalidFootballMatchException::new);
-        FootballMatch fm = new FootballMatch(home, away, homeTeamPoints, awayTeamPoints, startTime, endTime);
+        FootballMatch fm = new FootballMatch(home, away, homeTeamPoints, awayTeamPoints, startTime);
         return matchRepository.save(fm);
     }
 
     @Override
-    public FootballMatch update(Long id, FootballTeam homeTeam, FootballTeam awayTeam, int homeTeamPoints, int awayTeamPoints, LocalDateTime startTime, LocalDateTime endTime) {
+    public FootballMatch update(Long id, FootballTeam homeTeam, FootballTeam awayTeam, int homeTeamPoints, int awayTeamPoints, LocalDateTime startTime) {
         FootballTeam home = teamRepository.findById(homeTeam.getId()).orElseThrow(InvalidFootballTeamException::new);
         FootballTeam away = teamRepository.findById(awayTeam.getId()).orElseThrow(InvalidFootballMatchException::new);
         FootballMatch fm = matchRepository.findById(id).orElseThrow(InvalidFootballMatchException::new);
@@ -51,7 +51,6 @@ public class FootballMatchServiceImpl implements FootballMatchService {
         fm.setHomeTeamPoints(homeTeamPoints);
         fm.setAwayTeamPoints(awayTeamPoints);
         fm.setStartTime(startTime);
-        fm.setEndTime(endTime);
         return matchRepository.save(fm);
     }
 
@@ -63,7 +62,7 @@ public class FootballMatchServiceImpl implements FootballMatchService {
     }
 
     @Override
-    public void updateTeamStatistics(FootballMatch match, List<FootballPlayerScored> playerStatsList, int homeTeamScore, int awayTeamScore) {
+    public void updateTeamStatistics(FootballMatch match) {
         teamService.updateStats(match.getHomeTeam().getId());
         teamService.updateStats(match.getAwayTeam().getId());
     }

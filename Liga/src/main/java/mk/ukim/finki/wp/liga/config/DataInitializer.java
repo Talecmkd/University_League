@@ -7,6 +7,8 @@ import mk.ukim.finki.wp.liga.service.football.FootballPlayerService;
 import mk.ukim.finki.wp.liga.service.football.FootballTeamService;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 @Component
 public class DataInitializer {
 
@@ -36,7 +38,7 @@ public class DataInitializer {
 
             // Assuming the teams exist and service methods are correctly implemented
             if (home != null && away != null) {
-                this.footballMatchService.create(home, away, 0, 0, null, null);
+                this.footballMatchService.create(home, away, 0, 0, LocalDateTime.now());
             }
         }
     }
