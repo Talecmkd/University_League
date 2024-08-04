@@ -22,9 +22,9 @@ public interface FootballPlayerScoredService {
 
 
     FootballPlayerScored update(Long id, FootballPlayer player, LocalDateTime timeScored, FootballMatch match);
-
-
+    FootballPlayerScored findByPlayerAndMatch(FootballPlayer player, FootballMatch match);
     FootballPlayerScored delete(Long id);
+    FootballPlayerScored save(FootballPlayerScored player);
 
 
 }

@@ -34,6 +34,8 @@ public class FootballPlayerController {
     public String showAllPlayers(Model model) {
         List<FootballPlayer> footballPlayers = footballPlayerService.listAllPlayers();
        model.addAttribute("footballPlayers", footballPlayers);
+       List<FootballPlayer> topPlayers=footballPlayerService.getTop5Players();
+       model.addAttribute("topPlayers",topPlayers);
        //model.addAttribute("bodyContent", "football_players");
        return "football_players";
     }
@@ -78,19 +80,19 @@ public class FootballPlayerController {
 
         return "redirect:/players";
     }
-    @GetMapping("/edit/{id}") //localhost:8080/products/edit-form/{id}
+    @GetMapping("/edit/{id}")
     public String editProductPage(@PathVariable Long id, Model model) {
-        if (this.footballPlayerService.findById(id)!=null) { //we check if the product with the given ID exists
-            FootballPlayer player = this.footballPlayerService.findById(id); //we put the product into the product object
-            List<FootballTeam> teams = this.footballTeamService.listAllTeams();//we list all the manufacturers
+        if (this.footballPlayerService.findById(id)!=null) {
+            FootballPlayer player = this.footballPlayerService.findById(id);
+            List<FootballTeam> teams = this.footballTeamService.listAllTeams();
 
-            model.addAttribute("teams", teams);//we set the categories into the categories attribute
-            model.addAttribute("player", player);//we set the product into the product attribute
-            model.addAttribute("bodyContent", "add-football-player");//we set the edit-product.html into the bodyContent attribute
+            model.addAttribute("teams", teams);
+            model.addAttribute("player", player);
+            model.addAttribute("bodyContent", "add-football-player");
             return "edit_football_player";
         }
 
-        return "redirect:/players?error=PlayerNotFound"; //redirect to localhost:8080/products?error=ProductNotFound if the product is not found by its ID
+        return "redirect:/players?error=PlayerNotFound";
     }
     @PostMapping("/edit/{id}")
     public String editPlayer(@PathVariable("id") Long id,
@@ -129,7 +131,6 @@ public class FootballPlayerController {
     public String getPlayerDetails(@PathVariable Long id, Model model){
         FootballPlayer footballPlayer = footballPlayerService.findById(id);
         if (footballPlayer == null) {
-            // Handle the case where the player does not exist (e.g., return a 404 page or redirect to an error page)
             return "redirect:/players"; // Redirect to the list of players or another appropriate page
         }
         model.addAttribute("footballPlayer", footballPlayer);

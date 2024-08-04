@@ -42,6 +42,8 @@ public class FootballTeamController{
     if (team != null) {
         model.addAttribute("team", team);
         model.addAttribute("players", team.getPlayers());
+        List<FootballPlayer> top5Players=footballPlayerService.getTop5PlayersByTeam(id);
+        model.addAttribute("topPlayers",top5Players);
     } else {
         model.addAttribute("hasError", true);
         model.addAttribute("error", "Team not found");

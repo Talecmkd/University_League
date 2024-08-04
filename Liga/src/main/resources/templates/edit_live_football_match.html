@@ -1,41 +1,313 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <title>Add Football Player Scored</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h1>Add Football Player Scored</h1>-->
+<!--<form th:action="@{/matches/edit_live}" method="post">-->
+<!--    <label for="playerId">Player:</label>-->
+<!--    <select id="playerId" name="playerId">-->
+<!--        <option th:each="player : ${players}" th:value="${player.getFootball_player_id()}" th:text="${player.name}"></option>-->
+<!--    </select>-->
+
+<!--    <br/>-->
+
+<!--    <label for="timeScored">Time Scored:</label>-->
+<!--    <input type="datetime-local" id="timeScored" name="timeScored"/>-->
+<!--    <br/>-->
+
+<!--    <label for="goalsScored">Goals Scored:</label>-->
+<!--    <input type="number" id="goalsScored" name="goalsScored"/>-->
+<!--    <br/>-->
+
+<!--    <label for="assistsScored">Assists Scored:</label>-->
+<!--    <input type="number" id="assistsScored" name="assistsScored"/>-->
+<!--    <br/>-->
+
+<!--    <label for="saves">Saves:</label>-->
+<!--    <input type="number" id="saves" name="saves"/>-->
+<!--    <br/>-->
+
+<!--    <label for="footballMatchId">Match:</label>-->
+<!--    <select id="footballMatchId" name="footballMatchId">-->
+<!--        <option th:value="${match.getId()}" th:text="${match.getId()}"></option>-->
+<!--    </select>-->
+
+<!--    <br/>-->
+
+<!--    <button type="submit">Save</button>-->
+<!--</form>-->
+<!--</body>-->
+<!--</html>-->
+
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <title>Add Football Player Scored</title>-->
+<!--    <script>-->
+<!--        function loadPlayers() {-->
+<!--            const teamId = document.getElementById("teamId").value;-->
+<!--            const playerSelect = document.getElementById("playerId");-->
+
+<!--            // Clear existing options-->
+<!--            playerSelect.innerHTML = '<option value="">Select Player</option>';-->
+
+<!--            if (teamId) {-->
+<!--                fetch(`/api/football/teams/${teamId}/players`)-->
+<!--                    .then(response => response.json())-->
+<!--                    .then(players => {-->
+<!--                        players.forEach(player => {-->
+<!--                            const option = document.createElement("option");-->
+<!--                            option.value = player.football_player_id;-->
+<!--                            option.text = player.name;-->
+<!--                            playerSelect.add(option);-->
+<!--                        });-->
+<!--                    })-->
+<!--                    .catch(error => console.error('Error loading players:', error));-->
+<!--            }-->
+<!--        }-->
+<!--    </script>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h1>Add Football Player Scored</h1>-->
+
+<!--&lt;!&ndash; Team Selection Form &ndash;&gt;-->
+<!--<form id="teamForm">-->
+<!--    <label for="teamId">Select Team:</label>-->
+<!--    <select id="teamId" name="teamId" onchange="loadPlayers()">-->
+<!--        <option value="">Select Team</option>-->
+<!--        <option th:each="team : ${teams}" th:value="${team.getId()}" th:text="${team.getTeamName()}"></option>-->
+<!--    </select>-->
+<!--</form>-->
+
+<!--&lt;!&ndash; Player and Match Details Form &ndash;&gt;-->
+<!--<form th:action="@{/matches/edit_live}" method="post">-->
+<!--    <div id="playerForm" style="display:none;">-->
+<!--        <label for="playerId">Player:</label>-->
+<!--        <select id="playerId" name="playerId">&ndash;&gt;-->
+<!--                    <option th:each="player : ${players}" th:value="${player.getFootball_player_id()}" th:text="${player.name}"></option>-->
+<!--                </select>-->
+<!--        <br/>-->
+
+<!--        <label for="timeScored">Time Scored:</label>-->
+<!--        <input type="datetime-local" id="timeScored" name="timeScored"/>-->
+<!--        <br/>-->
+
+<!--        <label for="goalsScored">Goals Scored:</label>-->
+<!--        <input type="number" id="goalsScored" name="goalsScored"/>-->
+<!--        <br/>-->
+
+<!--        <label for="assistsScored">Assists Scored:</label>-->
+<!--        <input type="number" id="assistsScored" name="assistsScored"/>-->
+<!--        <br/>-->
+
+<!--        <label for="saves">Saves:</label>-->
+<!--        <input type="number" id="saves" name="saves"/>-->
+<!--        <br/>-->
+
+<!--        <label for="footballMatchId">Match:</label>-->
+<!--        <select id="footballMatchId" name="footballMatchId">-->
+<!--            <option th:value="${match.getId()}" th:text="${match.getId()}"></option>-->
+<!--        </select>-->
+<!--        <br/>-->
+
+<!--        <button type="submit">Save</button>-->
+<!--    </div>-->
+<!--</form>-->
+
+<!--<script>-->
+<!--    // Show the player form once the team is selected-->
+<!--    document.getElementById("teamId").addEventListener("change", function() {-->
+<!--        const playerForm = document.getElementById("playerForm");-->
+<!--        if (this.value) {-->
+<!--            playerForm.style.display = "block";-->
+<!--        } else {-->
+<!--            playerForm.style.display = "none";-->
+<!--        }-->
+<!--    });-->
+<!--</script>-->
+
+<!--</body>-->
+<!--</html>-->
+
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <title>Add Football Player Scored</title>-->
+<!--    <script>-->
+<!--        function loadPlayers() {-->
+<!--            const teamId = document.getElementById("teamId").value;-->
+<!--            const playerSelect = document.getElementById("playerId");-->
+<!--            const playerForm = document.getElementById("playerForm");-->
+
+<!--            // Clear existing options-->
+<!--            playerSelect.innerHTML = '<option value="">Select Player</option>';-->
+
+<!--            if (teamId) {-->
+<!--                fetch(`/api/football/teams/${teamId}/players`)-->
+<!--                    .then(response => response.json())-->
+<!--                    .then(players => {-->
+<!--                        players.forEach(player => {-->
+<!--                            const option = document.createElement("option");-->
+<!--                            option.value = player.football_player_id;-->
+<!--                            option.text = player.name;-->
+<!--                            playerSelect.add(option);-->
+<!--                        });-->
+<!--                        playerForm.style.display = "block";  // Show the form when players are loaded-->
+<!--                    })-->
+<!--                    .catch(error => console.error('Error loading players:', error));-->
+<!--            } else {-->
+<!--                playerForm.style.display = "none";  // Hide the form if no team is selected-->
+<!--            }-->
+<!--        }-->
+
+<!--        // Event listener to load players and show the form when team is selected-->
+<!--        document.addEventListener("DOMContentLoaded", function() {-->
+<!--            document.getElementById("teamId").addEventListener("change", loadPlayers);-->
+<!--        });-->
+<!--    </script>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h1>Add Football Player Scored</h1>-->
+
+<!--&lt;!&ndash; Team Selection Form &ndash;&gt;-->
+<!--<form id="teamForm">-->
+<!--    <label for="teamId">Select Team:</label>-->
+<!--    <select id="teamId" name="teamId">-->
+<!--        <option value="">Select Team</option>-->
+<!--        <option th:each="team : ${teams}" th:value="${team.getId()}" th:text="${team.getTeamName()}"></option>-->
+<!--    </select>-->
+<!--</form>-->
+
+<!--&lt;!&ndash; Player and Match Details Form &ndash;&gt;-->
+<!--<form th:action="@{/matches/edit_live}" method="post">-->
+<!--    <div id="playerForm" style="display:none;">-->
+<!--        <label for="playerId">Player:</label>-->
+<!--        <select id="playerId" name="playerId">-->
+<!--            &lt;!&ndash; Player options will be populated by JavaScript &ndash;&gt;-->
+<!--        </select>-->
+<!--        <br/>-->
+
+<!--        <label for="timeScored">Time Scored:</label>-->
+<!--        <input type="datetime-local" id="timeScored" name="timeScored"/>-->
+<!--        <br/>-->
+
+<!--        <label for="goalsScored">Goals Scored:</label>-->
+<!--        <input type="number" id="goalsScored" name="goalsScored" min="0"/>-->
+<!--        <br/>-->
+
+<!--        <label for="assistsScored">Assists Scored:</label>-->
+<!--        <input type="number" id="assistsScored" name="assistsScored" min="0"/>-->
+<!--        <br/>-->
+
+<!--        <label for="saves">Saves:</label>-->
+<!--        <input type="number" id="saves" name="saves" min="0"/>-->
+<!--        <br/>-->
+
+<!--        <label for="footballMatchId">Match:</label>-->
+<!--        <select id="footballMatchId" name="footballMatchId">-->
+<!--            <option th:each="match : ${matches}" th:value="${match.getId()}" th:text="${match.getId()}"></option>-->
+<!--        </select>-->
+<!--        <br/>-->
+
+<!--        <button type="submit">Save</button>-->
+<!--    </div>-->
+<!--</form>-->
+
+<!--</body>-->
+<!--</html>-->
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Add Football Player Scored</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const teamSelect = document.getElementById("teamId");
+            const playerSelect = document.getElementById("playerId");
+            const playerForm = document.getElementById("playerForm");
+
+            const players = document.querySelectorAll(".player-option");
+
+            function updatePlayerOptions() {
+                const selectedTeamId = teamSelect.value;
+                playerSelect.innerHTML = '<option value="">Select Player</option>'; // Reset options
+
+                players.forEach(player => {
+                    if (player.getAttribute("teamId") === selectedTeamId || selectedTeamId === "") {
+                        const option = document.createElement("option");
+                        option.value = player.getAttribute("");
+                        option.text = player.textContent;
+                        playerSelect.add(option);
+                    }
+                });
+
+                playerForm.style.display = selectedTeamId ? "block" : "none";
+            }
+
+            teamSelect.addEventListener("change", updatePlayerOptions);
+        });
+    </script>
 </head>
 <body>
 <h1>Add Football Player Scored</h1>
-<form th:action="@{/matches/add_live}" method="post">
-    <label for="player">Player:</label>
-    <select id="player" name="player">
-        <option th:each="player : ${players}" th:value="${player.getFootball_player_id()}" th:text="${player.name}"></option>
+
+<!-- Team Selection Form -->
+<form id="teamForm">
+    <label for="teamId">Select Team:</label>
+    <select id="teamId" name="teamId">
+        <option value="">Select Team</option>
+        <option th:each="team : ${teams}" th:value="${team.getId()}" th:text="${team.getTeamName()}"></option>
     </select>
-    <br/>
-
-    <label for="timeScored">Time Scored:</label>
-    <input type="datetime-local" id="timeScored" name="timeScored"/>
-    <br/>
-
-    <label for="goalsScored">Goals Scored:</label>
-    <input type="number" id="goalsScored" name="goalsScored"/>
-    <br/>
-
-    <label for="assistsScored">Assists Scored:</label>
-    <input type="number" id="assistsScored" name="assistsScored"/>
-    <br/>
-
-    <label for="saves">Saves:</label>
-    <input type="number" id="saves" name="saves"/>
-    <br/>
-
-    <label for="footballMatchId">Match:</label>
-    <select id="footballMatchId" name="footballMatchId">
-        <option th:value="${match.getId()}" th:text="${match.getId()}"></option>
-    </select>
-
-    <br/>
-
-    <button type="submit">Save</button>
 </form>
+
+<!-- Hidden Player Options -->
+<div id="playersData" style="display:none;">
+    <!-- Players from home team -->
+    <div th:each="player : ${playersHome}">
+        <span class="player-option" th:data-team-id="${match.homeTeam.getId()}" th:data-player-id="${player.getFootball_player_id()}" th:text="${player.name}"></span>
+    </div>
+    <!-- Players from away team -->
+    <div th:each="player : ${playersAway}">
+        <span class="player-option" th:data-team-id="${match.awayTeam.getId()}" th:data-player-id="${player.getFootball_player_id()}" th:text="${player.name}"></span>
+    </div>
+</div>
+
+<!-- Player and Match Details Form -->
+<form th:action="@{/matches/edit_live}" method="post">
+    <div id="playerForm" style="display:none;">
+        <label for="playerId">Player:</label>
+        <select id="playerId" name="playerId">
+            <!-- Player options will be populated by JavaScript -->
+        </select>
+        <br/>
+
+        <label for="timeScored">Time Scored:</label>
+        <input type="datetime-local" id="timeScored" name="timeScored"/>
+        <br/>
+
+        <label for="goalsScored">Goals Scored:</label>
+        <input type="number" id="goalsScored" name="goalsScored"/>
+        <br/>
+
+        <label for="assistsScored">Assists Scored:</label>
+        <input type="number" id="assistsScored" name="assistsScored"/>
+        <br/>
+
+        <label for="saves">Saves:</label>
+        <input type="number" id="saves" name="saves"/>
+        <br/>
+
+        <label for="footballMatchId">Match:</label>
+        <select id="footballMatchId" name="footballMatchId">
+            <option th:value="${match.id}" th:text="${match.id}"></option>
+        </select>
+        <br/>
+
+        <button type="submit">Save</button>
+    </div>
+</form>
+
 </body>
 </html>

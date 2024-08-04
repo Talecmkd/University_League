@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.awt.*;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -95,4 +96,29 @@ public class FootballPlayerServiceImpl implements FootballPlayerService {
     public List<FootballPlayer> getPlayersByIds(List<Long> ids) {
         return footballPlayerRepository.findAllById(ids);
     }
+
+    @Override
+    public List<FootballPlayer> getTop5Players(){
+        return this.footballPlayerRepository.findAll()
+                .stream().sorted((p1,p2)->{
+                    int score1 = p1.getGoals()*2 + p1.getAssists();
+                    int score2 = p2.getGoals()*2 + p2.getAssists();
+                    return Integer.compare(score2,score1);
+                })
+                .limit(5)
+                .collect(Collectors.toList());
+    }
+    @Override
+    public List<FootballPlayer> getTop5PlayersByTeam(Long teamId) {
+        return this.footballPlayerRepository.findByTeamId(teamId)
+                .stream()
+                .sorted((p1, p2) -> {
+                    int score1 = p1.getGoals() * 2 + p1.getAssists();
+                    int score2 = p2.getGoals() * 2 + p2.getAssists();
+                    return Integer.compare(score2, score1); // Descending order
+                })
+                .limit(5)
+                .collect(Collectors.toList());
+    }
+
 }

@@ -53,6 +53,25 @@ public class FootballPlayerScoredServiceImpl implements FootballPlayerScoredServ
         footballPlayerScoredRepository.delete(playerScored);
         return playerScored;
     }
+    @Override
+    public FootballPlayerScored save(FootballPlayerScored player){
+        return footballPlayerScoredRepository.save(player);
+    }
+    @Override
+    public FootballPlayerScored findByPlayerAndMatch(FootballPlayer player, FootballMatch match){
+        return footballPlayerScoredRepository.findFootballPlayerScoredByPlayerAndFootballMatch(player,match);
+    }
 
+//    public FootballPlayerScored addPlayerScore(Long matchId, FootballPlayerScored playerScored) {
+//        Optional<FootballMatch> matchOptional = footballMatchRepository.findById(matchId);
+//        if (matchOptional.isPresent()) {
+//            FootballMatch match = matchOptional.get();
+//            playerScored.setFootballMatch(match);
+//            match.getPlayersWhoScored().add(playerScored);
+//            footballMatchRepository.save(match);
+//            return playerScored;
+//        }
+//        return null;
+//    }
 
 }

@@ -29,6 +29,7 @@ public interface FootballPlayerService {
     FootballPlayer addSaves(Long Id, int savesToAdd);
 
     List<FootballPlayer> getPlayersByIds(List<Long> ids);
-
+    List<FootballPlayer> getTop5Players();
+    List<FootballPlayer> getTop5PlayersByTeam(Long teamId);
 
 }

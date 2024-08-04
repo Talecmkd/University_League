@@ -51,5 +51,8 @@ public class FootballPlayer {
     public FootballPlayer() {
 
     }
+    public int getPoints(){
+        return goals*2 + assists;
+    }
 
 }
