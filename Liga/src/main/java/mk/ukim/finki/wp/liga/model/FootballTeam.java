@@ -18,14 +18,14 @@ public class FootballTeam {
     private String teamName;
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<FootballPlayer> players;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "football_team_fixtures",
             joinColumns = @JoinColumn(name = "football_team_id"),
             inverseJoinColumns = @JoinColumn(name = "football_match_id")
     )
     private List<FootballMatch> footballFixtures;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "football_team_results",
             joinColumns = @JoinColumn(name = "football_team_id"),

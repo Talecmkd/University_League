@@ -24,4 +24,7 @@ public interface FootballMatchService {
 
     void updateTeamStatistics(FootballMatch match);
 
+    FootballMatch createAndAddToFixtures(FootballTeam homeTeam, FootballTeam awayTeam, int homeTeamPoints, int awayTeamPoints, LocalDateTime startTime);
+
+
 }

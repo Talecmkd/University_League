@@ -88,7 +88,7 @@ public class FootballMatchController {
         FootballTeam homeTeam = footballTeamService.findById(homeTeamId);
         FootballTeam awayTeam = footballTeamService.findById(awayTeamId);
 
-        footballMatchService.create(homeTeam, awayTeam, homeTeamPoints, awayTeamPoints, start);
+        footballMatchService.createAndAddToFixtures(homeTeam, awayTeam, homeTeamPoints, awayTeamPoints, start);
         return "redirect:/matches";
     }
 

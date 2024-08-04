@@ -6,6 +6,7 @@ import mk.ukim.finki.wp.liga.service.football.FootballMatchService;
 import mk.ukim.finki.wp.liga.service.football.FootballPlayerService;
 import mk.ukim.finki.wp.liga.service.football.FootballTeamService;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -24,6 +25,7 @@ public class DataInitializer {
 
 
     @PostConstruct
+    @Transactional
     public void initData() {
         for (int i = 1; i <= 5; i++) {
             this.footballTeamService.create("Team " + i, null, null);
@@ -38,7 +40,7 @@ public class DataInitializer {
 
             // Assuming the teams exist and service methods are correctly implemented
             if (home != null && away != null) {
-                this.footballMatchService.create(home, away, 0, 0, LocalDateTime.now());
+                this.footballMatchService.createAndAddToFixtures(home, away, 0, 0, LocalDateTime.now());
             }
         }
     }

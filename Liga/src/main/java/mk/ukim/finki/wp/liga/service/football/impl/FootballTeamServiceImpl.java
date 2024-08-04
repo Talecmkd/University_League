@@ -10,6 +10,7 @@ import mk.ukim.finki.wp.liga.repository.football.FootballPlayerRepository;
 import mk.ukim.finki.wp.liga.repository.football.FootballTeamRepository;
 import mk.ukim.finki.wp.liga.service.football.FootballTeamService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.awt.*;
 import java.util.List;
@@ -22,20 +23,25 @@ public class FootballTeamServiceImpl implements FootballTeamService {
     private final FootballMatchRepository footballMatchRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<FootballTeam> listAllTeams() {
         return footballTeamRepository.findAll();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public FootballTeam findById(Long id) {
         return footballTeamRepository.findById(id).orElseThrow(InvalidFootballTeamException::new);
     }
     @Override
+    @Transactional
     public FootballTeam create(String teamName, List<FootballPlayer> players, byte [] logo) {
         FootballTeam team = new FootballTeam(teamName,players, logo);
         return footballTeamRepository.save(team);
     }
 
+    @Override
+    @Transactional
     public FootballTeam update(Long id, String teamName, List<FootballPlayer> players, byte [] logo) {
         FootballTeam team = footballTeamRepository.findById(id).orElseThrow(InvalidFootballTeamException::new);
         team.setTeamName(teamName);
@@ -45,6 +51,7 @@ public class FootballTeamServiceImpl implements FootballTeamService {
     }
 
     @Override
+    @Transactional
     public FootballTeam delete(Long id) {
         FootballTeam team = footballTeamRepository.findById(id).orElseThrow(InvalidFootballTeamException::new);
         footballTeamRepository.delete(team);
@@ -52,6 +59,7 @@ public class FootballTeamServiceImpl implements FootballTeamService {
     }
 
     @Override
+    @Transactional
     public FootballTeam addFixtures(Long id, List<FootballMatch> fixtures) {
         FootballTeam team = footballTeamRepository.findById(id).orElseThrow(InvalidFootballTeamException::new);
 
@@ -60,6 +68,7 @@ public class FootballTeamServiceImpl implements FootballTeamService {
     }
 
     @Override
+    @Transactional
    public FootballTeam updateStats(Long id) {
         FootballTeam team = footballTeamRepository.findById(id).orElseThrow(InvalidFootballTeamException::new);
         int wins = 0;
@@ -95,17 +104,20 @@ public class FootballTeamServiceImpl implements FootballTeamService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public FootballTeam findByName(String teamName) {
         return footballTeamRepository.findFootballTeamByTeamName(teamName).get(0);
     }
 
     @Override
+    @Transactional
     public FootballTeam saveTable(Long id, int teamPoints) {
         FootballTeam ft = footballTeamRepository.findById(id).orElseThrow(InvalidFootballTeamException::new);
         ft.setTeamLeaguePoints(teamPoints);
         return footballTeamRepository.save(ft);
     }
     @Override
+    @Transactional
     public List<FootballTeam> findAllOrderByPointsDesc() {
         return footballTeamRepository.findAllByOrderByTeamLeaguePointsDesc();
     }
