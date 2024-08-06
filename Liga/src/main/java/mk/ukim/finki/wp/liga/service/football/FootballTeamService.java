@@ -15,7 +15,7 @@ public interface FootballTeamService {
     FootballTeam findById(Long id);
 
 
-    FootballTeam create(String teamName, List<FootballPlayer> players, byte [] logo);
+    FootballTeam create(String teamName, byte [] logo);
 
 
     FootballTeam update(Long id, String teamName, List<FootballPlayer> players, byte [] logo);

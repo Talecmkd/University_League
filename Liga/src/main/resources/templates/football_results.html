@@ -23,6 +23,9 @@
             <td th:text="${match.awayTeam.teamName}"></td>
             <td th:text="${match.homeTeamPoints} + ' - ' + ${match.awayTeamPoints}"></td>
             <td th:text="${#temporals.format(match.endTime, 'dd-MM-yyyy HH:mm')}"></td>
+            <td>
+                <a th:href="@{/matches/results/details/{id}(id=${match.id})}" class="btn btn-info btn-sm">Details</a>
+            </td>
         </tr>
         </tbody>
     </table>

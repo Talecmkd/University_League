@@ -41,10 +41,7 @@
         <table class="table table-bordered table-hover">
             <thead class="thead-dark">
             <tr>
-                <th>Home Team</th>
-                <th>Away Team</th>
-                <th>Home Team Points</th>
-                <th>Away Team Points</th>
+                <th>Match</th>
                 <th>Start Time</th>
                 <th>End Time</th>
                 <th>Actions</th>
@@ -52,13 +49,11 @@
             </thead>
             <tbody>
             <tr th:each="match : ${footballMatches}">
-                <td th:text="${match.homeTeam.teamName}">Home Team Name</td>
-                <td th:text="${match.awayTeam.teamName}">Away Team Name</td>
-                <td th:text="${match.homeTeamPoints}">Home Team Points</td>
-                <td th:text="${match.awayTeamPoints}">Away Team Points</td>
+                <td th:text="${match.homeTeam.teamName} + ' vs ' + ${match.awayTeam.teamName}">Match Description</td>
                 <td th:text="${#temporals.format(match.startTime, 'dd-MM-yyyy HH:mm')}">Start Time</td>
                 <td th:text="${#temporals.format(match.endTime, 'dd-MM-yyyy HH:mm')}">End Time</td>
                 <td>
+                    <a th:href="@{/matches/details/{id}(id=${match.id})}" class="btn btn-info btn-sm">Details</a>
                     <a th:href="@{/matches/edit-form/{id}(id=${match.id})}" class="btn btn-warning btn-sm">Edit</a>
                     <form th:method="POST" th:action="@{'/matches/delete/{id}'(id=${match.id})}" style="display:inline;">
                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>

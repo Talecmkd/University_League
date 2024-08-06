@@ -76,6 +76,7 @@
     <div class="form-group">
         <label>Team</label>
         <select name="team" class="form-control">
+            <option value=""></option>
             <option th:if="${player} != null"
                     th:selected="${player.getTeam() != null &&
                                 player.getTeam().getId() == team.getId()}"

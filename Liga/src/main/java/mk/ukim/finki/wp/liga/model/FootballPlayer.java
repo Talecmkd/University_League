@@ -1,5 +1,8 @@
 package mk.ukim.finki.wp.liga.model;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,6 +29,7 @@ public class FootballPlayer {
     private String city;
     private String position;
     @ManyToOne
+    @JsonIgnore
     private FootballTeam team;
     private int appearances;
     private int goals;

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Playoff Bracket</title>
+    <style>
+        .bracket {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .stage {
+            margin: 20px;
+        }
+        .match {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+        .team {
+            padding: 5px;
+        }
+    </style>
+    <script>
+        function createPlayoff() {
+            fetch('/playoffs/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+                .then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        console.error('Error creating playoff:', response);
+                    }
+                })
+                .catch(error => console.error('Error creating playoff:', error));
+        }
+
+        function updateScore(matchId) {
+            const homeTeamPoints = prompt("Enter home team points:");
+            const awayTeamPoints = prompt("Enter away team points:");
+
+            fetch(`/playoffs/match/${matchId}/complete`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ homeTeamPoints, awayTeamPoints })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        console.error('Error updating score:', response);
+                    }
+                })
+                .catch(error => console.error('Error updating score:', error));
+        }
+    </script>
+</head>
+<body>
+<h1>Playoff Bracket</h1>
+<button onclick="createPlayoff()">Create Bracket</button>
+<div th:if="${playoff}" class="bracket">
+    <div th:if="${playoff.stages}" class="stage" th:each="stage : ${playoff.stages}">
+        <h2>Stage [[${stage.stageNumber}]]</h2>
+        <div class="match" th:each="match : ${stage.matches}">
+            <div class="team">[[${match.homeTeam.teamName}]]</div>
+            <div class="team">vs</div>
+            <div class="team">[[${match.awayTeam.teamName}]]</div>
+            <span th:if="${match.isCompleted}">
+                - [[${match.homeTeamPoints}]] : [[${match.awayTeamPoints}]]
+            </span>
+            <button th:if="${!match.isCompleted}" onclick="updateScore([[${match.id}]])">Update Score</button>
+        </div>
+    </div>
+</div>
+<div th:if="${!playoff}">
+    <p>No playoff created yet.</p>
+</div>
+</body>
+</html>

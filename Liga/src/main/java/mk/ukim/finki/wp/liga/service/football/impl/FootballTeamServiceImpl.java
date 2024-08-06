@@ -35,8 +35,8 @@ public class FootballTeamServiceImpl implements FootballTeamService {
     }
     @Override
     @Transactional
-    public FootballTeam create(String teamName, List<FootballPlayer> players, byte [] logo) {
-        FootballTeam team = new FootballTeam(teamName,players, logo);
+    public FootballTeam create(String teamName, byte [] logo) {
+        FootballTeam team = new FootballTeam(teamName, logo);
         return footballTeamRepository.save(team);
     }
 
@@ -55,6 +55,8 @@ public class FootballTeamServiceImpl implements FootballTeamService {
     public FootballTeam delete(Long id) {
         FootballTeam team = footballTeamRepository.findById(id).orElseThrow(InvalidFootballTeamException::new);
         footballTeamRepository.delete(team);
+        List<FootballMatch> matchesToDelete = footballMatchRepository.findAllByHomeTeamOrAwayTeam(team, team);
+        footballMatchRepository.deleteAll(matchesToDelete);
         return team;
     }
 

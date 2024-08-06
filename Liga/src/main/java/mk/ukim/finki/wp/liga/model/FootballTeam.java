@@ -1,5 +1,7 @@
 package mk.ukim.finki.wp.liga.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +18,8 @@ public class FootballTeam {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String teamName;
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<FootballPlayer> players;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -40,9 +43,9 @@ public class FootballTeam {
     private int teamDraws;
     private byte [] logo;
 
-    public FootballTeam(String teamName, List<FootballPlayer> players, byte [] logo) {
+    public FootballTeam(String teamName, byte [] logo) {
         this.teamName = teamName;
-        this.players = players;
+        this.players = new ArrayList<>();
         this.footballFixtures = new ArrayList<>();
         this.footballResults = new ArrayList<>();
         this.teamMatchesPlayed = 0;

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -95,13 +96,11 @@ public class FootballTeamController{
 
     @PostMapping("/add")
     public String addTeam(@RequestParam("teamName") String teamName,
-                          @RequestParam("players") List<Long> playerIds,
                           @RequestParam(value = "logo", required = false) MultipartFile playerImage) throws IOException {
-        // Convert player IDs to FootballPlayer objects
-        List<FootballPlayer> players = footballPlayerService.getPlayersByIds(playerIds);
         byte [] imageBytes=null;
+
         // Create the team
-        footballTeamService.create(teamName, players, null);
+        footballTeamService.create(teamName, null);
 
         // Redirect to the teams list page
         return "redirect:/teams";
@@ -117,6 +116,12 @@ public class FootballTeamController{
         model.addAttribute("fixtures", team.getFootballFixtures());
         model.addAttribute("results", team.getFootballResults());
         return "show_football_team_matches";
+    }
+
+    @PostMapping("/delete/{id}")
+    public String deleteTeam(@PathVariable Long id){
+        footballTeamService.delete(id);
+        return "redirect:/teams";
     }
 
 }

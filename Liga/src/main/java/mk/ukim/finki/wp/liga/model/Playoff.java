@@ -1,19 +1,20 @@
 package mk.ukim.finki.wp.liga.model;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
+@Entity
 public class Playoff {
-    private List<FootballMatch> playoffMatches;
-    private List<BasketballTeam> qualifiedTeams;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    public Playoff(List<FootballMatch> playoffMatches) {
-        this.playoffMatches = playoffMatches;
-        this.qualifiedTeams = new ArrayList<>();
-    }
+    @OneToMany(mappedBy = "playoff", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<PlayoffStage> stages;
+
 }

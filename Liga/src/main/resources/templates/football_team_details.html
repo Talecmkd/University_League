@@ -3,18 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team Players</title>
+    <title>Team Details</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 </head>
 <body>
 <div class="container mt-5">
-    <h1>Players List</h1>
+    <h1>Team Details</h1>
     <div th:if="${team != null}">
         <div class="card">
             <div class="card-header">
                 <h2 th:text="${team.teamName}">Team Name</h2>
             </div>
             <div class="card-body">
+                <h3>Team Statistics</h3>
+                <ul>
+                    <li>Matches Played: <span th:text="${team.teamMatchesPlayed}"></span></li>
+                    <li>League Points: <span th:text="${team.teamLeaguePoints}"></span></li>
+                    <li>Wins: <span th:text="${team.teamWins}"></span></li>
+                    <li>Losses: <span th:text="${team.teamLoses}"></span></li>
+                    <li>Draws: <span th:text="${team.teamDraws}"></span></li>
+                </ul>
                 <h3>Players</h3>
                 <ul>
                     <li th:each="player : ${players}">
@@ -24,6 +32,11 @@
             </div>
         </div>
     </div>
+
+    <!-- Fixtures/Results button -->
+    <a th:href="@{/teams/show/{id}(id=${team.id})}" class="btn btn-info mt-3">Fixtures/Results</a>
+    <a type="button" class="btn btn-secondary" href="/players/add-form">Add Player</a>
+
     <div th:if="${team == null}">
         <p>Team not found.</p>
     </div>
@@ -55,7 +68,7 @@
                 </tbody>
             </table>
         </div>
-        <a type="button" class="btn btn-secondary" href="/players/add-form">Add Player</a>
+
     </section>
 </div>
 </body>

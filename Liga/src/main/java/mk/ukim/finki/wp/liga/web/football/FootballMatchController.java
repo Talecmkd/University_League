@@ -1,10 +1,15 @@
 package mk.ukim.finki.wp.liga.web.football;
 
+import ch.qos.logback.core.encoder.JsonEscapeUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import lombok.AllArgsConstructor;
 import mk.ukim.finki.wp.liga.model.FootballMatch;
 import mk.ukim.finki.wp.liga.model.FootballPlayer;
 import mk.ukim.finki.wp.liga.model.FootballPlayerScored;
 import mk.ukim.finki.wp.liga.model.FootballTeam;
+import mk.ukim.finki.wp.liga.model.dtos.FootballPlayerDTO;
 import mk.ukim.finki.wp.liga.service.football.FootballMatchService;
 import mk.ukim.finki.wp.liga.service.football.FootballPlayerScoredService;
 import mk.ukim.finki.wp.liga.service.football.FootballPlayerService;
@@ -16,7 +21,9 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -34,6 +41,67 @@ public class FootballMatchController {
         List<FootballMatch> footballMatches = footballMatchService.listAllFootballMatches();
         model.addAttribute("footballMatches", footballMatches);
         return "football_matches";
+    }
+
+    @GetMapping("/details/{id}")
+    public String showMatchDetails(@PathVariable Long id, Model model) {
+        FootballMatch match = footballMatchService.findById(id);
+        match.setHomeTeam(footballTeamService.findById(match.getHomeTeam().getId()));
+        match.setAwayTeam(footballTeamService.findById(match.getAwayTeam().getId()));
+        model.addAttribute("match", match);
+        return "football_match_details";
+    }
+
+    @GetMapping("/results/details/{id}")
+    public String showMatchResultsDetails(@PathVariable Long id, Model model) {
+        FootballMatch match = footballMatchService.findById(id);
+        match.setHomeTeam(footballTeamService.findById(match.getHomeTeam().getId()));
+        match.setAwayTeam(footballTeamService.findById(match.getAwayTeam().getId()));
+        model.addAttribute("match", match);
+        return "football_match_results_details";
+    }
+
+    @GetMapping("/results/details/stats/{id}")
+    public String showMatchDetailsAndStats(@PathVariable Long id, Model model) {
+        FootballMatch match = footballMatchService.findById(id);
+        match.setHomeTeam(footballTeamService.findById(match.getHomeTeam().getId()));
+        match.setAwayTeam(footballTeamService.findById(match.getAwayTeam().getId()));
+        FootballTeam homeTeam = match.getHomeTeam();
+        FootballTeam awayTeam = match.getAwayTeam();
+
+        List<FootballPlayer> homePlayers = homeTeam.getPlayers();
+        List<FootballPlayer> awayPlayers = awayTeam.getPlayers();
+
+        int homeGoals = 0;
+        int homeSaves = 0;
+        int homeAssists = 0;
+
+        for(FootballPlayer player : homePlayers){
+            homeGoals += player.getGoals();
+            homeSaves += player.getSaves();
+            homeAssists += player.getAssists();
+        }
+
+        int awayGoals = 0;
+        int awaySaves = 0;
+        int awayAssists = 0;
+
+        for(FootballPlayer player : awayPlayers){
+            awayGoals += player.getGoals();
+            awaySaves += player.getSaves();
+            awayAssists += player.getAssists();
+        }
+
+        model.addAttribute("match", match);
+        model.addAttribute("homeTeam",homeTeam);
+        model.addAttribute("awayTeam",awayTeam);
+        model.addAttribute("homeGoals",homeGoals);
+        model.addAttribute("homeSaves",homeSaves);
+        model.addAttribute("homeAssists",homeAssists);
+        model.addAttribute("awayGoals",awayGoals);
+        model.addAttribute("awaySaves",awaySaves);
+        model.addAttribute("awayAssists",awayAssists);
+        return "football_match_details_stats";
     }
 
     @GetMapping("/fixtures")
@@ -103,17 +171,28 @@ public class FootballMatchController {
     }
 
     @GetMapping("/edit_live/{id}")
-    public String editLiveMatch(@PathVariable Long id, Model model) {
+    public String editLiveMatch(@PathVariable Long id, Model model) throws JsonProcessingException {
         FootballMatch match = footballMatchService.findById(id);
 
         List<FootballPlayer> players = match.getHomeTeam().getPlayers();
         players.addAll(match.getAwayTeam().getPlayers());
+        System.out.println(players);
+        List<FootballPlayerDTO> dtoPlayers= new ArrayList<>();
+        for (FootballPlayer player : players) {
+            FootballPlayerDTO dtoPlayer=new FootballPlayerDTO();
+            dtoPlayer.setFootball_player_id(player.getFootball_player_id());
+            dtoPlayer.setName(player.getName());
+            dtoPlayer.setSurname(player.getSurname());
+            dtoPlayer.setTeamId(player.getTeam().getId());
+            dtoPlayers.add(dtoPlayer);
+        }
         model.addAttribute("match", match);
         List<FootballTeam> teams = new ArrayList<>();
         teams.add(match.getHomeTeam());
         teams.add(match.getAwayTeam());
         model.addAttribute("teams", teams);
         model.addAttribute("players", players);
+        model.addAttribute("dtoPlayers",dtoPlayers);
         model.addAttribute("playersHome", match.getHomeTeam().getPlayers());
         model.addAttribute("playersAway", match.getAwayTeam().getPlayers());
 
@@ -192,3 +271,6 @@ public class FootballMatchController {
         return team.getPlayers();
     }
 }
+
+
+

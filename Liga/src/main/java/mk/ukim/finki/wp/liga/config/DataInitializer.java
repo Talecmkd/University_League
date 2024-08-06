@@ -27,14 +27,14 @@ public class DataInitializer {
     @PostConstruct
     @Transactional
     public void initData() {
-        for (int i = 1; i <= 5; i++) {
-            this.footballTeamService.create("Team " + i, null, null);
+        for (int i = 1; i <= 8; i++) {
+            this.footballTeamService.create("Team " + i,  null);
         }
 
-        for (int i = 1; i <= 5; i++) {
+        for (int i = 1; i <= 8; i++) {
             this.footballPlayerService.create(null, "Player " + i, "Surname"+i, null, i, null, null, this.footballTeamService.findById((long) i));
         }
-        for (int i = 1; i <= 5; i++) {
+        for (int i = 1; i <= 8; i++) {
             FootballTeam home = this.footballTeamService.findByName("Team " + i);
             FootballTeam away = this.footballTeamService.findByName("Team " + (i % 5 + 1)); // Rotate to the first team after the last one
 
