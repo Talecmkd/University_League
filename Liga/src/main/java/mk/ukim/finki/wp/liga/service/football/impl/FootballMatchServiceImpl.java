@@ -160,31 +160,59 @@ public class FootballMatchServiceImpl implements FootballMatchService {
         }
     }
     private boolean isMatchCompleted(FootballMatch match) {
-        return match.getHomeTeamPoints() > 0 && match.getAwayTeamPoints() > 0;
+        return match.getHomeTeamPoints() != match.getAwayTeamPoints();
     }
 
 
     @Override
     @Transactional
     public List<FootballMatch> createSemiFinalMatches() {
-        // Fetch all completed quarter-final matches
         List<FootballMatch> quarterFinals = matchRepository.findAllByIsPlayoffMatchTrue();
 
-        if (quarterFinals.size() != 4 || quarterFinals.stream().anyMatch(match -> !match.isPlayoffMatch())) {
+        // Ensure all quarter-final matches are completed
+        if (quarterFinals.size() != 4 || quarterFinals.stream().anyMatch(match -> !isMatchCompleted(match))) {
             throw new RuntimeException("Quarter-finals are not fully completed yet.");
         }
 
-        // Proceed with creating semi-finals based on the winners
+        // Determine the winners of the quarter-finals
         FootballTeam semiFinalTeam1 = getWinner(quarterFinals.get(0));
         FootballTeam semiFinalTeam2 = getWinner(quarterFinals.get(1));
         FootballTeam semiFinalTeam3 = getWinner(quarterFinals.get(2));
         FootballTeam semiFinalTeam4 = getWinner(quarterFinals.get(3));
 
+        // Create semi-final matches
         List<FootballMatch> semiFinals = new ArrayList<>();
-        semiFinals.add(createMatch(semiFinalTeam1, semiFinalTeam4, true)); // Semi-final 1
-        semiFinals.add(createMatch(semiFinalTeam2, semiFinalTeam3, true)); // Semi-final 2
+        semiFinals.add(createMatch(semiFinalTeam1, semiFinalTeam4, true));
+        semiFinals.add(createMatch(semiFinalTeam2, semiFinalTeam3, true));
 
         return semiFinals;
     }
+    @Override
+    @Transactional
+    public List<FootballMatch> createFinalMatch()
+    {
+        List<FootballMatch> semiFinals = matchRepository.findAllByIsPlayoffMatchTrue();
 
+        // Ensure all quarter-final matches are completed
+        if (semiFinals.size() < 6) {
+            throw new RuntimeException("There are not enough matches to have semi-finals and finals.");
+        }
+        FootballMatch semiFinal1 = semiFinals.get(semiFinals.size() - 2);
+        FootballMatch semiFinal2 = semiFinals.get(semiFinals.size() - 1);
+
+        // Ensure both semi-final matches are completed
+        if (!isMatchCompleted(semiFinal1) || !isMatchCompleted(semiFinal2)) {
+            throw new RuntimeException("Semi-finals are not fully completed yet.");
+        }
+
+        // Determine the winners of the quarter-finals
+        FootballTeam finalist1 = getWinner(semiFinal1);
+        FootballTeam finalist2 = getWinner(semiFinal2);
+
+        // Create the final match
+        List<FootballMatch> finals = new ArrayList<>();
+        finals.add(createMatch(finalist1, finalist2, true));
+
+        return finals;
+    }
 }

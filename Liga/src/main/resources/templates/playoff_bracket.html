@@ -1,31 +1,133 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Playoff Matches</title>
+    <title>Playoff Bracket</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .bracket {
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        .round {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .match {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .team {
+            padding: 10px;
+            background-color: #f4f4f4;
+            margin: 5px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            width: 150px;
+        }
+
+        .team.winner {
+            font-weight: bold;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+
+        .round-header {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .quarter-finals {
+            color: #3498db;
+        }
+
+        .semi-finals {
+            color: #e67e22;
+        }
+
+        .finals {
+            color: #e74c3c;
+        }
+
+        .score {
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .actions {
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
-<h1>Playoff Matches</h1>
-<table>
-    <thead>
-    <tr>
-        <th>Home Team</th>
-        <th>Home Score</th>
-        <th>Away Score</th>
-        <th>Away Team</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="match : ${matches}">
-        <td th:text="${match.homeTeam.teamName}"></td>
-        <td th:text="${match.homeTeamPoints}"></td>
-        <td th:text="${match.awayTeamPoints}"></td>
-        <td th:text="${match.awayTeam.teamName}"></td>
-        <td>
-            <a th:href="@{/matches/playoffs/edit/{id}(id=${match.id})}">Edit</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<h1>Playoff Bracket</h1>
+<div class="bracket">
+    <!-- Quarter-Finals -->
+    <div class="round quarter-finals">
+        <div class="round-header">Quarter-Finals</div>
+        <div class="match" th:each="match, iterStat : ${matches}" th:if="${iterStat.index < 4}">
+            <div class="team">
+                <span th:text="${match.homeTeam.teamName}"></span>
+                <span class="score" th:text="${match.homeTeamPoints}"></span>
+            </div>
+            <div class="team">
+                <span th:text="${match.awayTeam.teamName}"></span>
+                <span class="score" th:text="${match.awayTeamPoints}"></span>
+            </div>
+            <div class="actions">
+                <a th:href="@{/matches/playoffs/edit/{id}(id=${match.football_match_id})}">Edit</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Semi-Finals -->
+    <div class="round semi-finals">
+        <div class="round-header">Semi-Finals</div>
+        <div class="match" th:each="match, iterStat : ${matches}" th:if="${iterStat.index >= 4 && iterStat.index < 6}">
+            <div class="team">
+                <span th:text="${match.homeTeam.teamName}"></span>
+                <span class="score" th:text="${match.homeTeamPoints}"></span>
+            </div>
+            <div class="team">
+                <span th:text="${match.awayTeam.teamName}"></span>
+                <span class="score" th:text="${match.awayTeamPoints}"></span>
+            </div>
+            <div class="actions">
+                <a th:href="@{/matches/playoffs/edit/{id}(id=${match.football_match_id})}">Edit</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Finals -->
+    <div class="round finals">
+        <div class="round-header">Final</div>
+        <div class="match" th:each="match, iterStat : ${matches}" th:if="${iterStat.index >= 6}">
+            <div class="team">
+                <span th:text="${match.homeTeam.teamName}"></span>
+                <span class="score" th:text="${match.homeTeamPoints}"></span>
+            </div>
+            <div class="team">
+                <span th:text="${match.awayTeam.teamName}"></span>
+                <span class="score" th:text="${match.awayTeamPoints}"></span>
+            </div>
+            <div class="actions">
+                <a th:href="@{/matches/playoffs/edit/{id}(id=${match.football_match_id})}">Edit</a>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

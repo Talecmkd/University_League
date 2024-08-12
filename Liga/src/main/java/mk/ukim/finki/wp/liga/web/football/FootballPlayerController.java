@@ -73,7 +73,12 @@ public class FootballPlayerController {
                 e.printStackTrace();
                 throw new RuntimeException("Failed to read the image file", e);
             }
-        }        FootballTeam team1=this.footballTeamService.findById(team);
+        }
+        FootballTeam team1;
+        if(team !=null)
+             team1=this.footballTeamService.findById(team);
+        else
+            team1=null;
         Date birthDate = Date.from(playerBirthDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
         this.footballPlayerService.create(imageBytes,playerName,playerSurname,
                 birthDate,playerIndex,playerCity,playerPosition,team1);
@@ -154,7 +159,7 @@ public class FootballPlayerController {
     @PostMapping("/delete/{id}")
     public String deletePlayer(@PathVariable Long id){
         footballPlayerService.delete(id);
-        return "redirect:/players";
+         return "redirect:/players";
     }
 
 

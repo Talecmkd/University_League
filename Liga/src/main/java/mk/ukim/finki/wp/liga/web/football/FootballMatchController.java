@@ -304,6 +304,16 @@ public class FootballMatchController {
 
         return "redirect:/matches/playoffs";
     }
+    @GetMapping("/playoffs/semi-finals_Init")
+    public String initializeSemiFinalMatches() {
+        footballMatchService.createSemiFinalMatches();
+        return "redirect:/matches/playoffs"; // Redirect to view the updated playoff bracket
+    }
+    @GetMapping("/playoffs/finals_Init")
+    public String initializeFinalMatches() {
+        footballMatchService.createFinalMatch();
+        return "redirect:/matches/playoffs"; // Redirect to view the updated playoff bracket
+    }
 }
 
 

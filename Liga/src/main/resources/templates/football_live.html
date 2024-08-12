@@ -22,7 +22,7 @@
             <td th:text="${match.awayTeam.teamName}"></td>
             <td th:text="${match.homeTeamPoints} + ' - ' + ${match.awayTeamPoints}"></td>
             <td>
-                <a th:href="@{/matches/edit_live/{id}(id=${match.id})}" class="btn btn-warning">Edit Live Match</a>
+                <a th:href="@{/matches/edit_live/{id}(id=${match.football_match_id})}" class="btn btn-warning">Edit Live Match</a>
             </td>
         </tr>
         </tbody>
