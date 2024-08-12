@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface FootballMatchRepository extends JpaRepository<FootballMatch, Long> {
 List<FootballMatch> findAllByHomeTeamOrAwayTeam(FootballTeam homeTeam, FootballTeam awayTeam);
+    List<FootballMatch> findAllByIsPlayoffMatchTrue();
+    void deleteAllByIsPlayoffMatchTrue();
 }

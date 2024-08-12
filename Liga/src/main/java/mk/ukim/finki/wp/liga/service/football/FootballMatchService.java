@@ -25,6 +25,10 @@ public interface FootballMatchService {
     void updateTeamStatistics(FootballMatch match);
 
     FootballMatch createAndAddToFixtures(FootballTeam homeTeam, FootballTeam awayTeam, int homeTeamPoints, int awayTeamPoints, LocalDateTime startTime);
+    List<FootballMatch> createPlayoffMatches();
+    List<FootballMatch> listPlayoffMatches();
+    FootballMatch updatePlayoffMatchPoints(Long id,FootballTeam homeTeam, FootballTeam awayTeam, int homeTeamPoints, int awayTeamPoints);
+    List<FootballMatch> createSemiFinalMatches();
 
 
 }

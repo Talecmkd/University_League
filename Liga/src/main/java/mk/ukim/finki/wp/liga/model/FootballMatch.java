@@ -31,9 +31,11 @@ public class FootballMatch {
     private List<FootballTeam> playedMatches;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+    @Column(name = "is_playoff_match")
+    private boolean isPlayoffMatch;
 
     public FootballMatch(FootballTeam homeTeam, FootballTeam awayTeam, int homeTeamPoints,
-                         int awayTeamPoints, LocalDateTime startTime) {
+                         int awayTeamPoints, LocalDateTime startTime, boolean isPlayoffMatch) {
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
         this.homeTeamPoints = homeTeamPoints;
@@ -41,6 +43,7 @@ public class FootballMatch {
         this.playersWhoScored = new ArrayList<>();
         this.startTime = startTime;
         this.endTime = startTime.plusHours(2);
+        this.isPlayoffMatch = isPlayoffMatch;
     }
 
     public FootballMatch() {

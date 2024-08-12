@@ -270,6 +270,40 @@ public class FootballMatchController {
         FootballTeam team = footballTeamService.findById(teamId);
         return team.getPlayers();
     }
+    @GetMapping("/playoffs/init")
+    public String initializePlayoffMatches() {
+        footballMatchService.createPlayoffMatches();
+        return "redirect:/matches/playoffs"; // Redirect to the list of playoff matches
+    }
+
+    @GetMapping("/playoffs")
+    public String getPlayoffMatches(Model model) {
+        List<FootballMatch> matches = footballMatchService.listPlayoffMatches();
+        model.addAttribute("matches", matches);
+        return "playoff_bracket"; // The name of your Thymeleaf template for the playoff view
+    }
+
+    @GetMapping("/playoffs/edit/{id}")
+    public String editPlayoffMatch(@PathVariable Long id, Model model) {
+        FootballMatch match = footballMatchService.findById(id);
+        List<FootballTeam> teams = footballTeamService.listAllTeams();
+        model.addAttribute("match", match);
+        model.addAttribute("teams", teams);
+        return "edit_playoff_match";
+    }
+    @PostMapping("/playoffs/edit")
+    public String updatePlayoffMatchPoints(
+            @RequestParam Long id,
+            @RequestParam Long homeTeamId,
+            @RequestParam Long awayTeamId,
+            @RequestParam int homeTeamPoints,
+            @RequestParam int awayTeamPoints) {
+        FootballTeam homeTeam = footballTeamService.findById(homeTeamId);
+        FootballTeam awayTeam = footballTeamService.findById(awayTeamId);
+        footballMatchService.updatePlayoffMatchPoints(id, homeTeam, awayTeam, homeTeamPoints, awayTeamPoints);
+
+        return "redirect:/matches/playoffs";
+    }
 }
 
 
