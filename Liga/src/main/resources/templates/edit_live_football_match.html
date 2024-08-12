@@ -45,7 +45,7 @@
 <body>
 <h1>Edit Live Football Match</h1>
 <form action="/matches/edit_live" method="post">
-    <input type="hidden" name="footballMatchId" th:value="${match.id}">
+    <input type="hidden" name="footballMatchId" th:value="${match.football_match_id}">
 
     <label for="teamId">Select Team:</label>
     <select id="teamId" name="teamId">
@@ -56,6 +56,7 @@
     <label for="playerId">Select Player:</label>
     <select id="playerId" name="playerId">
         <option value="">Select Player</option>
+        <option th:each="player : ${players}" th:value="${player.getFootball_player_id()}" th:text="${player.getSurname()}"></option>
     </select>
 
     <div id="playerForm" style="display: none;">

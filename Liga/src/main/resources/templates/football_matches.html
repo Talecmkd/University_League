@@ -53,9 +53,9 @@
                 <td th:text="${#temporals.format(match.startTime, 'dd-MM-yyyy HH:mm')}">Start Time</td>
                 <td th:text="${#temporals.format(match.endTime, 'dd-MM-yyyy HH:mm')}">End Time</td>
                 <td>
-                    <a th:href="@{/matches/details/{id}(id=${match.id})}" class="btn btn-info btn-sm">Details</a>
-                    <a th:href="@{/matches/edit-form/{id}(id=${match.id})}" class="btn btn-warning btn-sm">Edit</a>
-                    <form th:method="POST" th:action="@{'/matches/delete/{id}'(id=${match.id})}" style="display:inline;">
+                    <a th:href="@{/matches/details/{id}(id=${match.football_match_id})}" class="btn btn-info btn-sm">Details</a>
+                    <a th:href="@{/matches/edit-form/{id}(id=${match.football_match_id})}" class="btn btn-warning btn-sm">Edit</a>
+                    <form th:method="POST" th:action="@{'/matches/delete/{id}'(id=${match.football_match_id})}" style="display:inline;">
                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                     </form>
                 </td>

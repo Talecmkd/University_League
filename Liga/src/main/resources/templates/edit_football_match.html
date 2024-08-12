@@ -10,7 +10,7 @@
 <div class="container mt-5">
     <h1>Edit Match</h1>
     <form action="/matches/edit" method="post">
-        <input type="hidden" name="id" th:value="${match.id}"> <!-- Match ID to identify the match to update -->
+        <input type="hidden" name="id" th:value="${match.football_match_id}"> <!-- Match ID to identify the match to update -->
 
         <div class="form-group">
             <label for="homeTeam">Home Team</label>

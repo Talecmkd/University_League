@@ -29,6 +29,7 @@ public interface FootballMatchService {
     List<FootballMatch> listPlayoffMatches();
     FootballMatch updatePlayoffMatchPoints(Long id,FootballTeam homeTeam, FootballTeam awayTeam, int homeTeamPoints, int awayTeamPoints);
     List<FootballMatch> createSemiFinalMatches();
+    List<FootballMatch> createFinalMatch();
 
 
 }

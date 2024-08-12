@@ -14,20 +14,20 @@ import java.util.List;
 public class FootballMatch {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @ManyToOne
-    @JoinColumn(name = "football_home_id", nullable = false)
+    private Long football_match_id;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "football_home_id")
     private FootballTeam homeTeam;
-    @ManyToOne
-    @JoinColumn(name = "football_away_id", nullable = false)
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "football_away_id")
     private FootballTeam awayTeam;
     private int homeTeamPoints;
     private int awayTeamPoints;
     @OneToMany(mappedBy = "footballMatch", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FootballPlayerScored> playersWhoScored;
-    @ManyToMany(mappedBy = "footballFixtures")
+    @ManyToMany(mappedBy = "footballFixtures",cascade = CascadeType.REMOVE)
     private List<FootballTeam> upcomingMatches;
-    @ManyToMany(mappedBy = "footballResults")
+    @ManyToMany(mappedBy = "footballResults",cascade = CascadeType.REMOVE)
     private List<FootballTeam> playedMatches;
     private LocalDateTime startTime;
     private LocalDateTime endTime;

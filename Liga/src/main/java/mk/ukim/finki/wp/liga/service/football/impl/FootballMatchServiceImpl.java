@@ -63,6 +63,14 @@ public class FootballMatchServiceImpl implements FootballMatchService {
     @Transactional
     public FootballMatch delete(Long id) {
         FootballMatch fm = matchRepository.findById(id).orElseThrow(InvalidFootballMatchException::new);
+        if(fm.getEndTime().isBefore(LocalDateTime.now())){
+            fm.getHomeTeam().getFootballResults().remove(fm);
+            fm.getAwayTeam().getFootballResults().remove(fm);
+        }
+        else {
+            fm.getHomeTeam().getFootballFixtures().remove(fm);
+            fm.getAwayTeam().getFootballFixtures().remove(fm);
+        }
         matchRepository.delete(fm);
         return fm;
     }
@@ -79,10 +87,10 @@ public class FootballMatchServiceImpl implements FootballMatchService {
     public FootballMatch createAndAddToFixtures(FootballTeam homeTeam, FootballTeam awayTeam, int homeTeamPoints, int awayTeamPoints, LocalDateTime startTime) {
         FootballMatch match = this.create(homeTeam, awayTeam, homeTeamPoints, awayTeamPoints, startTime);
 
-        if(startTime.isAfter(LocalDateTime.now())) {
+        if(startTime.plusHours(2).isAfter(LocalDateTime.now())) {
             homeTeam.getFootballFixtures().add(match);
             awayTeam.getFootballFixtures().add(match);
-        } else if(startTime.isBefore(LocalDateTime.now())){
+        } else if(startTime.plusHours(2).isBefore(LocalDateTime.now())){
             homeTeam.getFootballResults().add(match);
             awayTeam.getFootballResults().add(match);
         }

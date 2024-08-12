@@ -18,7 +18,7 @@ public class FootballTeam {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String teamName;
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<FootballPlayer> players;
     @ManyToMany(fetch = FetchType.EAGER)
@@ -28,7 +28,7 @@ public class FootballTeam {
             inverseJoinColumns = @JoinColumn(name = "football_match_id")
     )
     private List<FootballMatch> footballFixtures;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinTable(
             name = "football_team_results",
             joinColumns = @JoinColumn(name = "football_team_id"),

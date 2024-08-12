@@ -55,8 +55,8 @@ public class FootballTeamServiceImpl implements FootballTeamService {
     public FootballTeam delete(Long id) {
         FootballTeam team = footballTeamRepository.findById(id).orElseThrow(InvalidFootballTeamException::new);
         footballTeamRepository.delete(team);
-        List<FootballMatch> matchesToDelete = footballMatchRepository.findAllByHomeTeamOrAwayTeam(team, team);
-        footballMatchRepository.deleteAll(matchesToDelete);
+//        List<FootballMatch> matchesToDelete = footballMatchRepository.findAllByHomeTeamOrAwayTeam(team, team);
+//        footballMatchRepository.deleteAll(matchesToDelete);
         return team;
     }
 
