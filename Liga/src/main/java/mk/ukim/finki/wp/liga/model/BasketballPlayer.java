@@ -1,32 +1,36 @@
 package mk.ukim.finki.wp.liga.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.awt.*;
 import java.util.Date;
 
+@Entity
 @Setter
 @Getter
 public class BasketballPlayer {
     @Id
-    private Long id;
-    private Image image;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long basketball_player_id;
+    private byte [] image;
     private String name;
     private String surname;
     private Date birthdate;
     private int index;
     private String city;
     private String position;
+    @ManyToOne
+    @JsonIgnore
     private BasketballTeam team;
     private int appearances;
     private int points;
     private int assists;
     private int rebounds;
 
-    public BasketballPlayer(Image image, String name, String surname, Date birthdate, int index,
+    public BasketballPlayer(byte[] image, String name, String surname, Date birthdate, int index,
                             String city, String position, BasketballTeam team) {
         this.image = image;
         this.name = name;
@@ -44,6 +48,10 @@ public class BasketballPlayer {
 
     public BasketballPlayer() {
 
+    }
+
+    public int getPoints(){
+        return points*2 + assists + rebounds;
     }
 
 }
