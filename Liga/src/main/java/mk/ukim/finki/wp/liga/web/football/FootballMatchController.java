@@ -232,7 +232,7 @@ public class FootballMatchController {
 
         FootballTeam team = footballTeamService.listAllTeams().stream().filter(t -> t.getPlayers().contains(player)).findFirst().get();
         footballTeamService.updateStats(team.getId());
-
+        footballMatchService.updateLiveStats(footballMatchId, goalsScored, playerId);
 
         return "redirect:/matches";
     }

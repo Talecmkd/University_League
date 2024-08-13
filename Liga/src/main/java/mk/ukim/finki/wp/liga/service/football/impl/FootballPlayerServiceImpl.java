@@ -34,7 +34,10 @@ public class FootballPlayerServiceImpl implements FootballPlayerService {
 
     @Override
     public FootballPlayer create(byte [] image, String name, String surname, Date birthdate, int index, String city, String position, FootballTeam team) {
-        FootballTeam playerTeam = footballTeamRepository.findById(team.getId()).orElse(null);
+        FootballTeam playerTeam;
+        if(team!=null)
+         playerTeam = footballTeamRepository.findById(team.getId()).orElse(null);
+        else playerTeam=null;
         FootballPlayer player = new FootballPlayer(image,name, surname, birthdate, index, city, position, playerTeam);
         return footballPlayerRepository.save(player);
     }

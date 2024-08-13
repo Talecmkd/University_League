@@ -124,4 +124,5 @@ public class FootballTeamServiceImpl implements FootballTeamService {
         return footballTeamRepository.findAllByOrderByTeamLeaguePointsDesc();
     }
 
+
 }

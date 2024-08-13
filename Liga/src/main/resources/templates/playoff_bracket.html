@@ -70,6 +70,36 @@
         .actions {
             margin-top: 10px;
         }
+
+        .init-button {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .init-button a {
+            text-decoration: none;
+            padding: 10px 20px;
+            background-color: #2c3e50;
+            color: white;
+            border-radius: 5px;
+        }
+
+        .init-button a:hover {
+            background-color: #34495e;
+        }
+
+        .winner-section {
+            text-align: center;
+            font-size: 2em;
+            font-weight: bold;
+            color: #27ae60;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #ecf0f1;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            margin: 50px auto;
+        }
     </style>
 </head>
 <body>
@@ -79,16 +109,17 @@
     <div class="round quarter-finals">
         <div class="round-header">Quarter-Finals</div>
         <div class="match" th:each="match, iterStat : ${matches}" th:if="${iterStat.index < 4}">
-            <div class="team">
+            <div class="team" th:classappend="${match.homeTeamPoints > match.awayTeamPoints} ? 'winner' : ''">
                 <span th:text="${match.homeTeam.teamName}"></span>
                 <span class="score" th:text="${match.homeTeamPoints}"></span>
             </div>
-            <div class="team">
+            <div class="team" th:classappend="${match.awayTeamPoints > match.homeTeamPoints} ? 'winner' : ''">
                 <span th:text="${match.awayTeam.teamName}"></span>
                 <span class="score" th:text="${match.awayTeamPoints}"></span>
             </div>
             <div class="actions">
-                <a th:href="@{/matches/playoffs/edit/{id}(id=${match.football_match_id})}">Edit</a>
+                <a th:if="${match.homeTeamPoints == match.awayTeamPoints}" th:href="@{/matches/playoffs/edit/{id}(id=${match.football_match_id})}">Edit</a>
+                <span th:if="${match.homeTeamPoints != match.awayTeamPoints}">Completed</span>
             </div>
         </div>
     </div>
@@ -97,16 +128,17 @@
     <div class="round semi-finals">
         <div class="round-header">Semi-Finals</div>
         <div class="match" th:each="match, iterStat : ${matches}" th:if="${iterStat.index >= 4 && iterStat.index < 6}">
-            <div class="team">
+            <div class="team" th:classappend="${match.homeTeamPoints > match.awayTeamPoints} ? 'winner' : ''">
                 <span th:text="${match.homeTeam.teamName}"></span>
                 <span class="score" th:text="${match.homeTeamPoints}"></span>
             </div>
-            <div class="team">
+            <div class="team" th:classappend="${match.awayTeamPoints > match.homeTeamPoints} ? 'winner' : ''">
                 <span th:text="${match.awayTeam.teamName}"></span>
                 <span class="score" th:text="${match.awayTeamPoints}"></span>
             </div>
             <div class="actions">
-                <a th:href="@{/matches/playoffs/edit/{id}(id=${match.football_match_id})}">Edit</a>
+                <a th:if="${match.homeTeamPoints == match.awayTeamPoints}" th:href="@{/matches/playoffs/edit/{id}(id=${match.football_match_id})}">Edit</a>
+                <span th:if="${match.homeTeamPoints != match.awayTeamPoints}">Completed</span>
             </div>
         </div>
     </div>
@@ -115,19 +147,42 @@
     <div class="round finals">
         <div class="round-header">Final</div>
         <div class="match" th:each="match, iterStat : ${matches}" th:if="${iterStat.index >= 6}">
-            <div class="team">
+            <div class="team" th:classappend="${match.homeTeamPoints > match.awayTeamPoints} ? 'winner' : ''">
                 <span th:text="${match.homeTeam.teamName}"></span>
                 <span class="score" th:text="${match.homeTeamPoints}"></span>
             </div>
-            <div class="team">
+            <div class="team" th:classappend="${match.awayTeamPoints > match.homeTeamPoints} ? 'winner' : ''">
                 <span th:text="${match.awayTeam.teamName}"></span>
                 <span class="score" th:text="${match.awayTeamPoints}"></span>
             </div>
             <div class="actions">
-                <a th:href="@{/matches/playoffs/edit/{id}(id=${match.football_match_id})}">Edit</a>
+                <a th:if="${match.homeTeamPoints == match.awayTeamPoints}" th:href="@{/matches/playoffs/edit/{id}(id=${match.football_match_id})}">Edit</a>
+                <span th:if="${match.homeTeamPoints != match.awayTeamPoints}">Completed</span>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Semi-Finals Initialization Button -->
+<div class="init-button">
+    <a th:if="${matches.size() >= 4 && matches[0].homeTeamPoints != matches[0].awayTeamPoints
+    && matches[1].homeTeamPoints != matches[1].awayTeamPoints
+    && matches[2].homeTeamPoints != matches[2].awayTeamPoints
+    && matches[3].homeTeamPoints != matches[3].awayTeamPoints}"
+       th:href="@{/matches/playoffs/semi-finals_Init}">Start Semi-Finals</a>
+</div>
+
+<!-- Finals Initialization Button -->
+<div class="init-button">
+    <a th:if="${matches.size() >= 6 && matches[4].homeTeamPoints != matches[4].awayTeamPoints
+    && matches[5].homeTeamPoints != matches[5].awayTeamPoints}"
+       th:href="@{/matches/playoffs/finals_Init}">Start Final</a>
+</div>
+
+<div class="winner-section" th:if="${matches.size() >= 7 && matches[6].homeTeamPoints != matches[6].awayTeamPoints}">
+    Congratulations to the Winner:
+    <span th:text="${matches[6].homeTeamPoints > matches[6].awayTeamPoints ? matches[6].homeTeam.teamName : matches[6].awayTeam.teamName}"></span>!
+</div>
+
 </body>
 </html>

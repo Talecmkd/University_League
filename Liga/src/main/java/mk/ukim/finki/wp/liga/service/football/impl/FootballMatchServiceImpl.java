@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import mk.ukim.finki.wp.liga.model.Exceptions.InvalidFootballMatchException;
 import mk.ukim.finki.wp.liga.model.Exceptions.InvalidFootballTeamException;
 import mk.ukim.finki.wp.liga.model.FootballMatch;
+import mk.ukim.finki.wp.liga.model.FootballPlayer;
 import mk.ukim.finki.wp.liga.model.FootballTeam;
 import mk.ukim.finki.wp.liga.repository.football.FootballMatchRepository;
+import mk.ukim.finki.wp.liga.repository.football.FootballPlayerRepository;
 import mk.ukim.finki.wp.liga.repository.football.FootballTeamRepository;
 import mk.ukim.finki.wp.liga.service.football.FootballMatchService;
 import mk.ukim.finki.wp.liga.service.football.FootballTeamService;
@@ -21,6 +23,7 @@ import java.util.List;
 public class FootballMatchServiceImpl implements FootballMatchService {
     private final FootballMatchRepository matchRepository;
     private final FootballTeamRepository teamRepository;
+    private final FootballPlayerRepository playerRepository;
     private final FootballTeamService teamService;
 
 
@@ -104,6 +107,12 @@ public class FootballMatchServiceImpl implements FootballMatchService {
     @Override
     @Transactional
     public List<FootballMatch> createPlayoffMatches() {
+        List<FootballMatch> existingPlayoffMatches = matchRepository.findAllByIsPlayoffMatchTrue();
+
+        // If matches exist, don't reinitialize, just return the existing ones
+        if (!existingPlayoffMatches.isEmpty()) {
+            return existingPlayoffMatches;
+        }
         List<FootballTeam> teams = teamRepository.findAllByOrderByTeamLeaguePointsDesc();
 
         if (teams.size() < 8) {
@@ -167,6 +176,13 @@ public class FootballMatchServiceImpl implements FootballMatchService {
     @Override
     @Transactional
     public List<FootballMatch> createSemiFinalMatches() {
+        List<FootballMatch> playoffMatches = matchRepository.findAllByIsPlayoffMatchTrue();
+
+        // Check if the final match already exists (total playoff matches should be 7 if final is created)
+        if (playoffMatches.size() >= 6) {
+            //System.out.println("Semi-final matches have already been created.");
+            return playoffMatches.subList(4, 6); // Return existing final match
+        }
         List<FootballMatch> quarterFinals = matchRepository.findAllByIsPlayoffMatchTrue();
 
         // Ensure all quarter-final matches are completed
@@ -191,6 +207,13 @@ public class FootballMatchServiceImpl implements FootballMatchService {
     @Transactional
     public List<FootballMatch> createFinalMatch()
     {
+        List<FootballMatch> playoffMatches = matchRepository.findAllByIsPlayoffMatchTrue();
+
+        // Check if the final match already exists (total playoff matches should be 7 if final is created)
+        if (playoffMatches.size() >= 7) {
+            //System.out.println("The final match has already been created.");
+            return playoffMatches.subList(6, 7); // Return existing final match
+        }
         List<FootballMatch> semiFinals = matchRepository.findAllByIsPlayoffMatchTrue();
 
         // Ensure all quarter-final matches are completed
@@ -214,5 +237,22 @@ public class FootballMatchServiceImpl implements FootballMatchService {
         finals.add(createMatch(finalist1, finalist2, true));
 
         return finals;
+    }
+
+    @Override
+    public void updateLiveStats(Long footballMatchId, int goalsScored, Long playerId) {
+        FootballPlayer player = playerRepository.getReferenceById(playerId);
+        FootballMatch match = matchRepository.findById(footballMatchId).get();
+        FootballTeam team = teamRepository.findAll().stream().filter(t -> t.getPlayers().contains(player)).findFirst().get();
+
+        FootballTeam homeOrAway = match.getHomeTeam();
+
+        if (team != homeOrAway) {
+            match.setAwayTeamPoints(goalsScored);
+        } else {
+            match.setHomeTeamPoints(goalsScored);
+        }
+
+        matchRepository.save(match);
     }
 }

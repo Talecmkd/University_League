@@ -32,4 +32,5 @@ public interface FootballMatchService {
     List<FootballMatch> createFinalMatch();
 
 
+    void updateLiveStats(Long footballMatchId, int goalsScored, Long playerId);
 }
