@@ -1,9 +1,6 @@
 package mk.ukim.finki.wp.liga.web.football;
 
-import ch.qos.logback.core.encoder.JsonEscapeUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import lombok.AllArgsConstructor;
 import mk.ukim.finki.wp.liga.model.FootballMatch;
 import mk.ukim.finki.wp.liga.model.FootballPlayer;
@@ -21,14 +18,12 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
 @AllArgsConstructor
-@RequestMapping({"/matches"})
+@RequestMapping({"/","/matches"})
 public class FootballMatchController {
 
     private final FootballMatchService footballMatchService;
@@ -40,7 +35,8 @@ public class FootballMatchController {
     public String showAllMatches(Model model) {
         List<FootballMatch> footballMatches = footballMatchService.listAllFootballMatches();
         model.addAttribute("footballMatches", footballMatches);
-        return "football_matches";
+        model.addAttribute("bodyContent","football_matches");
+        return "master_template";
     }
 
     @GetMapping("/details/{id}")
@@ -49,7 +45,8 @@ public class FootballMatchController {
         match.setHomeTeam(footballTeamService.findById(match.getHomeTeam().getId()));
         match.setAwayTeam(footballTeamService.findById(match.getAwayTeam().getId()));
         model.addAttribute("match", match);
-        return "football_match_details";
+        model.addAttribute("bodyContent","football_match_details");
+        return "master_template";
     }
 
     @GetMapping("/results/details/{id}")
@@ -58,7 +55,8 @@ public class FootballMatchController {
         match.setHomeTeam(footballTeamService.findById(match.getHomeTeam().getId()));
         match.setAwayTeam(footballTeamService.findById(match.getAwayTeam().getId()));
         model.addAttribute("match", match);
-        return "football_match_results_details";
+        model.addAttribute("bodyContent","football_match_results_details");
+        return "master_template";
     }
 
     @GetMapping("/results/details/stats/{id}")
@@ -101,7 +99,8 @@ public class FootballMatchController {
         model.addAttribute("awayGoals",awayGoals);
         model.addAttribute("awaySaves",awaySaves);
         model.addAttribute("awayAssists",awayAssists);
-        return "football_match_details_stats";
+        model.addAttribute("bodyContent","football_match_details_stats");
+        return "master_template";
     }
 
     @GetMapping("/fixtures")
@@ -111,7 +110,8 @@ public class FootballMatchController {
                 .filter(match -> match.getEndTime().isAfter(LocalDateTime.now()))
                 .collect(Collectors.toList());
         model.addAttribute("fixtures", fixtures);
-        return "football_fixtures";
+        model.addAttribute("bodyContent","football_fixtures");
+        return "master_template";
     }
 
     @GetMapping("/results")
@@ -121,7 +121,8 @@ public class FootballMatchController {
                 .collect(Collectors.toList());
         results.forEach(footballMatchService::updateTeamStatistics);
         model.addAttribute("results", results);
-        return "football_results";
+        model.addAttribute("bodyContent","football_results");
+        return "master_template";
     }
 
     @GetMapping("/live")
@@ -131,14 +132,16 @@ public class FootballMatchController {
                         .now())))
                 .collect(Collectors.toList());
         model.addAttribute("live", live);
-        return "football_live";
+        model.addAttribute("bodyContent","football_live");
+        return "master_template";
     }
 
     @GetMapping("/add-form")
     public String addMatch(Model model) {
         List<FootballTeam> teams = footballTeamService.listAllTeams();
         model.addAttribute("teams", teams);
-        return "add_football_match";
+        model.addAttribute("bodyContent","add_football_match");
+        return "master_template";
     }
 
     @PostMapping("/add")
@@ -167,7 +170,8 @@ public class FootballMatchController {
         List<FootballTeam> teams = footballTeamService.listAllTeams();
         model.addAttribute("match", match);
         model.addAttribute("teams", teams);
-        return "edit_football_match";
+        model.addAttribute("bodyContent","edit_football_match");
+        return "master_template";
     }
 
     @GetMapping("/edit_live/{id}")
@@ -195,8 +199,8 @@ public class FootballMatchController {
         model.addAttribute("dtoPlayers",dtoPlayers);
         model.addAttribute("playersHome", match.getHomeTeam().getPlayers());
         model.addAttribute("playersAway", match.getAwayTeam().getPlayers());
-
-        return "edit_live_football_match";
+        model.addAttribute("bodyContent","edit_live_football_match");
+        return "master_template";
     }
 
     @PostMapping("/edit_live")
@@ -280,7 +284,8 @@ public class FootballMatchController {
     public String getPlayoffMatches(Model model) {
         List<FootballMatch> matches = footballMatchService.listPlayoffMatches();
         model.addAttribute("matches", matches);
-        return "playoff_bracket"; // The name of your Thymeleaf template for the playoff view
+        model.addAttribute("bodyContent","playoff_bracket");
+        return "master_template";
     }
 
     @GetMapping("/playoffs/edit/{id}")
@@ -289,7 +294,8 @@ public class FootballMatchController {
         List<FootballTeam> teams = footballTeamService.listAllTeams();
         model.addAttribute("match", match);
         model.addAttribute("teams", teams);
-        return "edit_playoff_match";
+        model.addAttribute("bodyContent","edit_playoff_match");
+        return "master_template";
     }
     @PostMapping("/playoffs/edit")
     public String updatePlayoffMatchPoints(

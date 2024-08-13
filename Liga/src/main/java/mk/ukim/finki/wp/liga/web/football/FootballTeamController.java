@@ -33,8 +33,8 @@ public class FootballTeamController{
     }
     List<FootballTeam> footballTeams = this.footballTeamService.findAllOrderByPointsDesc();
     model.addAttribute("footballTeams",footballTeams);
-    //model.addAttribute("bodyContent","football_teams");
-    return "football_teams";
+    model.addAttribute("bodyContent","football_teams");
+    return "master_template";
 }
 
 @GetMapping("team/{id}")
@@ -49,7 +49,8 @@ public class FootballTeamController{
         model.addAttribute("hasError", true);
         model.addAttribute("error", "Team not found");
     }
-    return "football_team_details";
+    model.addAttribute("bodyContent","football_team_details");
+    return "master_template";
 }
 
 //@GetMapping("teams/team/{id}")
@@ -72,7 +73,8 @@ public class FootballTeamController{
             return "redirect:/teams";
         }
         model.addAttribute("team", team);
-        return "edit_football_table";
+        model.addAttribute("bodyContent","edit_football_table");
+        return "master_template";
     }
 
     @PostMapping("/edit/{id}")
@@ -91,7 +93,8 @@ public class FootballTeamController{
     public String showAddTeamForm(Model model) {
         List<FootballPlayer> players = footballPlayerService.listAllPlayers();
         model.addAttribute("players", players);
-        return "add_team";
+        model.addAttribute("bodyContent","add_team");
+        return "master_template";
     }
 
     @PostMapping("/add")
@@ -115,7 +118,8 @@ public class FootballTeamController{
         model.addAttribute("team", team);
         model.addAttribute("fixtures", team.getFootballFixtures());
         model.addAttribute("results", team.getFootballResults());
-        return "show_football_team_matches";
+        model.addAttribute("bodyContent","show_football_team_matches");
+        return "master_template";
     }
 
     @PostMapping("/delete/{id}")

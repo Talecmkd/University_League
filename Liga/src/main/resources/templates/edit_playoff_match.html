@@ -33,6 +33,7 @@
     <input type="number" id="awayTeamPoints" name="awayTeamPoints" th:value="${match.awayTeamPoints}" />
 
     <button type="submit">Update Match</button>
+    <a type="button" class="btn btn-secondary" onclick="window.history.back()">Back</a>
 </form>
 <a th:href="@{/matches/playoffs}">Back to Playoff Matches</a>
 </body>

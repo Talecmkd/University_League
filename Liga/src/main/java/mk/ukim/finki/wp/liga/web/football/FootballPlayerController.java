@@ -36,19 +36,16 @@ public class FootballPlayerController {
        model.addAttribute("footballPlayers", footballPlayers);
        List<FootballPlayer> topPlayers=footballPlayerService.getTop5Players();
        model.addAttribute("topPlayers",topPlayers);
-       //model.addAttribute("bodyContent", "football_players");
-       return "football_players";
+       model.addAttribute("bodyContent", "football_players");
+       return "master_template";
     }
 
     @GetMapping("/add-form")
     public String addPlayerForm(Model model){
         List<FootballTeam> teams=this.footballTeamService.listAllTeams();
         model.addAttribute("teams",teams);
-        model.addAttribute("bodyContent","add-football-player");
-
-
-
-        return "add_football_player";
+        model.addAttribute("bodyContent","add_football_player");
+        return "master_template";
 
     }
 
@@ -86,21 +83,21 @@ public class FootballPlayerController {
         return "redirect:/players";
     }
     @GetMapping("/edit/{id}")
-    public String editProductPage(@PathVariable Long id, Model model) {
+    public String editFootballPlayer(@PathVariable Long id, Model model) {
         if (this.footballPlayerService.findById(id)!=null) {
             FootballPlayer player = this.footballPlayerService.findById(id);
             List<FootballTeam> teams = this.footballTeamService.listAllTeams();
 
             model.addAttribute("teams", teams);
             model.addAttribute("player", player);
-            model.addAttribute("bodyContent", "add-football-player");
-            return "edit_football_player";
+            model.addAttribute("bodyContent", "edit_football_player");
+            return "master_template";
         }
 
         return "redirect:/players?error=PlayerNotFound";
     }
     @PostMapping("/edit/{id}")
-    public String editPlayer(@PathVariable("id") Long id,
+    public String editFootballPlayer(@PathVariable("id") Long id,
                              @RequestParam(value = "playerImage", required = false) MultipartFile playerImage,
                              @RequestParam String playerName,
                              @RequestParam String playerSurname,
@@ -141,8 +138,8 @@ public class FootballPlayerController {
         model.addAttribute("footballPlayer", footballPlayer);
         String imageUrl = "/players/image/" + id;
         model.addAttribute("playerImageUrl", imageUrl);
-
-        return "football_player_details";
+        model.addAttribute("bodyContent","football_player_details");
+        return "master_template";
     }
     @GetMapping("/image/{id}")
     public ResponseEntity<byte[]> getPlayerImage(@PathVariable Long id) {
