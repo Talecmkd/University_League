@@ -10,7 +10,7 @@ import lombok.Setter;
 public class VolleyballPlayerMatchStats {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long volleyball_player_stats_id;
+    private Long id;
     @ManyToOne
     @JoinColumn(name = "volleyball_player_id", nullable = false)
     private VolleyballPlayer player;

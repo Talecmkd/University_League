@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Match Results Details</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+<div class="container">
+    <h1>Match Results Details</h1>
+    <p><strong>Home Team:</strong> <span th:text="${match.homeTeam.getTeamName()}">Home Team Name</span></p>
+    <p><strong>Away Team:</strong> <span th:text="${match.awayTeam.getTeamName()}">Away Team Name</span></p>
+    <p><strong>Home Team Points:</strong> <span th:text="${match.homeTeamPoints}">0</span></p>
+    <p><strong>Away Team Points:</strong> <span th:text="${match.awayTeamPoints}">0</span></p>
+    <a th:href="@{/volleyball_matches/results/details/stats/{id}(id=${match.getVolleyball_match_id()})}" class="btn btn-info">View Stats</a>
+    <a th:href="@{/volleyball_matches/results}" class="btn btn-primary">Back to Results</a>
+</div>
+</body>
+</html>

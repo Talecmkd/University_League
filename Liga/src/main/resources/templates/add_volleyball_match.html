@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Match</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+<div class="container">
+    <h1>Add Volleyball Match</h1>
+    <form th:action="@{/volleyball_matches/add}" method="post">
+        <div class="form-group">
+            <label for="homeTeam">Home Team</label>
+            <select id="homeTeam" name="homeTeamId" class="form-control" required>
+                <option th:each="team : ${teams}" th:value="${team.getVolleyball_team_id()}" th:text="${team.getTeamName()}">Team Name</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="awayTeam">Away Team</label>
+            <select id="awayTeam" name="awayTeamId" class="form-control" required>
+                <option th:each="team : ${teams}" th:value="${team.getVolleyball_team_id()}" th:text="${team.getTeamName()}">Team Name</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="homeTeamPoints">Home Team Points</label>
+            <input type="number" id="homeTeamPoints" name="homeTeamPoints" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="awayTeamPoints">Away Team Points</label>
+            <input type="number" id="awayTeamPoints" name="awayTeamPoints" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="startTime">Start Time</label>
+            <input type="datetime-local" id="startTime" name="startTime" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="endTime">End Time</label>
+            <input type="datetime-local" id="endTime" name="endTime" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-success">Add Match</button>
+    </form>
+    <a th:href="@{/volleyball_matches}" class="btn btn-primary">Back to Matches</a>
+</div>
+</body>
+</html>

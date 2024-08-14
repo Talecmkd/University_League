@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Volleyball Player</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Add Volleyball Player</h2>
+    <form th:action="@{/volleyball/players/add}" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="image" class="form-label">Player Image</label>
+            <input type="file" class="form-control" id="image" name="image">
+        </div>
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        <div class="mb-3">
+            <label for="surname" class="form-label">Surname</label>
+            <input type="text" class="form-control" id="surname" name="surname" required>
+        </div>
+        <div class="mb-3">
+            <label for="birthdate" class="form-label">Birthdate</label>
+            <input type="date" class="form-control" id="birthdate" name="birthdate" required>
+        </div>
+        <div class="mb-3">
+            <label for="index" class="form-label">Index</label>
+            <input type="number" class="form-control" id="index" name="index" required>
+        </div>
+        <div class="mb-3">
+            <label for="city" class="form-label">City</label>
+            <input type="text" class="form-control" id="city" name="city" required>
+        </div>
+        <div class="mb-3">
+            <label for="position" class="form-label">Position</label>
+            <input type="text" class="form-control" id="position" name="position" required>
+        </div>
+        <div class="mb-3">
+            <label for="team" class="form-label">Team</label>
+            <select class="form-control" id="team" name="teamId">
+                <option value="" disabled selected>Select a team</option>
+                <option th:each="team : ${teams}" th:value="${team.getVolleyball_team_id()}" th:text="${team.getTeamName()}">Team Name</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Player</button>
+        <a th:href="@{/volleyball/players}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

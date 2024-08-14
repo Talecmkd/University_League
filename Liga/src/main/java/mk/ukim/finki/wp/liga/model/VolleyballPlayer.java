@@ -16,6 +16,7 @@ public class VolleyballPlayer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long volleyball_player_id;
+    @Lob
     private byte[] image;
     private String name;
     private String surname;

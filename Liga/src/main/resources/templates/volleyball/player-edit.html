@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Volleyball Player</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Edit Player</h2>
+    <form th:action="@{/volleyball/players/edit/{id}(id=${player.getVolleyball_player_id()})}" th:method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="image">Image</label>
+            <input type="file" class="form-control-file" id="image" name="image">
+        </div>
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" name="name" th:value="${player.name}" required>
+        </div>
+        <div class="form-group">
+            <label for="surname">Surname</label>
+            <input type="text" class="form-control" id="surname" name="surname" th:value="${player.surname}" required>
+        </div>
+        <div class="form-group">
+            <label for="birthdate">Birthdate</label>
+            <input type="date" class="form-control" id="birthdate" name="birthdate" th:value="${#dates.format(player.birthdate, 'yyyy-MM-dd')}" required>
+        </div>
+        <div class="form-group">
+            <label for="index">Index</label>
+            <input type="number" class="form-control" id="index" name="index" th:value="${player.index}" required>
+        </div>
+        <div class="form-group">
+            <label for="city">City</label>
+            <input type="text" class="form-control" id="city" name="city" th:value="${player.city}" required>
+        </div>
+        <div class="form-group">
+            <label for="position">Position</label>
+            <input type="text" class="form-control" id="position" name="position" th:value="${player.position}" required>
+        </div>
+        <div class="form-group">
+            <label for="team">Team</label>
+            <select class="form-control" id="team" name="teamId">
+                <option th:each="team : ${teams}" th:value="${team.getVolleyball_team_id()}" th:text="${team.teamName}" th:selected="${team.getVolleyball_team_id() == player.team.getVolleyball_team_id()}"></option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a class="btn btn-secondary" th:href="@{/volleyball/players}">Cancel</a>
+    </form>
+</div>
+</body>
+</html>
