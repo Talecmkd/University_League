@@ -37,7 +37,7 @@ public class BasketballPlayerServiceImpl implements BasketballPlayerService {
     public BasketballPlayer create(byte[] image, String name, String surname, Date birthdate, int index, String city, String position, BasketballTeam team) {
         BasketballTeam playerTeam;
         if(team!=null)
-            playerTeam = basketballTeamRepository.findById(team.getBasketball_team_id()).orElse(null);
+            playerTeam = basketballTeamRepository.findById(team.getId()).orElse(null);
         else playerTeam=null;
         BasketballPlayer player = new BasketballPlayer(image,name, surname, birthdate, index, city, position, playerTeam);
         return basketballPlayerRepository.save(player);
@@ -54,7 +54,7 @@ public class BasketballPlayerServiceImpl implements BasketballPlayerService {
             p.setIndex(index);
             p.setCity(city);
             p.setPosition(position);
-            BasketballTeam t = basketballTeamRepository.findById(team.getBasketball_team_id()).orElseThrow(InvalidBasketballTeamException::new);
+            BasketballTeam t = basketballTeamRepository.findById(team.getId()).orElseThrow(InvalidBasketballTeamException::new);
             p.setTeam(t);
         return basketballPlayerRepository.save(p);
     }

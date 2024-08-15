@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Playoff Match</title>
+</head>
+<body>
+<h1>Edit Playoff Match</h1>
+<form th:action="@{/basketball/matches/playoffs/edit}" method="post">
+    <!-- Hidden input for match ID -->
+    <input type="hidden" name="id" th:value="${match.basketball_match_id}" />
+
+    <!-- Hidden inputs for team IDs -->
+    <input type="hidden" name="homeTeamId" th:value="${match.homeTeam.id}" />
+    <input type="hidden" name="awayTeamId" th:value="${match.awayTeam.id}" />
+
+    <!-- Display Home Team -->
+    <label for="homeTeam">Home Team:</label>
+    <select id="homeTeam" name="homeTeamId" disabled>
+        <option th:value="${match.homeTeam.id}" th:text="${match.homeTeam.teamName}"></option>
+    </select>
+
+    <!-- Display Away Team -->
+    <label for="awayTeam">Away Team:</label>
+    <select id="awayTeam" name="awayTeamId" disabled>
+        <option th:value="${match.awayTeam.id}" th:text="${match.awayTeam.teamName}"></option>
+    </select>
+
+    <!-- Input fields for match points -->
+    <label for="homeTeamPoints">Home Team Points:</label>
+    <input type="number" id="homeTeamPoints" name="homeTeamPoints" th:value="${match.homeTeamPoints}" />
+
+    <label for="awayTeamPoints">Away Team Points:</label>
+    <input type="number" id="awayTeamPoints" name="awayTeamPoints" th:value="${match.awayTeamPoints}" />
+
+    <button type="submit">Update Match</button>
+</form>
+<a th:href="@{/basketball/matches/playoffs}">Back to Playoff Matches</a>
+</body>
+</html>

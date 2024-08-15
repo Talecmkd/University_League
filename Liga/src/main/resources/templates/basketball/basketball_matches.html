@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Football Matches</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> <!-- Bootstrap CSS -->
+</head>
+<body>
+<header class="bg-primary text-white p-3">
+    <div class="container">
+        <h1 class="mb-0">Football Matches</h1>
+    </div>
+</header>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a href="/basketball/matches/add-form" class="nav-link">Add Match</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/basketball/matches/live" class="nav-link">Live Matches</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/basketball/matches/fixtures" class="nav-link">Fixtures</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/basketball/matches/results" class="nav-link">Results</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/basketball/players" class="nav-link">View Players</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/basketball/matches/playoffs/init" class="nav-link">Playoffs</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="container mt-4">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-dark">
+            <tr>
+                <th>Match</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="match : ${basketballMatches}">
+                <td th:text="${match.homeTeam.teamName} + ' vs ' + ${match.awayTeam.teamName}">Match Description</td>
+                <td th:text="${#temporals.format(match.startTime, 'dd-MM-yyyy HH:mm')}">Start Time</td>
+                <td th:text="${#temporals.format(match.endTime, 'dd-MM-yyyy HH:mm')}">End Time</td>
+                <td>
+                    <a th:href="@{/basketball/matches/details/{id}(id=${match.basketball_match_id})}" class="btn btn-info btn-sm">Details</a>
+                    <a th:href="@{/basketball/matches/edit-form/{id}(id=${match.basketball_match_id})}" class="btn btn-warning btn-sm">Edit</a>
+                    <form th:method="POST" th:action="@{'/basketball/matches/delete/{id}'(id=${match.basketball_match_id})}" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+</html>

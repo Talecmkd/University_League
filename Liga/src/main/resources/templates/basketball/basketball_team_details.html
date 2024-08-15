@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Details</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h1>Team Details</h1>
+    <div th:if="${team != null}">
+        <div class="card">
+            <div class="card-header">
+                <h2 th:text="${team.teamName}">Team Name</h2>
+            </div>
+            <div class="card-body">
+                <h3>Team Statistics</h3>
+                <ul>
+                    <li>Matches Played: <span th:text="${team.teamMatchesPlayed}"></span></li>
+                    <li>League Points: <span th:text="${team.teamLeaguePoints}"></span></li>
+                    <li>Wins: <span th:text="${team.teamWins}"></span></li>
+                    <li>Losses: <span th:text="${team.teamLoses}"></span></li>
+                </ul>
+                <h3>Players</h3>
+                <ul>
+                    <li th:each="player : ${players}">
+                        <span th:text="${player.name}">Player Name</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fixtures/Results button -->
+    <a th:href="@{/basketball/teams/show/{id}(id=${team.id})}" class="btn btn-info mt-3">Fixtures/Results</a>
+    <a type="button" class="btn btn-secondary" href="/basketball/players/add-form">Add Player</a>
+
+    <div th:if="${team == null}">
+        <p>Team not found.</p>
+    </div>
+
+    <!-- Top Players Section -->
+    <section class="container mt-4">
+        <h2>Top Players</h2>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead class="thead-dark">
+                <tr>
+                    <th>Image</th>
+                    <th>Player Name</th>
+                    <th>Points</th>
+                    <th>Assists</th>
+                    <th>Points Scored</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="player : ${topPlayers}">
+                    <td>
+                        <img th:src="@{/players/image/{id}(id=${player.basketball_player_id})}" alt="Player Image" style="width:50px;height:50px;"/>
+                    </td>
+                    <td th:text="${player.name} + ' ' + ${player.surname}"></td>
+                    <td th:text="${player.points}"></td>
+                    <td th:text="${player.assists}"></td>
+                    <td th:text="${player.points * 2 + player.assists + player.rebounds}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+</div>
+</body>
+</html>

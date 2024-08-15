@@ -32,10 +32,10 @@ public class BasketballMatch {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     @Column(name = "is_basketball_playoff_match")
-    private boolean isBasketballPlayoffMatch;
+    private boolean isPlayoffMatch;
 
     public BasketballMatch(BasketballTeam homeTeam, BasketballTeam awayTeam, int homeTeamPoints,
-                           int awayTeamPoints, LocalDateTime startTime, boolean isBasketballPlayoffMatch) {
+                           int awayTeamPoints, LocalDateTime startTime, boolean isPlayoffMatch) {
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
         this.homeTeamPoints = homeTeamPoints;
@@ -43,7 +43,7 @@ public class BasketballMatch {
         this.playerMatchStats = new ArrayList<>();
         this.startTime = startTime;
         this.endTime = startTime.plusHours(2);
-        this.isBasketballPlayoffMatch = isBasketballPlayoffMatch;
+        this.isPlayoffMatch = isPlayoffMatch;
     }
 
     public BasketballMatch() {

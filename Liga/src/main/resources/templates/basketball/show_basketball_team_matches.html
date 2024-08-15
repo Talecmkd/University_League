@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Matches</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h1 th:text="${team.teamName}">Team Name</h1>
+
+    <!-- Section for upcoming fixtures -->
+    <div class="mt-4">
+        <h2>Upcoming Fixtures</h2>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Opponent</th>
+                <th>Date</th>
+                <th>Venue</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="fixture : ${fixtures}">
+                <td th:text="${fixture.awayTeam.teamName == team.teamName ? fixture.homeTeam.teamName : fixture.awayTeam.teamName}">Opponent</td>
+<!--                <td th:text="${#dates.format(fixture.startTime, 'dd-MM-yyyy HH:mm')}">Date</td>-->
+                <td th:text="${fixture.awayTeam.teamName == team.teamName ? 'Away' : 'Home'}">Venue</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Section for past results -->
+    <div class="mt-4">
+        <h2>Past Results</h2>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Opponent</th>
+                <th>Date</th>
+                <th>Score</th>
+                <th>Venue</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="result : ${results}">
+                <td th:text="${result.awayTeam.teamName == team.teamName ? result.homeTeam.teamName : result.awayTeam.teamName}">Opponent</td>
+<!--                <td th:text="${#dates.format(result.endTime, 'dd-MM-yyyy HH:mm')}">Date</td>-->
+                <td th:text="${result.homeTeamPoints} + ' - ' + ${result.awayTeamPoints}">Score</td>
+                <td th:text="${result.awayTeam.teamName == team.teamName ? 'Away' : 'Home'}">Venue</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Back button to return to teams list -->
+    <div class="mt-3">
+        <a th:href="@{/basketball/teams}" class="btn btn-secondary">Back to Teams</a>
+    </div>
+</div>
+</body>
+</html>

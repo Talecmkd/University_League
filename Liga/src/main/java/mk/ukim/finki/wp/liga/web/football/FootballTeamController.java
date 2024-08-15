@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -91,7 +90,7 @@ public class FootballTeamController{
     public String showAddTeamForm(Model model) {
         List<FootballPlayer> players = footballPlayerService.listAllPlayers();
         model.addAttribute("players", players);
-        return "add_team";
+        return "add_football_team";
     }
 
     @PostMapping("/add")

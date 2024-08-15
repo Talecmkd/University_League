@@ -15,6 +15,8 @@ public class BasketballPlayer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long basketball_player_id;
+    @Lob
+    @Column(name="profile_image")
     private byte [] image;
     private String name;
     private String surname;

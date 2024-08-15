@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Player</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Add Player</h2>
+    <form action="/basketball/players/add" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+        <input id="id" type="hidden" name="id"
+               th:value="(${player} != null ? ${player.getBasketball_player_id()} : '')">
+
+        <div class="mb-3">
+            <label for="playerImage" class="form-label">Player Image</label>
+            <input type="file"
+                   class="form-control"
+                   id="playerImage"
+                   name="playerImage"
+                   th:value="${player}!=null?${player.getImage()}: ''"
+                   placeholder="Upload player image">
+        </div>
+
+        <div class="mb-3">
+            <label for="playerName" class="form-label">Player Name</label>
+            <input type="text"
+                   class="form-control"
+                   id="playerName"
+                   name="playerName"
+                   th:value="(${player} != null ? ${player.getName()} : '')"
+                   required
+                   placeholder="Enter player name">
+        </div>
+
+        <div class="mb-3">
+            <label for="playerSurname" class="form-label">Surname</label>
+            <input type="text"
+                   class="form-control"
+                   id="playerSurname"
+                   name="playerSurname"
+                   th:value="(${player} != null ? ${player.getSurname()} : '')"
+                   placeholder="Player Surname">
+        </div>
+
+        <div class="mb-3">
+            <label for="playerBirthDate" class="form-label">Birth Date</label>
+            <input type="date"
+                   class="form-control"
+                   id="playerBirthDate"
+                   name="playerBirthDate"
+                   th:value="(${player} != null ? ${player.getBirthdate()} : '')"
+                   placeholder="Player Birth date">
+        </div>
+
+        <div class="mb-3">
+            <label for="playerIndex" class="form-label">Index</label>
+            <input type="number"
+                   class="form-control"
+                   id="playerIndex"
+                   name="playerIndex"
+                   th:value="(${player} != null ? ${player.getIndex()} : '')"
+                   placeholder="Player Student index">
+        </div>
+
+        <div class="mb-3">
+            <label for="playerCity" class="form-label">City</label>
+            <input type="text"
+                   class="form-control"
+                   id="playerCity"
+                   name="playerCity"
+                   th:value="(${player} != null ? ${player.getCity()} : '')"
+                   placeholder="Player City">
+        </div>
+
+        <div class="mb-3">
+            <label for="playerPosition" class="form-label">Position</label>
+            <input type="text"
+                   class="form-control"
+                   id="playerPosition"
+                   name="playerPosition"
+                   th:value="(${player} != null ? ${player.getPosition()} : '')"
+                   placeholder="Player Position">
+        </div>
+
+        <div class="mb-3">
+            <label for="team" class="form-label">Team</label>
+            <select name="team" id="team" class="form-select">
+                <option value=""></option>
+                <option th:if="${player} != null"
+                        th:selected="${player.getTeam() != null &&
+                                        player.getTeam().getId() == team.getId()}"
+                        th:each="team : ${teams}"
+                        th:value="${team.getId()}"
+                        th:text="${team.getTeamName()}">
+                </option>
+                <option th:if="${player} == null"
+                        th:each="team : ${teams}"
+                        th:value="${team.getId()}"
+                        th:text="${team.getTeamName()}">
+                </option>
+            </select>
+        </div>
+
+        <button id="submit" type="submit" class="btn btn-primary">Submit</button>
+        <a type="button" class="btn btn-secondary" href="/basketball/players">Back</a>
+    </form>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

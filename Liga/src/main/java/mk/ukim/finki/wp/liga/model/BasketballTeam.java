@@ -14,7 +14,7 @@ import java.util.List;
 public class BasketballTeam {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long basketball_team_id;
+    private Long id;
     private String teamName;
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<BasketballPlayer> players;

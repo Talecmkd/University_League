@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Live Football Match</title>
+
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        const players = /*[[${dtoPlayers}]]*/ [];
+        /*]]>*/
+        console.log(players); // Use console.log instead of alert for debugging
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const teamSelect = document.getElementById("teamId");
+            const playerSelect = document.getElementById("playerId");
+            const playerForm = document.getElementById("playerForm");
+            function updatePlayerOptions() {
+                const selectedTeamId = teamSelect.value;
+                playerSelect.innerHTML = '<option value="">Select Player</option>'; // Reset options
+
+                // Filter and add players to the select element
+                for (let i = 0; i < players.length; i++) {
+                    const player = players[i];
+                    console.log(player.teamId);
+                    console.log(selectedTeamId);
+                    if (player.teamId == selectedTeamId) {
+                        const option = document.createElement("option");
+                        console.log(player.basketball_player_id);
+                        option.value = player.basketball_player_id;
+                        option.text = player.name + ' ' + player.surname;
+                        playerSelect.add(option);
+                    }
+                }
+
+                // Show or hide the form based on team selection
+                playerForm.style.display = selectedTeamId ? "block" : "none";
+            }
+
+            teamSelect.addEventListener("change", updatePlayerOptions);
+        });
+    </script>
+</head>
+<body>
+<h1>Edit Live Football Match</h1>
+<form action="/basketball/matches/edit_live" method="post">
+    <input type="hidden" name="footballMatchId" th:value="${match.basketball_match_id}">
+
+    <label for="teamId">Select Team:</label>
+    <select id="teamId" name="teamId">
+        <option value="">Select Team</option>
+        <option th:each="team : ${teams}" th:value="${team.getId()}" th:text="${team.getTeamName()}"></option>
+    </select>
+
+    <label for="playerId">Select Player:</label>
+    <select id="playerId" name="playerId">
+        <option value="">Select Player</option>
+        <option th:each="player : ${players}" th:value="${player.getBasketball_player_id()}" th:text="${player.getSurname()}"></option>
+    </select>
+
+    <div id="playerForm" style="display: none;">
+        <label for="timeScored">Time Scored:</label>
+        <input type="datetime-local" id="timeScored" name="timeScored" required>
+
+        <label for="goalsScored">Points Scored:</label>
+        <input type="number" id="goalsScored" name="goalsScored" required>
+
+        <label for="assistsScored">Assists Scored:</label>
+        <input type="number" id="assistsScored" name="assistsScored" required>
+
+        <label for="saves">Rebounds:</label>
+        <input type="number" id="saves" name="saves" required>
+
+        <button type="submit">Submit</button>
+    </div>
+</form>
+</body>
+</html>
