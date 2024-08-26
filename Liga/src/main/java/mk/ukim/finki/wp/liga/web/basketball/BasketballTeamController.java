@@ -32,7 +32,8 @@ public class BasketballTeamController {
         List<BasketballTeam> basketballTeams = this.basketballTeamService.findAllOrderByPointsDesc();
         model.addAttribute("basketballTeams",basketballTeams);
         //model.addAttribute("bodyContent","football_teams");
-        return "basketball/basketball_teams";
+        model.addAttribute("bodyContent","basketball/basketball_teams");
+        return "/basketball/master_template";
     }
 
     @GetMapping("team/{id}")
@@ -47,7 +48,8 @@ public class BasketballTeamController {
             model.addAttribute("hasError", true);
             model.addAttribute("error", "Team not found");
         }
-        return "basketball/basketball_team_details";
+        model.addAttribute("bodyContent","basketball/basketball_team_details");
+        return "/basketball/master_template";
     }
 
     @GetMapping("/edit/{id}")
@@ -57,7 +59,8 @@ public class BasketballTeamController {
             return "redirect:/basketball/teams";
         }
         model.addAttribute("team", team);
-        return "basketball/edit_basketball_table";
+        model.addAttribute("bodyContent","basketball/edit_basketball_table");
+        return "/basketball/master_template";
     }
 
     @PostMapping("/edit/{id}")
@@ -76,7 +79,8 @@ public class BasketballTeamController {
     public String showAddTeamForm(Model model) {
         List<BasketballPlayer> players = basketballPlayerService.listAllPlayers();
         model.addAttribute("players", players);
-        return "basketball/add_basketball_team";
+        model.addAttribute("bodyContent","basketball/add_basketball_team");
+        return "/basketball/master_template";
     }
 
     @PostMapping("/add")
@@ -100,7 +104,8 @@ public class BasketballTeamController {
         model.addAttribute("team", team);
         model.addAttribute("fixtures", team.getBasketballFixtures());
         model.addAttribute("results", team.getBasketballResults());
-        return "basketball/show_basketball_team_matches";
+        model.addAttribute("bodyContent","basketball/show_basketball_team_matches");
+        return "/basketball/master_template";
     }
 
     @PostMapping("/delete/{id}")

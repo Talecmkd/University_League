@@ -107,8 +107,8 @@ public class BasketballPlayerServiceImpl implements BasketballPlayerService {
     public List<BasketballPlayer> getTop5Players() {
         return this.basketballPlayerRepository.findAll()
                 .stream().sorted((p1,p2)->{
-                    int score1 = p1.getPoints()*2 + p1.getAssists() + p1.getRebounds();
-                    int score2 = p2.getPoints()*2 + p2.getAssists() + p2.getRebounds();
+                    int score1 = p1.getPoints();
+                    int score2 = p2.getPoints();
                     return Integer.compare(score2,score1);
                 })
                 .limit(5)
@@ -120,8 +120,8 @@ public class BasketballPlayerServiceImpl implements BasketballPlayerService {
         return this.basketballPlayerRepository.findByTeamId(teamId)
                 .stream()
                 .sorted((p1, p2) -> {
-                    int score1 = p1.getPoints() * 2 + p1.getAssists() + p1.getRebounds();
-                    int score2 = p2.getPoints() * 2 + p2.getAssists() + p2.getRebounds();
+                    int score1 = p1.getPoints();
+                    int score2 = p2.getPoints();
                     return Integer.compare(score2, score1); // Descending order
                 })
                 .limit(5)

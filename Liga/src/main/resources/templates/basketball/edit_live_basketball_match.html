@@ -45,7 +45,7 @@
 <body>
 <h1>Edit Live Football Match</h1>
 <form action="/basketball/matches/edit_live" method="post">
-    <input type="hidden" name="footballMatchId" th:value="${match.basketball_match_id}">
+    <input type="hidden" name="basketballMatchId" th:value="${match.basketball_match_id}">
 
     <label for="teamId">Select Team:</label>
     <select id="teamId" name="teamId">
@@ -63,14 +63,14 @@
         <label for="timeScored">Time Scored:</label>
         <input type="datetime-local" id="timeScored" name="timeScored" required>
 
-        <label for="goalsScored">Points Scored:</label>
-        <input type="number" id="goalsScored" name="goalsScored" required>
+        <label for="pointsScored">Points Scored:</label>
+        <input type="number" id="pointsScored" name="pointsScored" required>
 
         <label for="assistsScored">Assists Scored:</label>
         <input type="number" id="assistsScored" name="assistsScored" required>
 
-        <label for="saves">Rebounds:</label>
-        <input type="number" id="saves" name="saves" required>
+        <label for="reboundsScored">Rebounds:</label>
+        <input type="number" id="reboundsScored" name="reboundsScored" required>
 
         <button type="submit">Submit</button>
     </div>

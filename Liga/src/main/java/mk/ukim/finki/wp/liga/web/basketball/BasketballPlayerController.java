@@ -38,16 +38,16 @@ public class BasketballPlayerController {
         model.addAttribute("basketballPlayers", basketballPlayers);
         List<BasketballPlayer> topPlayers=basketballPlayerService.getTop5Players();
         model.addAttribute("topPlayers",topPlayers);
-        //model.addAttribute("bodyContent", "football_players");
-        return "basketball/basketball_players";
+        model.addAttribute("bodyContent","basketball/basketball_players");
+        return "/basketball/master_template";
     }
 
     @GetMapping("/add-form")
     public String addPlayerForm(Model model){
         List<BasketballTeam> teams=this.basketballTeamService.listAllTeams();
         model.addAttribute("teams",teams);
-        model.addAttribute("bodyContent","add-basketball-player");
-        return "basketball/add_basketball_player";
+        model.addAttribute("bodyContent","basketball/add_basketball_player");
+        return "/basketball/master_template";
     }
 
     @PostMapping("/add")
@@ -90,8 +90,8 @@ public class BasketballPlayerController {
 
             model.addAttribute("teams", teams);
             model.addAttribute("player", player);
-            model.addAttribute("bodyContent", "add-basketball-player");
-            return "basketball/edit_basketball_player";
+            model.addAttribute("bodyContent", "basketball/edit_basketball_player");
+            return "/basketball/master_template";
         }
 
         return "redirect:/basketball/players?error=PlayerNotFound";
@@ -126,7 +126,7 @@ public class BasketballPlayerController {
         Date birthDate = Date.from(playerBirthDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
         // Update the player's details
         basketballPlayerService.update(id, imageBytes, playerName, playerSurname, birthDate, playerIndex, playerCity, playerPosition, team1);
-        String imageUrl = "/players/image/" + id;
+        String imageUrl = "basketball/players/image/" + id;
         model.addAttribute("playerImageUrl", imageUrl);
         return "redirect:/basketball/players";
     }
@@ -139,10 +139,10 @@ public class BasketballPlayerController {
             return "redirect:/basketball/players"; // Redirect to the list of players or another appropriate page
         }
         model.addAttribute("basketballPlayer", basketballPlayer);
-        String imageUrl = "/players/image/" + id;
+        String imageUrl = "basketball/players/image/" + id;
         model.addAttribute("playerImageUrl", imageUrl);
-
-        return "basketball/basketball_player_details";
+        model.addAttribute("bodyContent","basketball/basketball_player_details");
+        return "/basketball/master_template";
     }
 
     @GetMapping("/image/{id}")

@@ -248,11 +248,12 @@ public class BasketballMatchServiceImpl implements BasketballMatchService {
         BasketballTeam team = basketballTeamRepository.findAll().stream().filter(t -> t.getPlayers().contains(player)).findFirst().get();
 
         BasketballTeam homeOrAway = match.getHomeTeam();
-
+        int ptsHome=match.getHomeTeamPoints();
+        int ptsAway=match.getAwayTeamPoints();
         if (team != homeOrAway) {
-            match.setAwayTeamPoints(pointsScored);
+            match.setAwayTeamPoints(pointsScored + ptsAway);
         } else {
-            match.setHomeTeamPoints(pointsScored);
+            match.setHomeTeamPoints(pointsScored + ptsHome);
         }
 
         basketballMatchRepository.save(match);

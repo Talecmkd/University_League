@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @AllArgsConstructor
-@RequestMapping({"/basketball/matches"})
+@RequestMapping({"/basketball/matches","/basketball"})
 public class BasketballMatchController {
 
     private final BasketballMatchService basketballMatchService;
@@ -32,7 +32,8 @@ public class BasketballMatchController {
     public String showAllMatches(Model model) {
         List<BasketballMatch> basketballMatches = basketballMatchService.listAllBasketballMatches();
         model.addAttribute("basketballMatches", basketballMatches);
-        return "basketball/basketball_matches";
+        model.addAttribute("bodyContent","basketball/basketball_matches");
+        return "/basketball/master_template";
     }
 
     @GetMapping("/details/{id}")
@@ -41,7 +42,8 @@ public class BasketballMatchController {
         match.setHomeTeam(basketballTeamService.findById(match.getHomeTeam().getId()));
         match.setAwayTeam(basketballTeamService.findById(match.getAwayTeam().getId()));
         model.addAttribute("match", match);
-        return "basketball/basketball_match_details";
+        model.addAttribute("bodyContent","basketball/basketball_match_details");
+        return "/basketball/master_template";
     }
 
     @GetMapping("/results/details/{id}")
@@ -50,7 +52,8 @@ public class BasketballMatchController {
         match.setHomeTeam(basketballTeamService.findById(match.getHomeTeam().getId()));
         match.setAwayTeam(basketballTeamService.findById(match.getAwayTeam().getId()));
         model.addAttribute("match", match);
-        return "basketball/basketball_match_results_details";
+        model.addAttribute("bodyContent","basketball/basketball_match_results_details");
+        return "/basketball/master_template";
     }
 
     @GetMapping("/results/details/stats/{id}")
@@ -93,7 +96,8 @@ public class BasketballMatchController {
         model.addAttribute("awayGoals", awayPoints);
         model.addAttribute("awaySaves", awayRebounds);
         model.addAttribute("awayAssists",awayAssists);
-        return "basketball/basketball_match_details_stats";
+        model.addAttribute("bodyContent","basketball/basketball_match_details_stats");
+        return "/basketball/master_template";
     }
 
     @GetMapping("/fixtures")
@@ -103,7 +107,8 @@ public class BasketballMatchController {
                 .filter(match -> match.getEndTime().isAfter(LocalDateTime.now()))
                 .collect(Collectors.toList());
         model.addAttribute("fixtures", fixtures);
-        return "basketball/basketball_fixtures";
+        model.addAttribute("bodyContent","basketball/basketball_fixtures");
+        return "/basketball/master_template";
     }
 
     @GetMapping("/results")
@@ -113,7 +118,8 @@ public class BasketballMatchController {
                 .collect(Collectors.toList());
         results.forEach(basketballMatchService::updateTeamStatistics);
         model.addAttribute("results", results);
-        return "basketball/basketball_results";
+        model.addAttribute("bodyContent","basketball/basketball_results");
+        return "/basketball/master_template";
     }
 
     @GetMapping("/live")
@@ -123,14 +129,16 @@ public class BasketballMatchController {
                         .now())))
                 .collect(Collectors.toList());
         model.addAttribute("live", live);
-        return "basketball/basketball_live";
+        model.addAttribute("bodyContent","basketball/basketball_live");
+        return "/basketball/master_template";
     }
 
     @GetMapping("/add-form")
     public String addMatch(Model model) {
         List<BasketballTeam> teams = basketballTeamService.listAllTeams();
         model.addAttribute("teams", teams);
-        return "basketball/add_basketball_match";
+        model.addAttribute("bodyContent","basketball/add_basketball_match");
+        return "/basketball/master_template";
     }
 
     @PostMapping("/add")
@@ -159,7 +167,8 @@ public class BasketballMatchController {
         List<BasketballTeam> teams = basketballTeamService.listAllTeams();
         model.addAttribute("match", match);
         model.addAttribute("teams", teams);
-        return "basketball/edit_basketball_match";
+        model.addAttribute("bodyContent","basketball/edit_basketball_match");
+        return "/basketball/master_template";
     }
 
     @PostMapping("/edit")
@@ -210,20 +219,21 @@ public class BasketballMatchController {
         model.addAttribute("playersHome", match.getHomeTeam().getPlayers());
         model.addAttribute("playersAway", match.getAwayTeam().getPlayers());
 
-        return "basketball/edit_live_basketball_match";
+        model.addAttribute("bodyContent","basketball/edit_live_basketball_match");
+        return "/basketball/master_template";
     }
 
     @PostMapping("/edit_live")
     public String editLiveMatchPost(@RequestParam Long playerId,
                                     @RequestParam LocalDateTime timeScored,
-                                    @RequestParam Long footballMatchId,
+                                    @RequestParam Long basketballMatchId,
                                     @RequestParam int pointsScored,
                                     @RequestParam int assistsScored,
                                     @RequestParam int reboundsScored) {
 
 
         BasketballPlayer player = basketballPlayerService.findById(playerId);
-        BasketballMatch basketballMatch = basketballMatchService.findById(footballMatchId);
+        BasketballMatch basketballMatch = basketballMatchService.findById(basketballMatchId);
 
         BasketballPlayerMatchStats existingPlayerScored = basketballPlayerMatchStatsService.findByPlayerAndBasketballMatch(player, basketballMatch);
         if (existingPlayerScored != null) {
@@ -246,7 +256,7 @@ public class BasketballMatchController {
 
         BasketballTeam team = basketballTeamService.listAllTeams().stream().filter(t -> t.getPlayers().contains(player)).findFirst().get();
         basketballTeamService.updateStats(team.getId());
-        basketballMatchService.updateLiveStats(footballMatchId, pointsScored, playerId);
+        basketballMatchService.updateLiveStats(basketballMatchId, pointsScored, playerId);
 
         return "redirect:/basketball/matches";
     }
@@ -274,7 +284,8 @@ public class BasketballMatchController {
     public String getPlayoffMatches(Model model) {
         List<BasketballMatch> matches = basketballMatchService.listPlayoffMatches();
         model.addAttribute("matches", matches);
-        return "basketball/basketball_playoff_bracket"; // The name of your Thymeleaf template for the playoff view
+        model.addAttribute("bodyContent","basketball/basketball_playoff_bracket");
+        return "/basketball/master_template"; // The name of your Thymeleaf template for the playoff view
     }
 
     @GetMapping("/playoffs/edit/{id}")
@@ -283,7 +294,8 @@ public class BasketballMatchController {
         List<BasketballTeam> teams = basketballTeamService.listAllTeams();
         model.addAttribute("match", match);
         model.addAttribute("teams", teams);
-        return "basketball/edit_basketball_playoff_match";
+        model.addAttribute("bodyContent","basketball/edit_basketball_playoff_match");
+        return "/basketball/master_template";
     }
 
     @PostMapping("/playoffs/edit")
