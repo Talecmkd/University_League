@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Volleyball Teams</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+<header class="bg-primary text-white p-3">
+    <div class="container">
+        <h1 class="mb-0">Volleyball Teams</h1>
+    </div>
+</header>
+<div class="container mt-5">
+    <div class="mb-3">
+        <!-- Add Team button linking to the add team form -->
+        <a th:href="@{/volleyball/teams/add-form}" class="btn btn-success">Add Team</a>
+    </div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Team Name</th>
+            <th scope="col">Details</th> <!-- New column for details button -->
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="team : ${volleyballTeams}">
+            <td th:text="${team.teamName}"></td>
+            <td>
+                <a th:href="@{/volleyball/teams/team/{id}(id=${team.volleyball_team_id})}" class="btn btn-info">Details</a>
+
+            <td>
+                <!-- Edit button linking to the edit form -->
+                <a th:href="@{/volleyball/teams/edit/{id}(id=${team.volleyball_team_id})}" class="btn btn-warning">Edit</a>
+            </td>
+            <td>
+                <form th:method="POST" th:action="@{'/volleyball/teams/delete/{id}'(id=${team.volleyball_team_id})}" style="display:inline;">
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

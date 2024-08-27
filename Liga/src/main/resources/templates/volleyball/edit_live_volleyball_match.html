@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Live Volleyball Match</title>
+
+  <script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    const players = /*[[${dtoPlayers}]]*/ [];
+    /*]]>*/
+    // console.log(players); // Use console.log instead of alert for debugging
+  </script>
+
+  <script>
+
+    document.addEventListener("DOMContentLoaded", function() {
+      const teamSelect = document.getElementById("teamId");
+      const playerSelect = document.getElementById("playerId");
+      const playerForm = document.getElementById("playerForm");
+      function updatePlayerOptions() {
+        const selectedTeamId = teamSelect.value;
+        playerSelect.innerHTML = '<option value="">Select Player</option>'; // Reset options
+
+        // Filter and add players to the select element
+        for (let i = 0; i < players.length; i++) {
+          const player = players[i];
+          console.log("Players: " ,players);
+          if (player.teamId == selectedTeamId) {
+            const option = document.createElement("option");
+            console.log("Player ID:" ,players[i].volleyball_player_id);
+            console.log("Team ID:", player.teamId);
+            option.value = player.volleyball_player_id;
+            option.text = player.name + ' ' + player.surname;
+            playerSelect.add(option);
+          }
+        }
+
+        // Show or hide the form based on team selection
+        playerForm.style.display = selectedTeamId ? "block" : "none";
+      }
+
+      teamSelect.addEventListener("change", updatePlayerOptions);
+    });
+    document.getElementById("playerForm").onsubmit = function() {
+      const teamValue = document.getElementById("teamId").value;
+      const playerValue = document.getElementById("playerId").value;
+      console.log("Team ID:", teamValue);
+      console.log("Player ID:", playerValue);
+      if (!teamValue || !playerValue || teamValue === "undefined" || playerValue === "undefined") {
+        alert("Please select both a team and a player.");
+        return false; // Prevent form submission
+      }
+
+      return true; // Allow form submission
+    };
+
+
+  </script>
+</head>
+<body>
+<header class="bg-primary text-white p-3">
+  <div class="container">
+    <h1 class="mb-0">Edit Live Volleyball Match</h1>
+  </div>
+</header>
+<form action="/volleyball/matches/edit_live" method="post">
+  <input type="hidden" name="volleyballMatchId" th:value="${match.volleyball_match_id}">
+
+  <label for="teamId">Select Team:</label>
+  <select id="teamId" name="teamId">
+    <option value="">Select Team</option>
+    <option th:each="team : ${teams}" th:value="${team.getVolleyball_team_id()}" th:text="${team.getTeamName()}"></option>
+  </select>
+
+  <label for="playerId">Select Player:</label>
+  <select id="playerId" name="playerId">
+    <option value="">Select Player</option>
+<!--    <option th:each="player : ${players}" th:value="${player.getVolleyball_player_id()}" th:text="${player.getSurname()}"></option>-->
+  </select>
+
+  <div id="playerForm" style="display: none;">
+    <label for="timeScored">Time Scored:</label>
+    <input type="datetime-local" id="timeScored" name="timeScored" required>
+
+    <label for="points">Points Scored:</label>
+    <input type="number" id="points" name="points" required>
+
+    <label for="assists">Assists Scored:</label>
+    <input type="number" id="assists" name="assists" required>
+
+    <label for="blocks">Blocks:</label>
+    <input type="number" id="blocks" name="blocks" required>
+
+    <label for="servings">Servings:</label>
+    <input type="number" id="servings" name="servings" required>
+
+    <button type="submit">Submit</button>
+  </div>
+</form>
+</body>
+</html>

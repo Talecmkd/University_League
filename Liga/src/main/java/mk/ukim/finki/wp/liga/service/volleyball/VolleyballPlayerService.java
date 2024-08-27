@@ -31,5 +31,6 @@ public interface VolleyballPlayerService {
 
     List<VolleyballPlayer> getPlayersByIds(List<Long> ids);
     List<VolleyballPlayer> getTop5Players();
-//    List<VolleyballPlayer> getTop5PlayersByTeam(Long teamId);
+
+//    List<VolleyballPlayer> getTop5PlayersByTeam(Long id);
 }

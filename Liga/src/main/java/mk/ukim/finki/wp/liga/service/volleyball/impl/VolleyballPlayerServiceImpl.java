@@ -76,7 +76,7 @@ public class VolleyballPlayerServiceImpl implements VolleyballPlayerService {
     @Override
     public VolleyballPlayer addPoints(Long id, int pointsToAdd) {
         VolleyballPlayer p = this.findById(id);
-        p.setScoredPoints(p.getPoints() + pointsToAdd);
+        p.setScoredPoints(p.getScoredPoints() + pointsToAdd);
         return volleyballPlayerRepository.save(p);
     }
 
@@ -110,24 +110,13 @@ public class VolleyballPlayerServiceImpl implements VolleyballPlayerService {
     public List<VolleyballPlayer> getTop5Players() {
         return this.volleyballPlayerRepository.findAll()
                 .stream().sorted((p1, p2) -> {
-                    int score1 = p1.getPoints() * 2 + p1.getAssists();
-                    int score2 = p2.getPoints() * 2 + p2.getAssists();
+                    int score1 = p1.getTotalPoints();
+                    int score2 = p2.getTotalPoints();
                     return Integer.compare(score2, score1);
                 })
                 .limit(5)
                 .collect(Collectors.toList());
     }
 
-//    @Override
-//    public List<VolleyballPlayer> getTop5PlayersByTeam(Long teamId) {
-//        return this.volleyballPlayerRepository.findByTeam_Id(teamId)
-//                .stream()
-//                .sorted((p1, p2) -> {
-//                    int score1 = p1.getScoredPoints() * 2 + p1.getAssists();
-//                    int score2 = p2.getScoredPoints() * 2 + p2.getAssists();
-//                    return Integer.compare(score2, score1); // Descending order
-//                })
-//                .limit(5)
-//                .collect(Collectors.toList());
-//    }
+
 }

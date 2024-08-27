@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Volleyball Matches</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+<header class="bg-primary text-white p-3">
+    <div class="container">
+        <h1 class="mb-0">Volleyball Matches</h1>
+    </div>
+</header>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a href="/volleyball/matches/add-form" class="nav-link">Add Match</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/volleyball/matches/live" class="nav-link">Live Matches</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/volleyball/matches/fixtures" class="nav-link">Fixtures</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/volleyball/matches/results" class="nav-link">Results</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/volleyball/players" class="nav-link">View Players</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/volleyball/matches/playoffs/init" class="nav-link">Playoffs</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Home Team</th>
+            <th>Away Team</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Details</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="match : ${volleyballMatches}">
+            <td th:text="${match.homeTeam.getTeamName()}">Home Team Name</td>
+            <td th:text="${match.awayTeam.getTeamName()}">Away Team Name</td>
+            <td th:text="${#temporals.format(match.startTime, 'dd-MM-yyyy HH:mm')}">Start Time</td>
+            <td th:text="${#temporals.format(match.endTime, 'dd-MM-yyyy HH:mm')}">End Time</td>
+            <td><a th:href="@{/volleyball/matches/details/{id}(id=${match.getVolleyball_match_id()})}" class="btn btn-primary">Details</a></td>
+        </tr>
+        </tbody>
+    </table>
+    <a th:href="@{/volleyball/matches/add-form}" class="btn btn-success">Add Match</a>
+</div>
+</body>
+</html>

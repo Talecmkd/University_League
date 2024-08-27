@@ -32,7 +32,8 @@ public class VolleyballTeamController {
         }
         List<VolleyballTeam> volleyballTeams = this.volleyballTeamService.findAllOrderByPointsDesc();
         model.addAttribute("volleyballTeams", volleyballTeams);
-        return "volleyball_teams";
+        model.addAttribute("bodyContent","volleyball/volleyball_teams");
+        return "volleyball/master_template";
     }
 
     @GetMapping("team/{id}")
@@ -41,14 +42,14 @@ public class VolleyballTeamController {
         if (team != null) {
             model.addAttribute("team", team);
             model.addAttribute("players", team.getPlayers());
-            List<VolleyballPlayer> top5Players = new ArrayList<>();
-//                    volleyballPlayerService.getTop5PlayersByTeam(id);
-            model.addAttribute("topPlayers", top5Players);
+//            List<VolleyballPlayer> top5Players=volleyballPlayerService.getTop5PlayersByTeam(id);
+//            model.addAttribute("topPlayers", top5Players);
         } else {
             model.addAttribute("hasError", true);
             model.addAttribute("error", "Team not found");
         }
-        return "volleyball_team_details";
+        model.addAttribute("bodyContent","volleyball/volleyball_team_details");
+        return "volleyball/master_template";
     }
 
     @GetMapping("/edit/{id}")
@@ -58,7 +59,8 @@ public class VolleyballTeamController {
             return "redirect:/volleyball/teams";
         }
         model.addAttribute("team", team);
-        return "edit_volleyball_team";
+        model.addAttribute("bodyContent","volleyball/edit_volleyball_team");
+        return "volleyball/master_template";
     }
 
     @PostMapping("/edit/{id}")
@@ -73,11 +75,12 @@ public class VolleyballTeamController {
         return "redirect:/volleyball/teams";
     }
 
-    @GetMapping("/add")
+    @GetMapping("/add-form")
     public String showAddTeamForm(Model model) {
         List<VolleyballPlayer> players = volleyballPlayerService.listAllPlayers();
         model.addAttribute("players", players);
-        return "add_volleyball_team";
+        model.addAttribute("bodyContent","volleyball/add_volleyball_team");
+        return "volleyball/master_template";
     }
 
     @PostMapping("/add")
@@ -89,7 +92,7 @@ public class VolleyballTeamController {
         }
 
         // Create the team
-        volleyballTeamService.create(teamName, logoBytes);
+        volleyballTeamService.create(teamName, null);
 
         // Redirect to the teams list page
         return "redirect:/volleyball/teams";
@@ -104,7 +107,8 @@ public class VolleyballTeamController {
         model.addAttribute("team", team);
         model.addAttribute("fixtures", team.getVolleyballFixtures());
         model.addAttribute("results", team.getVolleyballResults());
-        return "show_volleyball_team_matches";
+        model.addAttribute("bodyContent","volleyball/show_volleyball_team_matches");
+        return "volleyball/master_template";
     }
 
     @PostMapping("/delete/{id}")

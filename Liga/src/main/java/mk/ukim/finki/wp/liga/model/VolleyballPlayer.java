@@ -54,8 +54,8 @@ public class VolleyballPlayer {
 
     }
 
-    public int getPoints(){
-        return scoredPoints*2 + assists + blocks;
+    public int getTotalPoints(){
+        return scoredPoints + assists + blocks +servings;
     }
 
 }
