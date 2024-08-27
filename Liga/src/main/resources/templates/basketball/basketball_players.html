@@ -53,7 +53,7 @@
             <tbody>
             <tr th:each="player : ${basketballPlayers}">
                 <td>
-                    <img th:src="@{/players/image/{id}(id=${player.basketball_player_id})}" alt="Player Image" style="width:50px;height:50px;"/>
+                    <img th:src="@{/basketball/players/image/{id}(id=${player.basketball_player_id})}" alt="Player Image" style="width:50px;height:50px;"/>
                 </td>
                 <td th:text="${player.name} + ' ' + ${player.surname}"></td>
                 <td th:text="${#dates.format(player.birthdate, 'yyyy-MM-dd')}"></td>
@@ -90,7 +90,7 @@
             <tbody>
             <tr th:each="player : ${topPlayers}">
                 <td>
-                    <img th:src="@{/players/image/{id}(id=${player.basketball_player_id})}" alt="Player Image" style="width:50px;height:50px;"/>
+                    <img th:src="@{/basketball/players/image/{id}(id=${player.basketball_player_id})}" alt="Player Image" style="width:50px;height:50px;"/>
                 </td>
                 <td th:text="${player.name} + ' ' + ${player.surname}"></td>
                 <td th:text="${player.getPoints()}"></td>
@@ -100,7 +100,6 @@
             </tbody>
         </table>
     </div>
-    <a type="button" class="btn btn-secondary" href="/basketball/players/add-form">Add Player</a>
 </section>
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>

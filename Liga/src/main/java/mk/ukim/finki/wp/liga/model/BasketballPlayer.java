@@ -16,7 +16,7 @@ public class BasketballPlayer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long basketball_player_id;
     @Lob
-    @Column(name="profile_image")
+    @Column(name="basketball_profile_image")
     private byte [] image;
     private String name;
     private String surname;
@@ -52,7 +52,7 @@ public class BasketballPlayer {
 
     }
 
-    public int getPoints(){
+    public int getTotalPoints(){
         return points*2 + assists + rebounds;
     }
 

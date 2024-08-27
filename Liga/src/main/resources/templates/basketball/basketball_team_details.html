@@ -51,7 +51,8 @@
                     <th>Player Name</th>
                     <th>Points</th>
                     <th>Assists</th>
-                    <th>Points Scored</th>
+                    <th>Rebounds</th>
+                    <th>Points Contribution</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -62,7 +63,8 @@
                     <td th:text="${player.name} + ' ' + ${player.surname}"></td>
                     <td th:text="${player.points}"></td>
                     <td th:text="${player.assists}"></td>
-                    <td th:text="${player.points * 2 + player.assists + player.rebounds}"></td>
+                    <td th:text="${player.rebounds}"></td>
+                    <td th:text="${player.getTotalPoints()}"></td>
                 </tr>
                 </tbody>
             </table>

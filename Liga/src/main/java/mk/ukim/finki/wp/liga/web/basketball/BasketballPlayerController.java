@@ -126,7 +126,7 @@ public class BasketballPlayerController {
         Date birthDate = Date.from(playerBirthDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
         // Update the player's details
         basketballPlayerService.update(id, imageBytes, playerName, playerSurname, birthDate, playerIndex, playerCity, playerPosition, team1);
-        String imageUrl = "basketball/players/image/" + id;
+        String imageUrl = "/basketball/players/image/" + id;
         model.addAttribute("playerImageUrl", imageUrl);
         return "redirect:/basketball/players";
     }
