@@ -3,6 +3,7 @@ package mk.ukim.finki.wp.liga.service.football;
 import mk.ukim.finki.wp.liga.model.FootballMatch;
 import mk.ukim.finki.wp.liga.model.FootballPlayer;
 import mk.ukim.finki.wp.liga.model.FootballTeam;
+import mk.ukim.finki.wp.liga.model.dtos.TeamStandingsDTO;
 
 import java.awt.*;
 import java.util.Date;
@@ -31,5 +32,12 @@ public interface FootballTeamService {
 
     FootballTeam saveTable(Long id, int teamPoints);
     List<FootballTeam> findAllOrderByPointsDesc();
+    List<TeamStandingsDTO> getStandings();
+//  List<String> getLastFiveMatchesForm(FootballTeam team);
+    void incrementMatchesPlayed(Long teamId);
+    void addWin(Long teamId);
+    void addLoss(Long teamId);
+    void addDraw(Long teamId);
+    void addPoints(Long teamId, int points);
 
 }

@@ -2,134 +2,135 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Add Player</title>
+    <title>Edit Player</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<!--image,name,surname,birthdate,index,city,position,team,appearances,goals,assists,saves-->
-<form th:action="'/players/edit/'+${player.getFootball_player_id()}" method="POST" enctype="multipart/form-data"> <!-- the form takes us to the postMapping /products/edit/{id} if the product is present, or just /products/edit if the product is not present -->
-    <input id="id" type="hidden" name="id"
-           th:value="(${player} != null ? ${player.getFootball_player_id()} : '')">
-    <div class="form-group">
-        <label for ="playerImage">Player Image</label>
-        <input type="file"
-               class = "form-control"
-               id="playerImage"
-               name="playerImage"
-               th:value="${player}!=null?${player.getImage()}: ''"
-               placeholder="Upload player image"
-        >
-        <label for="playerName">Player name</label>
-        <input type="text"
-               class="form-control"
-               id="playerName"
-               name="playerName"
-               th:value="(${player} != null ? ${player.getName()} : '')"
-               required
-               placeholder="Enter player name"> <!--We check if the product is null, if not we get its name -->
-    </div>
-    <div class="form-group">
-        <label for="playerSurname">Surname</label>
-        <input type="text"
-               class="form-control"
-               id="playerSurname"
-               name="playerSurname"
-               th:value="(${player} != null ? ${player.getSurname()} : '')"
-               placeholder="Player Surname">
-        <!-- We check if the product is null, if not we get its price -->
-    </div>
-    <div class="form-group">
-        <label for="playerBirthDate">Birth Date</label>
-        <input type="date"
-               class="form-control"
-               id="playerBirthDate"
-               name="playerBirthDate"
-               th:value="(${player} != null ? ${player.getBirthdate()} : '')"
-               placeholder="Player Birth date">
-    </div>
-    <div class="form-group">
-        <label for="playerIndex">Index</label>
-        <input type="number"
-               class="form-control"
-               id="playerIndex"
-               name="playerIndex"
-               th:value="(${player} != null ? ${player.getIndex()} : '')"
-               placeholder="Player Student index">
-    </div>
-    <div class="form-group">
-        <label for="playerCity">City</label>
-        <input type="text"
-               class="form-control"
-               id="playerCity"
-               name="playerCity"
-               th:value="(${player} != null ? ${player.getCity()} : '')"
-               placeholder="Player City">
-    </div>
-    <div class="form-group">
-        <label for="playerPosition">Position</label>
-        <input type="text"
-               class="form-control"
-               id="playerPosition"
-               name="playerPosition"
-               th:value="(${player} != null ? ${player.getPosition()} : '')"
-               placeholder="Player Position ">
-    </div>
-    <div class="form-group">
-        <label>Team</label>
-        <select name="team" class="form-control">
-            <option th:if="${player} != null"
-                    th:selected="${player.getTeam() != null &&
-                                player.getTeam().getId() == team.getId()}"
-                    th:each="team : ${teams}"
-                    th:value="${team.getId()}"
-                    th:text="${team.getTeamName()}">
-            </option>
-            <option th:if="${player} == null"
-                    th:each="team : ${teams}"
-                    th:value="${team.getId()}"
-                    th:text="${team.getTeamName()}">
-            </option>
-        </select>
-    </div>
-    <!--    <div class="form-group">-->
-    <!--        <label for="playerAppearances">Player Appearances</label>-->
-    <!--        <input type="number"-->
-    <!--               class="form-control"-->
-    <!--               id="playerAppearances"-->
-    <!--               name="playerAppearances"-->
-    <!--               th:value="(${player} != null ? ${player.getPosition()} : '')"-->
-    <!--               placeholder="Player Position ">-->
-    <!--    </div>-->
-    <!--    <div class="form-group">-->
-    <!--        <label for="playerGoals">Player Goals</label>-->
-    <!--        <input type="number"-->
-    <!--               class="form-control"-->
-    <!--               id="playerGoals"-->
-    <!--               name="playerGoals"-->
-    <!--               th:value="(${player} != null ? ${player.getGoals()} : '')"-->
-    <!--               placeholder="Player Goals ">-->
-    <!--    </div>-->
-    <!--    <div class="form-group">-->
-    <!--        <label for="playerAssists">Player Goals</label>-->
-    <!--        <input type="number"-->
-    <!--               class="form-control"-->
-    <!--               id="playerAssists"-->
-    <!--               name="playerAssists"-->
-    <!--               th:value="(${player} != null ? ${player.getAssists()} : '')"-->
-    <!--               placeholder="Player Assists ">-->
-    <!--    </div>-->
-    <!--    <div class="form-group">-->
-    <!--        <label for="playerSaves">Player Saves</label>-->
-    <!--        <input type="number"-->
-    <!--               class="form-control"-->
-    <!--               id="playerSaves"-->
-    <!--               name="playerSaves"-->
-    <!--               th:value="(${player} != null ? ${player.getSaves()()} : '')"-->
-    <!--               placeholder="Player Saves ">-->
-    <!--    </div>-->
-    <button id="submit" type="submit" class="btn btn-primary">Submit</button>
-    <a type="button" class="btn btn-secondary" href="/products">Back</a>
-</form>
+<div class="container mt-5">
+    <h2>Edit Player</h2>
+    <form th:action="'/players/edit/'+${player.getFootball_player_id()}" method="POST" enctype="multipart/form-data"
+          class="needs-validation" novalidate>
+        <!-- Hidden ID Field -->
+        <input id="id" type="hidden" name="id" th:value="${player != null ? player.getFootball_player_id() : ''}">
 
+        <!-- Player Image -->
+        <div class="mb-3">
+            <label for="playerImage" class="form-label">Player Image</label>
+            <input type="file" class="form-control" id="playerImage" name="playerImage"
+                   th:value="${player != null ? player.getImage() : ''}" placeholder="Upload player image">
+        </div>
 
+        <!-- Player Name -->
+        <div class="mb-3">
+            <label for="playerName" class="form-label">Player Name</label>
+            <input type="text" class="form-control" id="playerName" name="playerName"
+                   th:value="${player != null ? player.getName() : ''}" required placeholder="Enter player name">
+            <div class="invalid-feedback">Please enter the player's name.</div>
+        </div>
+
+        <!-- Player Surname -->
+        <div class="mb-3">
+            <label for="playerSurname" class="form-label">Surname</label>
+            <input type="text" class="form-control" id="playerSurname" name="playerSurname"
+                   th:value="${player != null ? player.getSurname() : ''}" required placeholder="Player Surname">
+            <div class="invalid-feedback">Please enter the player's surname.</div>
+        </div>
+
+        <!-- Player Birth Date -->
+        <div class="mb-3">
+            <label for="playerBirthDate" class="form-label">Birth Date</label>
+            <input type="date" class="form-control" id="playerBirthDate" name="playerBirthDate"
+                   th:value="${player != null ? player.getBirthdate() : ''}" required placeholder="Player Birth date">
+            <div class="invalid-feedback">Please enter the player's birth date.</div>
+        </div>
+
+        <!-- Player Index -->
+        <div class="mb-3">
+            <label for="playerIndex" class="form-label">Index</label>
+            <input type="text" class="form-control" id="playerIndex" name="playerIndex"
+                   th:value="${player != null ? player.getIndex() : ''}" required placeholder="Player Student index"
+                   pattern="\d{6}" maxlength="6">
+            <div class="invalid-feedback">Please enter a 6-digit player index.</div>
+        </div>
+
+        <!-- Player City -->
+        <div class="mb-3">
+            <label for="playerCity" class="form-label">City</label>
+            <input type="text" class="form-control" id="playerCity" name="playerCity"
+                   th:value="${player != null ? player.getCity() : ''}" required placeholder="Player City">
+            <div class="invalid-feedback">Please enter the player's city.</div>
+        </div>
+
+        <!-- Player Position -->
+        <div class="mb-3">
+            <label for="playerPosition" class="form-label">Position</label>
+            <input type="text" class="form-control" id="playerPosition" name="playerPosition"
+                   th:value="${player != null ? player.getPosition() : ''}" required placeholder="Player Position">
+            <div class="invalid-feedback">Please enter the player's position.</div>
+        </div>
+
+        <!-- Team Selection -->
+        <div class="mb-3">
+            <label for="teamSelect" class="form-label">Team</label>
+            <select id="teamSelect" name="team" class="form-select" required onchange="checkTeamPlayerCount()">
+                <option value="">Select a team</option>
+                <option th:each="team : ${teams}" th:value="${team.getId()}"
+                        th:data-player-count="${team.getPlayers().size()}" th:text="${team.getTeamName()}"
+                        th:selected="${player.getTeam() != null && player.getTeam().getId() == team.getId()}">
+                </option>
+            </select>
+            <div class="invalid-feedback">Please select a team.</div>
+        </div>
+
+        <!-- Submit and Back Buttons -->
+        <button id="submitButton" type="submit" class="btn btn-primary">Submit</button>
+        <a type="button" class="btn btn-secondary" href="/players">Back</a>
+    </form>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Custom Script for Validation and Team Player Count Check -->
+<script>
+    (function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            var forms = document.getElementsByClassName('needs-validation');
+            Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    var indexField = document.getElementById('playerIndex');
+                    if (indexField.value.length !== 6) {
+                        indexField.setCustomValidity('The index must be exactly 6 digits long.');
+                        event.preventDefault();
+                        event.stopPropagation();
+                    } else {
+                        indexField.setCustomValidity('');
+                    }
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+
+    function checkTeamPlayerCount() {
+        const teamSelect = document.getElementById('teamSelect');
+        const selectedTeam = teamSelect.options[teamSelect.selectedIndex];
+        const playerCount = selectedTeam.getAttribute('data-player-count');
+        const submitButton = document.getElementById('submitButton');
+
+        if (parseInt(playerCount) >= 5) {
+            alert('This team already has 5 players. You cannot add more.');
+            submitButton.disabled = true;
+        } else {
+            submitButton.disabled = false;
+        }
+    }
+</script>
 </body>
 </html>

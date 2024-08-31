@@ -1,8 +1,10 @@
 package mk.ukim.finki.wp.liga.web.football;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import mk.ukim.finki.wp.liga.model.FootballPlayer;
 import mk.ukim.finki.wp.liga.model.FootballTeam;
+import mk.ukim.finki.wp.liga.model.dtos.TeamStandingsDTO;
 import mk.ukim.finki.wp.liga.service.football.FootballMatchService;
 import mk.ukim.finki.wp.liga.service.football.FootballPlayerScoredService;
 import mk.ukim.finki.wp.liga.service.football.FootballPlayerService;
@@ -14,7 +16,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @AllArgsConstructor
@@ -37,12 +42,13 @@ public class FootballTeamController{
     return "football_teams";
 }
 
-@GetMapping("team/{id}")
-    public String getTeam(@PathVariable Long id, Model model){
+@GetMapping("details/{id}")
+    public String getTeam(@PathVariable Long id, Model model, HttpServletRequest request){
     FootballTeam team = footballTeamService.findById(id);
     if (team != null) {
         model.addAttribute("team", team);
         model.addAttribute("players", team.getPlayers());
+        model.addAttribute("referer", request.getHeader("Referer"));
         List<FootballPlayer> top5Players=footballPlayerService.getTop5PlayersByTeam(id);
         model.addAttribute("topPlayers",top5Players);
     } else {
@@ -123,5 +129,12 @@ public class FootballTeamController{
         footballTeamService.delete(id);
         return "redirect:/teams";
     }
+    @GetMapping("/standings")
+    public String getStandings(Model model) {
+        List<TeamStandingsDTO> standings = footballTeamService.getStandings();
+        model.addAttribute("standings", standings);
+        return "standings";
+    }
 
 }
+

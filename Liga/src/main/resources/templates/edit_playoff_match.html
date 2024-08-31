@@ -2,28 +2,77 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Edit Playoff Match</title>
+    <script>
+        function validateForm(event) {
+            let homeTeamPoints = document.getElementById('homeTeamPoints').value;
+            let awayTeamPoints = document.getElementById('awayTeamPoints').value;
+            let homeScorers = document.getElementById('homeScorers').selectedOptions.length;
+            let awayScorers = document.getElementById('awayScorers').selectedOptions.length;
+
+            // Check if goals are entered but no players selected
+            if (homeTeamPoints > 0 && homeScorers === 0) {
+                alert('Please select at least one home team scorer for the goals.');
+                event.preventDefault();
+                return;
+            }
+            if (awayTeamPoints > 0 && awayScorers === 0) {
+                alert('Please select at least one away team scorer for the goals.');
+                event.preventDefault();
+                return;
+            }
+
+            // Check if players selected but no goals are entered
+            if (homeTeamPoints === '0' && homeScorers > 0) {
+                alert('Please enter home team goals if players are selected.');
+                event.preventDefault();
+                return;
+            }
+            if (awayTeamPoints === '0' && awayScorers > 0) {
+                alert('Please enter away team goals if players are selected.');
+                event.preventDefault();
+                return;
+            }
+
+            // Check if more players are selected than goals entered
+            if (homeScorers > homeTeamPoints) {
+                alert('You have selected more home team players than the goals entered.');
+                event.preventDefault();
+                return;
+            }
+            if (awayScorers > awayTeamPoints) {
+                alert('You have selected more away team players than the goals entered.');
+                event.preventDefault();
+                return;
+            }
+
+            if ((homeTeamPoints > 0 && homeScorers > 0 && awayTeamPoints === '0' && awayScorers === 0) ||
+                (awayTeamPoints > 0 && awayScorers > 0 && homeTeamPoints === '0' && homeScorers === 0)) {
+                if (!confirm("You have entered scores only for one team. Would you like to continue updating the match?")) {
+                    event.preventDefault();
+                    return;
+                }
+            }
+
+            // If no changes are made, just submit the form and redirect
+            if (homeTeamPoints === '0' && awayTeamPoints === '0' && homeScorers === 0 && awayScorers === 0) {
+                window.location.href = '/matches/playoffs';
+                event.preventDefault();
+                return;
+            }
+        }
+    </script>
 </head>
 <body>
 <h1>Edit Playoff Match</h1>
-<form th:action="@{/matches/playoffs/edit}" method="post">
+<form th:action="@{/matches/playoffs/edit}" method="post" onsubmit="validateForm(event)">
     <!-- Hidden input for match ID -->
     <input type="hidden" name="id" th:value="${match.football_match_id}" />
 
-    <!-- Hidden inputs for team IDs -->
+    <!-- Hidden input for Home Team ID -->
     <input type="hidden" name="homeTeamId" th:value="${match.homeTeam.id}" />
+
+    <!-- Hidden input for Away Team ID -->
     <input type="hidden" name="awayTeamId" th:value="${match.awayTeam.id}" />
-
-    <!-- Display Home Team -->
-    <label for="homeTeam">Home Team:</label>
-    <select id="homeTeam" name="homeTeamId" disabled>
-        <option th:value="${match.homeTeam.id}" th:text="${match.homeTeam.teamName}"></option>
-    </select>
-
-    <!-- Display Away Team -->
-    <label for="awayTeam">Away Team:</label>
-    <select id="awayTeam" name="awayTeamId" disabled>
-        <option th:value="${match.awayTeam.id}" th:text="${match.awayTeam.teamName}"></option>
-    </select>
 
     <!-- Input fields for match points -->
     <label for="homeTeamPoints">Home Team Points:</label>
@@ -31,6 +80,24 @@
 
     <label for="awayTeamPoints">Away Team Points:</label>
     <input type="number" id="awayTeamPoints" name="awayTeamPoints" th:value="${match.awayTeamPoints}" />
+
+    <!-- Home Team Scorers -->
+    <label for="homeScorers">Select Home Team Scorers:</label>
+    <select id="homeScorers" name="homeScorers" multiple>
+        <option th:each="player : ${match.homeTeam.players}"
+                th:value="${player.football_player_id}"
+                th:text="${player.name}">
+        </option>
+    </select>
+
+    <!-- Away Team Scorers -->
+    <label for="awayScorers">Select Away Team Scorers:</label>
+    <select id="awayScorers" name="awayScorers" multiple>
+        <option th:each="player : ${match.awayTeam.players}"
+                th:value="${player.football_player_id}"
+                th:text="${player.name}">
+        </option>
+    </select>
 
     <button type="submit">Update Match</button>
 </form>
