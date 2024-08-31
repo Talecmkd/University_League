@@ -1,9 +1,62 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Football Matches</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        .match-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-decoration: none; /* Remove underline from link */
+            color: inherit; /* Inherit color from parent */
+            transition: background-color 0.3s; /* Smooth hover effect */
+        }
+        .match-row:hover {
+            background-color: #f8f9fa; /* Highlight row on hover */
+        }
+        .match-link {
+            display: block;
+            width: 100%;
+            color: inherit;
+        }
+        .team-info {
+            display: flex;
+            align-items: center;
+        }
+        .team-info img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+        .match-time {
+            font-size: 1.2rem;
+            padding: 5px 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            color: #333;
+        }
+        .match-date {
+            font-size: 0.9rem;
+            color: #555;
+        }
+        .team-name {
+            font-size: 1.2rem;
+            color: #000;
+            font-weight: bold;
+        }
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+        .actions .btn {
+            font-size: 0.8rem;
+        }
+    </style>
 </head>
 <body>
 <header class="bg-primary text-white p-3">
@@ -32,6 +85,9 @@
                     <a href="/players" class="nav-link">View Players</a>
                 </li>
                 <li class="nav-item">
+                    <a href="/teams/standings" class="nav-link">Standings</a>
+                </li>
+                <li class="nav-item">
                     <a href="/matches/playoffs/init" class="nav-link">Playoffs</a>
                 </li>
             </ul>
@@ -40,31 +96,33 @@
 </nav>
 
 <section class="container mt-4">
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover">
-            <thead class="thead-dark">
-            <tr>
-                <th>Match</th>
-                <th>Start Time</th>
-                <th>End Time</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="match : ${footballMatches}">
-                <td th:text="${match.homeTeam.teamName} + ' vs ' + ${match.awayTeam.teamName}">Match Description</td>
-                <td th:text="${#temporals.format(match.startTime, 'dd-MM-yyyy HH:mm')}">Start Time</td>
-                <td th:text="${#temporals.format(match.endTime, 'dd-MM-yyyy HH:mm')}">End Time</td>
-                <td>
-                    <a th:href="@{/matches/details/{id}(id=${match.football_match_id})}" class="btn btn-info btn-sm">Details</a>
-                    <a th:href="@{/matches/edit-form/{id}(id=${match.football_match_id})}" class="btn btn-warning btn-sm">Edit</a>
-                    <form th:method="POST" th:action="@{'/matches/delete/{id}'(id=${match.football_match_id})}" style="display:inline;">
-                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+    <!-- Iterate over the map's entry set -->
+    <div th:each="entry : ${groupedMatches}">
+        <!-- Display the date -->
+        <h3 class="match-date" th:text="${#temporals.format(entry.key, 'EEEE dd MMMM yyyy')}"></h3>
+
+        <!-- Iterate over the list of matches for each date -->
+        <div th:each="match : ${entry.value}">
+            <a th:href="@{/matches/details/{id}(id=${match.football_match_id})}" class="d-block match-link">
+                <div class="match-row">
+                    <div>
+                        <span class="team-name" th:text="${match.homeTeam.teamName}"></span>
+                        <span class="match-time" th:text="${#temporals.format(match.startTime, 'HH:mm')}"></span>
+                        <span class="team-name" th:text="${match.awayTeam.teamName}"></span>
+                    </div>
+                    <div class="ml-auto actions">
+                        <!-- Action Buttons -->
+                        <a th:href="@{/matches/edit-form/{id}(id=${match.football_match_id})}" class="btn btn-warning btn-sm">Edit</a>
+                        <form th:method="POST" th:action="@{'/matches/finish/{id}'(id=${match.football_match_id})}" style="display:inline;">
+                            <button type="submit" class="btn btn-success btn-sm">Finish</button>
+                        </form>
+                        <form th:method="POST" th:action="@{'/matches/delete/{id}'(id=${match.football_match_id})}" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </a>
+        </div>
     </div>
 </section>
 

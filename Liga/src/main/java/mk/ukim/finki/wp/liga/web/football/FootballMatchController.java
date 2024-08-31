@@ -15,10 +15,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @Controller
@@ -33,8 +37,9 @@ public class FootballMatchController {
 
     @GetMapping
     public String showAllMatches(Model model) {
-        List<FootballMatch> footballMatches = footballMatchService.listAllFootballMatches();
-        model.addAttribute("footballMatches", footballMatches);
+        List<FootballMatch> matches = footballMatchService.listAllFootballMatches(); // Assume this gets all matches
+        Map<LocalDate, List<FootballMatch>> groupedMatches = footballMatchService.groupMatchesByDate(matches);
+        model.addAttribute("groupedMatches", groupedMatches);
         model.addAttribute("bodyContent","football_matches");
         return "master_template";
     }
@@ -119,7 +124,7 @@ public class FootballMatchController {
         List<FootballMatch> results = footballMatchService.listAllFootballMatches().stream()
                 .filter(match -> match.getEndTime().isBefore(LocalDateTime.now()))
                 .collect(Collectors.toList());
-        results.forEach(footballMatchService::updateTeamStatistics);
+        //results.forEach(footballMatchService::updateTeamStatistics);
         model.addAttribute("results", results);
         model.addAttribute("bodyContent","football_results");
         return "master_template";
@@ -150,12 +155,11 @@ public class FootballMatchController {
             @RequestParam Long awayTeamId,
             @RequestParam int homeTeamPoints,
             @RequestParam int awayTeamPoints,
-            @RequestParam String startTime,
-            @RequestParam String endTime) {
+            @RequestParam String startTime
+    ) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
         LocalDateTime start = LocalDateTime.parse(startTime, formatter);
-        LocalDateTime end = LocalDateTime.parse(endTime, formatter);
 
         FootballTeam homeTeam = footballTeamService.findById(homeTeamId);
         FootballTeam awayTeam = footballTeamService.findById(awayTeamId);
@@ -249,12 +253,11 @@ public class FootballMatchController {
             @RequestParam Long awayTeamId,
             @RequestParam int homeTeamPoints,
             @RequestParam int awayTeamPoints,
-            @RequestParam String startTime,
-            @RequestParam String endTime) {
+            @RequestParam String startTime
+            ) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
         LocalDateTime start = LocalDateTime.parse(startTime, formatter);
-        LocalDateTime end = LocalDateTime.parse(endTime, formatter);
 
         FootballTeam homeTeam = footballTeamService.findById(homeTeamId);
         FootballTeam awayTeam = footballTeamService.findById(awayTeamId);
@@ -292,8 +295,12 @@ public class FootballMatchController {
     public String editPlayoffMatch(@PathVariable Long id, Model model) {
         FootballMatch match = footballMatchService.findById(id);
         List<FootballTeam> teams = footballTeamService.listAllTeams();
+        FootballTeam homeTeam = match.getHomeTeam();
+        FootballTeam awayTeam = match.getAwayTeam();
         model.addAttribute("match", match);
         model.addAttribute("teams", teams);
+        model.addAttribute("homeScorers", homeTeam.getPlayers());
+        model.addAttribute("awayScorers", awayTeam.getPlayers());
         model.addAttribute("bodyContent","edit_playoff_match");
         return "master_template";
     }
@@ -303,23 +310,45 @@ public class FootballMatchController {
             @RequestParam Long homeTeamId,
             @RequestParam Long awayTeamId,
             @RequestParam int homeTeamPoints,
-            @RequestParam int awayTeamPoints) {
+            @RequestParam int awayTeamPoints,
+            @RequestParam(value = "homeScorers", required = false) List<FootballPlayer> homeScorers,
+            @RequestParam(value = "awayScorers", required = false) List<FootballPlayer> awayScorers) {
+
         FootballTeam homeTeam = footballTeamService.findById(homeTeamId);
         FootballTeam awayTeam = footballTeamService.findById(awayTeamId);
-        footballMatchService.updatePlayoffMatchPoints(id, homeTeam, awayTeam, homeTeamPoints, awayTeamPoints);
+
+        footballMatchService.updatePlayoffMatchPoints(id, homeTeam, awayTeam, homeTeamPoints, awayTeamPoints, homeScorers, awayScorers);
 
         return "redirect:/matches/playoffs";
     }
     @GetMapping("/playoffs/semi-finals_Init")
     public String initializeSemiFinalMatches() {
         footballMatchService.createSemiFinalMatches();
-        return "redirect:/matches/playoffs"; // Redirect to view the updated playoff bracket
+        return "redirect:/matches/playoffs";
     }
     @GetMapping("/playoffs/finals_Init")
     public String initializeFinalMatches() {
         footballMatchService.createFinalMatch();
-        return "redirect:/matches/playoffs"; // Redirect to view the updated playoff bracket
+        return "redirect:/matches/playoffs";
     }
+    @PostMapping("/finish/{id}")
+    public String finishMatch(@PathVariable Long id) {
+        try {
+            FootballMatch match = footballMatchService.findById(id);
+            footballMatchService.finishMatch(id);
+            //footballMatchService.updateTeamStatistics(match);
+            return "redirect:/matches/results";
+
+        } catch (Exception e) {
+            return "redirect:/matches/error";
+        }
+    }
+    @PostMapping("/details/{id}/process-stats")
+    public String processMatchStats(@PathVariable("id") Long matchId, Model model) {
+        footballMatchService.processMatchStats(matchId);
+        return "redirect:/matches/results"; // Redirect back to the results page after processing
+    }
+
 }
 
 

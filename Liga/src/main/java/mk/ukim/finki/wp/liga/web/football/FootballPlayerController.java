@@ -1,5 +1,6 @@
 package mk.ukim.finki.wp.liga.web.football;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import mk.ukim.finki.wp.liga.model.FootballPlayer;
 import mk.ukim.finki.wp.liga.model.FootballTeam;
@@ -41,9 +42,11 @@ public class FootballPlayerController {
     }
 
     @GetMapping("/add-form")
-    public String addPlayerForm(Model model){
+    public String addPlayerForm(@RequestParam(value = "returnUrl", required = false, defaultValue = "/players") String returnUrl, Model model){
         List<FootballTeam> teams=this.footballTeamService.listAllTeams();
         model.addAttribute("teams",teams);
+        model.addAttribute("bodyContent","add-football-player");
+        model.addAttribute("returnUrl", returnUrl);
         model.addAttribute("bodyContent","add_football_player");
         return "master_template";
 
@@ -59,8 +62,17 @@ public class FootballPlayerController {
                             @RequestParam Integer playerIndex,
                             @RequestParam String playerCity,
                             @RequestParam String playerPosition,
-                            @RequestParam(required = false) Long team
+                            @RequestParam(required = false) Long team,
+                            @RequestParam(value = "returnUrl", required = false, defaultValue = "/players") String returnUrl,
+                            Model model
     ) throws IOException {
+        if (playerName.isEmpty() || playerSurname.isEmpty() || playerBirthDate == null || playerIndex == null || playerCity.isEmpty() || playerPosition.isEmpty()) {
+            model.addAttribute("errorMessage", "Please fill out all required fields.");
+            List<FootballTeam> teams = this.footballTeamService.listAllTeams();
+            model.addAttribute("teams", teams);
+            model.addAttribute("returnUrl", returnUrl);
+            return "add_football_player"; // Return the view with the error message
+        }
         byte [] imageBytes=null;
         if (playerImage != null && !playerImage.isEmpty()) {
             try {
@@ -80,7 +92,7 @@ public class FootballPlayerController {
         this.footballPlayerService.create(imageBytes,playerName,playerSurname,
                 birthDate,playerIndex,playerCity,playerPosition,team1);
 
-        return "redirect:/players";
+        return "redirect:" + returnUrl;
     }
     @GetMapping("/edit/{id}")
     public String editFootballPlayer(@PathVariable Long id, Model model) {
@@ -108,9 +120,23 @@ public class FootballPlayerController {
                              @RequestParam Long team,
                              Model model
     ) {
+        if (playerName.isEmpty() || playerSurname.isEmpty() || playerBirthDate == null || playerIndex == 0 || playerCity.isEmpty() || playerPosition.isEmpty()) {
+            model.addAttribute("errorMessage", "Please fill out all required fields.");
+            FootballPlayer player = this.footballPlayerService.findById(id);
+            List<FootballTeam> teams = this.footballTeamService.listAllTeams();
+            model.addAttribute("player", player);
+            model.addAttribute("teams", teams);
+            return "edit_football_player"; // Return the view with the error message
+        }
+
+
         FootballPlayer existingPlayer = footballPlayerService.findById(id);
         if (existingPlayer == null) {
             return "redirect:/players";
+        }
+        FootballTeam existingTeam = footballTeamService.findById(id);
+        if(existingTeam.getPlayers().size() >= 5){
+            return "redirect:/players/edit/" + id + "?error=Teamfull";
         }
         byte[] imageBytes = existingPlayer.getImage();
         if (playerImage != null && !playerImage.isEmpty()) {
@@ -130,12 +156,13 @@ public class FootballPlayerController {
         return "redirect:/players";
     }
     @GetMapping("/details/{id}")
-    public String getPlayerDetails(@PathVariable Long id, Model model){
+    public String getPlayerDetails(@PathVariable Long id, HttpServletRequest request, Model model){
         FootballPlayer footballPlayer = footballPlayerService.findById(id);
         if (footballPlayer == null) {
             return "redirect:/players"; // Redirect to the list of players or another appropriate page
         }
         model.addAttribute("footballPlayer", footballPlayer);
+        model.addAttribute("referer", request.getHeader("Referer"));
         String imageUrl = "/players/image/" + id;
         model.addAttribute("playerImageUrl", imageUrl);
         model.addAttribute("bodyContent","football_player_details");

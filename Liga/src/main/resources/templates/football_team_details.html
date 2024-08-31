@@ -5,6 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Team Details</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+    <style>
+        a.player-link {
+            color: black;
+            text-decoration: none; /* This removes the underline, if needed */
+        }
+
+        a.player-link:hover {
+            color: grey; /* Optional: Change color on hover */
+        }
+    </style>
 </head>
 <body>
 <div class="container mt-5">
@@ -26,16 +37,25 @@
                 <h3>Players</h3>
                 <ul>
                     <li th:each="player : ${players}">
-                        <span th:text="${player.name}">Player Name</span>
+                        <a th:href="@{/players/details/{id}(id=${player.football_player_id})}" th:text="${player.name}" class="player-link">Player Name</a>
                     </li>
                 </ul>
             </div>
         </div>
     </div>
 
-    <!-- Fixtures/Results button -->
-    <a th:href="@{/teams/show/{id}(id=${team.id})}" class="btn btn-info mt-3">Fixtures/Results</a>
-    <a type="button" class="btn btn-secondary" href="/players/add-form">Add Player</a>
+    <!-- Conditionally show Add Player button -->
+    <div th:if="${players.size()} < 5">
+        <a th:href="@{/players/add-form(returnUrl=${'/teams/details/' + team.id})}" class="btn btn-primary mt-3">Add Player</a>
+        <a th:if="${referer?.contains('/matches/details')}"
+           th:href="${referer}"
+           class="btn btn-primary mt-3">Back to Match</a>
+
+        <!-- "Back to List" Button -->
+        <a th:if="${referer?.contains('/teams')}"
+           th:href="@{/teams}"
+           class="btn btn-primary mt-3">Back to List</a>
+    </div>
 
     <div th:if="${team == null}">
         <p>Team not found.</p>
@@ -68,10 +88,14 @@
                 </tbody>
             </table>
         </div>
-
     </section>
     <a type="button" class="btn btn-secondary" onclick="window.history.back()">Back</a>
 
 </div>
+
+<!-- Bootstrap JS and jQuery -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </body>
 </html>

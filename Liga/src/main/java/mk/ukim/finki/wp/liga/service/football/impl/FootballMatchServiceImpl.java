@@ -5,18 +5,22 @@ import mk.ukim.finki.wp.liga.model.Exceptions.InvalidFootballMatchException;
 import mk.ukim.finki.wp.liga.model.Exceptions.InvalidFootballTeamException;
 import mk.ukim.finki.wp.liga.model.FootballMatch;
 import mk.ukim.finki.wp.liga.model.FootballPlayer;
+import mk.ukim.finki.wp.liga.model.FootballPlayerScored;
 import mk.ukim.finki.wp.liga.model.FootballTeam;
 import mk.ukim.finki.wp.liga.repository.football.FootballMatchRepository;
 import mk.ukim.finki.wp.liga.repository.football.FootballPlayerRepository;
+import mk.ukim.finki.wp.liga.repository.football.FootballPlayerScoredRepository;
 import mk.ukim.finki.wp.liga.repository.football.FootballTeamRepository;
 import mk.ukim.finki.wp.liga.service.football.FootballMatchService;
+import mk.ukim.finki.wp.liga.service.football.FootballPlayerService;
 import mk.ukim.finki.wp.liga.service.football.FootballTeamService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -25,6 +29,7 @@ public class FootballMatchServiceImpl implements FootballMatchService {
     private final FootballTeamRepository teamRepository;
     private final FootballPlayerRepository playerRepository;
     private final FootballTeamService teamService;
+    private final FootballPlayerService playerService;
 
 
     @Override
@@ -42,15 +47,22 @@ public class FootballMatchServiceImpl implements FootballMatchService {
     @Override
     @Transactional
     public FootballMatch create(FootballTeam homeTeam, FootballTeam awayTeam, int homeTeamPoints, int awayTeamPoints, LocalDateTime startTime) {
+        if(homeTeam.getId().equals(awayTeam.getId())){
+            throw new InvalidFootballMatchException();
+        }
         FootballTeam home = teamRepository.findById(homeTeam.getId()).orElseThrow(InvalidFootballTeamException::new);
         FootballTeam away = teamRepository.findById(awayTeam.getId()).orElseThrow(InvalidFootballMatchException::new);
         FootballMatch fm = new FootballMatch(home, away, homeTeamPoints, awayTeamPoints, startTime, false);
+        fm.setEndTime(startTime.plusMinutes(120));
         return matchRepository.save(fm);
     }
 
     @Override
     @Transactional
     public FootballMatch update(Long id, FootballTeam homeTeam, FootballTeam awayTeam, int homeTeamPoints, int awayTeamPoints, LocalDateTime startTime) {
+        if(homeTeam.getId().equals(awayTeam.getId())){
+            throw new InvalidFootballMatchException();
+        }
         FootballTeam home = teamRepository.findById(homeTeam.getId()).orElseThrow(InvalidFootballTeamException::new);
         FootballTeam away = teamRepository.findById(awayTeam.getId()).orElseThrow(InvalidFootballMatchException::new);
         FootballMatch fm = matchRepository.findById(id).orElseThrow(InvalidFootballMatchException::new);
@@ -59,6 +71,7 @@ public class FootballMatchServiceImpl implements FootballMatchService {
         fm.setHomeTeamPoints(homeTeamPoints);
         fm.setAwayTeamPoints(awayTeamPoints);
         fm.setStartTime(startTime);
+        fm.setEndTime(startTime.plusMinutes(120));
         return matchRepository.save(fm);
     }
 
@@ -81,8 +94,8 @@ public class FootballMatchServiceImpl implements FootballMatchService {
     @Override
     @Transactional
     public void updateTeamStatistics(FootballMatch match) {
-        teamService.updateStats(match.getHomeTeam().getId());
-        teamService.updateStats(match.getAwayTeam().getId());
+//        teamService.updateStats(match.getHomeTeam().getId());
+//        teamService.updateStats(match.getAwayTeam().getId());
     }
 
     @Override
@@ -151,13 +164,46 @@ public class FootballMatchServiceImpl implements FootballMatchService {
     }
     @Override
     @Transactional
-    public FootballMatch updatePlayoffMatchPoints(Long id, FootballTeam homeTeam, FootballTeam awayTeam, int homeTeamPoints, int awayTeamPoints) {
+    public FootballMatch updatePlayoffMatchPoints(Long id, FootballTeam homeTeam, FootballTeam awayTeam, int homeTeamPoints, int awayTeamPoints, List<FootballPlayer> homeScorers, List<FootballPlayer> awayScorers) {
         FootballMatch match = matchRepository.findById(id).orElseThrow(InvalidFootballMatchException::new);
         match.setHomeTeam(homeTeam);
         match.setAwayTeam(awayTeam);
         match.setHomeTeamPoints(homeTeamPoints);
         match.setAwayTeamPoints(awayTeamPoints);
+        distributeGoals(homeScorers, homeTeamPoints);
+        distributeGoals(awayScorers, awayTeamPoints);
         return matchRepository.save(match);
+    }
+    private void distributeGoals(List<FootballPlayer> selectedPlayers, int totalGoals) {
+        if (selectedPlayers == null || selectedPlayers.isEmpty()) {
+            return;
+        }
+
+        int numberOfPlayers = selectedPlayers.size();
+
+        // Edge case: If there is only one player, assign all goals to that player
+        if (numberOfPlayers == 1) {
+            playerService.addGoals(selectedPlayers.get(0).getFootball_player_id(), totalGoals);
+            return;
+        }
+
+        // Calculate goals per player
+        int goalsPerPlayer = totalGoals / numberOfPlayers;
+        int remainingGoals = totalGoals % numberOfPlayers;
+
+        // Distribute the goals
+        for (int i = 0; i < numberOfPlayers; i++) {
+            int goalsForThisPlayer = goalsPerPlayer;
+
+            // Assign the remainder to the first few players
+            if (remainingGoals > 0) {
+                goalsForThisPlayer++;
+                remainingGoals--;
+            }
+
+            // Use the addGoals method from Football Player Service
+            playerService.addGoals(selectedPlayers.get(i).getFootball_player_id(), goalsForThisPlayer);
+        }
     }
     private FootballTeam getWinner(FootballMatch match) {
         if (match.getHomeTeamPoints() > match.getAwayTeamPoints()) {
@@ -254,5 +300,83 @@ public class FootballMatchServiceImpl implements FootballMatchService {
         }
 
         matchRepository.save(match);
+    }
+    @Override
+    @Transactional
+    public Map<LocalDate, List<FootballMatch>> groupMatchesByDate(List<FootballMatch> matches) {
+        Map<LocalDate, List<FootballMatch>> groupedMatches = matches.stream()
+                .collect(Collectors.groupingBy(match -> match.getStartTime().toLocalDate()));
+
+        // Sort the entries by date in descending order and collect into a LinkedHashMap
+        return groupedMatches.entrySet()
+                .stream()
+                .sorted(Map.Entry.<LocalDate, List<FootballMatch>>comparingByKey(Comparator.naturalOrder()))
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new
+                ));
+    }
+    @Override
+    @Transactional
+    public void finishMatch(Long matchId) {
+        FootballMatch match = matchRepository.findById(matchId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid match Id:" + matchId));
+
+        match.setEndTime(LocalDateTime.now());
+        matchRepository.save(match);
+    }
+    @Override
+    @Transactional
+    public void processMatchStats(Long matchId) {
+        FootballMatch match = matchRepository.findById(matchId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid match ID"));
+
+        FootballTeam homeTeam = match.getHomeTeam();
+        FootballTeam awayTeam = match.getAwayTeam();
+
+        // Increment matches played
+        teamService.incrementMatchesPlayed(homeTeam.getId());
+        teamService.incrementMatchesPlayed(awayTeam.getId());
+
+        homeTeam.setGoalsFor(homeTeam.getGoalsFor() + match.getHomeTeamPoints());
+        homeTeam.setGoalsAgainst(homeTeam.getGoalsAgainst() + match.getAwayTeamPoints());
+        awayTeam.setGoalsFor(awayTeam.getGoalsFor() + match.getAwayTeamPoints());
+        awayTeam.setGoalsAgainst(awayTeam.getGoalsAgainst() + match.getHomeTeamPoints());
+        homeTeam.setGoalDifference(homeTeam.getGoalsFor() - homeTeam.getGoalsAgainst());
+        awayTeam.setGoalDifference(awayTeam.getGoalsFor() - awayTeam.getGoalsAgainst());
+
+        // Determine the result and update the respective records
+        if (match.getHomeTeamPoints() > match.getAwayTeamPoints()) {
+            // Home team wins
+            teamService.addWin(homeTeam.getId());
+            teamService.addLoss(awayTeam.getId());
+            teamService.addPoints(homeTeam.getId(), 3);
+        } else if (match.getHomeTeamPoints() < match.getAwayTeamPoints()) {
+            // Away team wins
+            teamService.addLoss(homeTeam.getId());
+            teamService.addWin(awayTeam.getId());
+            teamService.addPoints(awayTeam.getId(), 3);
+        } else {
+            // Draw
+            teamService.addDraw(homeTeam.getId());
+            teamService.addDraw(awayTeam.getId());
+            teamService.addPoints(homeTeam.getId(), 1);
+            teamService.addPoints(awayTeam.getId(), 1);
+        }
+
+        if (match.getHomeTeamPoints() > match.getAwayTeamPoints()) {
+            homeTeam.addMatchResult("W");
+            awayTeam.addMatchResult("L");
+        } else if (match.getHomeTeamPoints() < match.getAwayTeamPoints()) {
+            homeTeam.addMatchResult("L");
+            awayTeam.addMatchResult("W");
+        } else {
+            homeTeam.addMatchResult("D");
+            awayTeam.addMatchResult("D");
+        }
+        teamRepository.save(homeTeam);
+        teamRepository.save(awayTeam);
     }
 }

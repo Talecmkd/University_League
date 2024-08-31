@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Setter
@@ -42,6 +43,13 @@ public class FootballTeam {
     private int teamLoses;
     private int teamDraws;
     private byte [] logo;
+    private int goalsFor;
+    private int goalsAgainst;
+    private int goalDifference;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "team_last_five_matches", joinColumns = @JoinColumn(name = "team_id"))
+    @Column(name = "match_result")
+    private List<String> lastFiveMatches = new ArrayList<>();
 
     public FootballTeam(String teamName, byte [] logo) {
         this.teamName = teamName;
@@ -54,6 +62,12 @@ public class FootballTeam {
         this.teamLoses = 0;
         this.teamDraws = 0;
         this.logo = logo;
+    }
+    public void addMatchResult(String result) {
+        if (lastFiveMatches.size() == 5) {
+            lastFiveMatches.remove(0);
+        }
+        lastFiveMatches.add(result);
     }
 
 
