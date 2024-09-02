@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Basketball Teams</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> <!-- Bootstrap CSS -->
+</head>
+<body>
+<header class="bg-primary text-white p-3">
+    <div class="container">
+        <h1 class="mb-0">Basketball Players</h1>
+    </div>
+</header>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a href="/basketball/players/add-form" class="nav-link">Add Player</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/basketball/matches/live" class="nav-link">Live Matches</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/basketball/matches/fixtures" class="nav-link">Fixtures</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/basketball/matches/results" class="nav-link">Results</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/basketball/players" class="nav-link">View Players</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="container mt-4">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-dark">
+            <tr>
+                <th>Image</th>
+                <th>Player Name</th>
+                <th>Birthdate</th>
+                <th>City</th>
+                <th>Position</th>
+                <th>Team</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="player : ${basketballPlayers}">
+                <td>
+                    <img th:src="@{/basketball/players/image/{id}(id=${player.basketball_player_id})}" alt="Player Image" style="width:50px;height:50px;"/>
+                </td>
+                <td th:text="${player.name} + ' ' + ${player.surname}"></td>
+                <td th:text="${#dates.format(player.birthdate, 'yyyy-MM-dd')}"></td>
+                <td th:text="${player.city}"></td>
+                <td th:text="${player.position}"></td>
+                <td th:text="${player.team?.teamName}"></td>
+                <td>
+                    <a th:href="@{/basketball/players/edit/{id}(id=${player.basketball_player_id})}" class="btn btn-warning btn-sm">Edit</a>
+                    <a th:href="@{/basketball/players/details/{id}(id=${player.basketball_player_id})}" class="btn btn-info btn-sm">Details</a>
+                    <form th:method="POST" th:action="@{/basketball/players/delete/{id} (id=${player.basketball_player_id})}" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <a type="button" class="btn btn-secondary" href="/basketball/players/add-form">Add Player</a>
+</section>
+
+
+<section class="container mt-4">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-dark">
+            <tr>
+                <th>Image</th>
+                <th>Player Name</th>
+                <th>Points</th>
+                <th>Assists</th>
+                <th>Rebounds</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="player : ${topPlayers}">
+                <td>
+                    <img th:src="@{/basketball/players/image/{id}(id=${player.basketball_player_id})}" alt="Player Image" style="width:50px;height:50px;"/>
+                </td>
+                <td th:text="${player.name} + ' ' + ${player.surname}"></td>
+                <td th:text="${player.getPoints()}"></td>
+                <td th:text="${player.getAssists()}"></td>
+                <td th:text="${player.getRebounds()}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+</html>

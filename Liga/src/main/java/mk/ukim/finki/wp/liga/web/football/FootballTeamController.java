@@ -1,10 +1,8 @@
 package mk.ukim.finki.wp.liga.web.football;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import mk.ukim.finki.wp.liga.model.FootballPlayer;
 import mk.ukim.finki.wp.liga.model.FootballTeam;
-import mk.ukim.finki.wp.liga.model.dtos.TeamStandingsDTO;
 import mk.ukim.finki.wp.liga.service.football.FootballMatchService;
 import mk.ukim.finki.wp.liga.service.football.FootballPlayerScoredService;
 import mk.ukim.finki.wp.liga.service.football.FootballPlayerService;
@@ -16,10 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Controller
 @AllArgsConstructor
@@ -38,25 +33,23 @@ public class FootballTeamController{
     }
     List<FootballTeam> footballTeams = this.footballTeamService.findAllOrderByPointsDesc();
     model.addAttribute("footballTeams",footballTeams);
-    model.addAttribute("bodyContent","football_teams");
-    return "master_template";
+    //model.addAttribute("bodyContent","football_teams");
+    return "football_teams";
 }
 
-@GetMapping("details/{id}")
-    public String getTeam(@PathVariable Long id, Model model, HttpServletRequest request){
+@GetMapping("team/{id}")
+    public String getTeam(@PathVariable Long id, Model model){
     FootballTeam team = footballTeamService.findById(id);
     if (team != null) {
         model.addAttribute("team", team);
         model.addAttribute("players", team.getPlayers());
-        model.addAttribute("referer", request.getHeader("Referer"));
         List<FootballPlayer> top5Players=footballPlayerService.getTop5PlayersByTeam(id);
         model.addAttribute("topPlayers",top5Players);
     } else {
         model.addAttribute("hasError", true);
         model.addAttribute("error", "Team not found");
     }
-    model.addAttribute("bodyContent","football_team_details");
-    return "master_template";
+    return "football_team_details";
 }
 
 //@GetMapping("teams/team/{id}")
@@ -79,8 +72,7 @@ public class FootballTeamController{
             return "redirect:/teams";
         }
         model.addAttribute("team", team);
-        model.addAttribute("bodyContent","edit_football_table");
-        return "master_template";
+        return "edit_football_table";
     }
 
     @PostMapping("/edit/{id}")
@@ -99,8 +91,7 @@ public class FootballTeamController{
     public String showAddTeamForm(Model model) {
         List<FootballPlayer> players = footballPlayerService.listAllPlayers();
         model.addAttribute("players", players);
-        model.addAttribute("bodyContent","add_team");
-        return "master_template";
+        return "add_team";
     }
 
     @PostMapping("/add")
@@ -124,8 +115,7 @@ public class FootballTeamController{
         model.addAttribute("team", team);
         model.addAttribute("fixtures", team.getFootballFixtures());
         model.addAttribute("results", team.getFootballResults());
-        model.addAttribute("bodyContent","show_football_team_matches");
-        return "master_template";
+        return "show_football_team_matches";
     }
 
     @PostMapping("/delete/{id}")
@@ -133,12 +123,5 @@ public class FootballTeamController{
         footballTeamService.delete(id);
         return "redirect:/teams";
     }
-    @GetMapping("/standings")
-    public String getStandings(Model model) {
-        List<TeamStandingsDTO> standings = footballTeamService.getStandings();
-        model.addAttribute("standings", standings);
-        return "standings";
-    }
 
 }
-
