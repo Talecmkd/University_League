@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Team</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-5">Edit Team</h1>
+
+    <form th:action="@{/volleyball/teams/edit/{id}(id=${team.getVolleyball_team_id()})}" method="post">
+        <div class="form-group">
+            <label for="teamName">Team Name</label>
+            <input type="text" id="teamName" class="form-control" th:value="${team.getTeamName()}" disabled>
+        </div>
+        <div class="form-group">
+            <label for="teamLeaguePoints">League Points</label>
+            <input type="number" id="teamLeaguePoints" name="teamLeaguePoints" class="form-control" th:value="${team.getTeamLeaguePoints()}">
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a href="/volleyball/teams" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+</body>
+</html>

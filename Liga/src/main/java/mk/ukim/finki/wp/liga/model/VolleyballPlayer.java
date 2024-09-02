@@ -16,6 +16,7 @@ public class VolleyballPlayer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long volleyball_player_id;
+    @Lob
     private byte[] image;
     private String name;
     private String surname;
@@ -53,8 +54,8 @@ public class VolleyballPlayer {
 
     }
 
-    public int getPoints(){
-        return scoredPoints*2 + assists + blocks;
+    public int getTotalPoints(){
+        return scoredPoints + assists + blocks +servings;
     }
 
 }
