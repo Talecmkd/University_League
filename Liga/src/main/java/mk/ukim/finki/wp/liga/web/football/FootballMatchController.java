@@ -14,6 +14,7 @@ import mk.ukim.finki.wp.liga.service.football.FootballTeamService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.time.LocalDate;
@@ -278,15 +279,25 @@ public class FootballMatchController {
         return team.getPlayers();
     }
     @GetMapping("/playoffs/init")
-    public String initializePlayoffMatches() {
-        footballMatchService.createPlayoffMatches();
-        return "redirect:/matches/playoffs"; // Redirect to the list of playoff matches
+    public String initializePlayoffMatches(Model model,RedirectAttributes redirectAttributes) {
+//        boolean allTeamsPlayedExactly4Matches = footballMatchService.allTeamsHavePlayedFourMatches();
+//        model.addAttribute("allTeamsPlayedExactly4Matches", allTeamsPlayedExactly4Matches);
+        try {
+            footballMatchService.createPlayoffMatches();
+            return "redirect:/matches/playoffs"; // Redirect to the list of playoff matches
+        } catch (RuntimeException e) {
+            // Handle the case where not all teams have played 4 matches
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/matches/playoffs"; // Redirect back to the playoff matches page with an error message
+        }
     }
 
     @GetMapping("/playoffs")
     public String getPlayoffMatches(Model model) {
         List<FootballMatch> matches = footballMatchService.listPlayoffMatches();
         model.addAttribute("matches", matches);
+        boolean allTeamsPlayedExactly4Matches = footballMatchService.allTeamsHavePlayedFourMatches();
+        model.addAttribute("allTeamsPlayedExactly4Matches", allTeamsPlayedExactly4Matches);
         model.addAttribute("bodyContent","playoff_bracket");
         return "master_template";
     }
@@ -343,11 +354,11 @@ public class FootballMatchController {
             return "redirect:/matches/error";
         }
     }
-    @PostMapping("/details/{id}/process-stats")
-    public String processMatchStats(@PathVariable("id") Long matchId, Model model) {
-        footballMatchService.processMatchStats(matchId);
-        return "redirect:/matches/results"; // Redirect back to the results page after processing
-    }
+//    @PostMapping("/details/{id}/process-stats")
+//    public String processMatchStats(@PathVariable("id") Long matchId, Model model) {
+//        footballMatchService.processMatchStats(matchId);
+//        return "redirect:/matches/results"; // Redirect back to the results page after processing
+//    }
 
 }
 

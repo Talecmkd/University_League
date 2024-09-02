@@ -12,12 +12,12 @@
             justify-content: space-between;
             padding: 10px;
             border-bottom: 1px solid #ddd;
-            text-decoration: none; /* Remove underline from link */
-            color: inherit; /* Inherit color from parent */
-            transition: background-color 0.3s; /* Smooth hover effect */
+            text-decoration: none;
+            color: inherit;
+            transition: background-color 0.3s;
         }
         .match-row:hover {
-            background-color: #f8f9fa; /* Highlight row on hover */
+            background-color: #f8f9fa;
         }
         .match-link {
             display: block;
@@ -56,6 +56,18 @@
         .actions .btn {
             font-size: 0.8rem;
         }
+        .playoff-badge {
+            background-color: #ff6f61;
+            color: white;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+        }
+        .nav-link.disabled {
+            pointer-events: none;
+            color: #6c757d;
+        }
     </style>
 </head>
 <body>
@@ -88,20 +100,18 @@
                     <a href="/teams/standings" class="nav-link">Standings</a>
                 </li>
                 <li class="nav-item">
-                    <a href="/matches/playoffs/init" class="nav-link">Playoffs</a>
+                    <a th:if="${allTeamsPlayedExactly4Matches != null and allTeamsPlayedExactly4Matches}" th:href="@{/matches/playoffs/init}" class="nav-link">Playoffs</a>
+                    <a th:if="${allTeamsPlayedExactly4Matches == null or !allTeamsPlayedExactly4Matches}" class="nav-link disabled" href="#">Playoffs</a>
                 </li>
+
             </ul>
         </div>
     </div>
 </nav>
 
 <section class="container mt-4">
-    <!-- Iterate over the map's entry set -->
     <div th:each="entry : ${groupedMatches}">
-        <!-- Display the date -->
         <h3 class="match-date" th:text="${#temporals.format(entry.key, 'EEEE dd MMMM yyyy')}"></h3>
-
-        <!-- Iterate over the list of matches for each date -->
         <div th:each="match : ${entry.value}">
             <a th:href="@{/matches/details/{id}(id=${match.football_match_id})}" class="d-block match-link">
                 <div class="match-row">
@@ -109,11 +119,11 @@
                         <span class="team-name" th:text="${match.homeTeam.teamName}"></span>
                         <span class="match-time" th:text="${#temporals.format(match.startTime, 'HH:mm')}"></span>
                         <span class="team-name" th:text="${match.awayTeam.teamName}"></span>
+                        <span th:if="${match.isPlayoffMatch}" class="playoff-badge">Playoff</span>
                     </div>
                     <div class="ml-auto actions">
-                        <!-- Action Buttons -->
                         <a th:href="@{/matches/edit-form/{id}(id=${match.football_match_id})}" class="btn btn-warning btn-sm">Edit</a>
-                        <form th:method="POST" th:action="@{'/matches/finish/{id}'(id=${match.football_match_id})}" style="display:inline;">
+                        <form th:if="${!match.isPlayoffMatch}" th:method="POST" th:action="@{'/matches/finish/{id}'(id=${match.football_match_id})}" style="display:inline;" onsubmit="return confirmFinish(this)">
                             <button type="submit" class="btn btn-success btn-sm">Finish</button>
                         </form>
                         <form th:method="POST" th:action="@{'/matches/delete/{id}'(id=${match.football_match_id})}" style="display:inline;">
@@ -125,6 +135,17 @@
         </div>
     </div>
 </section>
+
+<script>
+    function confirmFinish(form) {
+        if (form.dataset.isFinished) {
+            alert("This match has already been finished.");
+            return false;
+        }
+        form.dataset.isFinished = true;
+        return true;
+    }
+</script>
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>

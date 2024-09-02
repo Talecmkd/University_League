@@ -120,6 +120,10 @@ public class FootballMatchServiceImpl implements FootballMatchService {
     @Override
     @Transactional
     public List<FootballMatch> createPlayoffMatches() {
+        if (!allTeamsHavePlayedFourMatches()) {
+            throw new RuntimeException("Cannot create playoff matches. All teams must have played exactly 8 matches.");
+        }
+
         List<FootballMatch> existingPlayoffMatches = matchRepository.findAllByIsPlayoffMatchTrue();
 
         // If matches exist, don't reinitialize, just return the existing ones
@@ -146,7 +150,7 @@ public class FootballMatchServiceImpl implements FootballMatchService {
     }
 
     private FootballMatch createMatch(FootballTeam homeTeam, FootballTeam awayTeam, boolean isPlayoffMatch) {
-        LocalDateTime startTime = LocalDateTime.now().plusDays(1); // Set the start time for the match
+        LocalDateTime startTime = LocalDateTime.now(); // Set the start time for the match
         FootballMatch match = new FootballMatch(homeTeam, awayTeam, 0, 0, startTime, isPlayoffMatch);
         return matchRepository.save(match);
     }
@@ -170,6 +174,7 @@ public class FootballMatchServiceImpl implements FootballMatchService {
         match.setAwayTeam(awayTeam);
         match.setHomeTeamPoints(homeTeamPoints);
         match.setAwayTeamPoints(awayTeamPoints);
+        match.setEndTime(LocalDateTime.now());
         distributeGoals(homeScorers, homeTeamPoints);
         distributeGoals(awayScorers, awayTeamPoints);
         return matchRepository.save(match);
@@ -192,7 +197,7 @@ public class FootballMatchServiceImpl implements FootballMatchService {
         int remainingGoals = totalGoals % numberOfPlayers;
 
         // Distribute the goals
-        for (int i = 0; i < numberOfPlayers; i++) {
+        for (FootballPlayer selectedPlayer : selectedPlayers) {
             int goalsForThisPlayer = goalsPerPlayer;
 
             // Assign the remainder to the first few players
@@ -202,7 +207,7 @@ public class FootballMatchServiceImpl implements FootballMatchService {
             }
 
             // Use the addGoals method from Football Player Service
-            playerService.addGoals(selectedPlayers.get(i).getFootball_player_id(), goalsForThisPlayer);
+            playerService.addGoals(selectedPlayer.getFootball_player_id(), goalsForThisPlayer);
         }
     }
     private FootballTeam getWinner(FootballMatch match) {
@@ -284,6 +289,12 @@ public class FootballMatchServiceImpl implements FootballMatchService {
 
         return finals;
     }
+    @Override
+    @Transactional
+    public boolean allTeamsHavePlayedFourMatches() {
+        List<FootballTeam> teams = teamRepository.findAllByOrderByTeamLeaguePointsDesc();
+        return  teams.stream().allMatch(footballTeam -> footballTeam.getTeamMatchesPlayed() == 1);
+    }
 
     @Override
     public void updateLiveStats(Long footballMatchId, int goalsScored, Long playerId) {
@@ -326,6 +337,7 @@ public class FootballMatchServiceImpl implements FootballMatchService {
 
         match.setEndTime(LocalDateTime.now());
         matchRepository.save(match);
+        processMatchStats(matchId);
     }
     @Override
     @Transactional

@@ -149,7 +149,7 @@ public class FootballTeamServiceImpl implements FootballTeamService {
                         team.getGoalsAgainst(),
                         team.getGoalDifference(),
                         team.getLastFiveMatches()))
-                .sorted(Comparator.comparingInt(TeamStandingsDTO::getPoints).reversed())
+                .sorted(Comparator.comparingInt(TeamStandingsDTO::getPoints).reversed().thenComparing(TeamStandingsDTO::getGoalDifference))
                 .collect(Collectors.toList());
     }
 

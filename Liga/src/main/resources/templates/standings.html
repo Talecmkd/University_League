@@ -17,10 +17,10 @@
             <th>W</th>
             <th>D</th>
             <th>L</th>
-            <th>Pts</th>
             <th>Goals For</th>
             <th>Goals Against</th>
             <th>Goal Difference</th>
+            <th>Pts</th>
             <th>Last 5</th>
         </tr>
         </thead>
@@ -31,10 +31,10 @@
             <td th:text="${teamData.wins}"></td>
             <td th:text="${teamData.draws}"></td>
             <td th:text="${teamData.loses}"></td>
-            <td th:text="${teamData.points}"></td>
             <td th:text="${teamData.goalsFor}"></td>
             <td th:text="${teamData.goalsAgainst}"></td>
             <td th:text="${teamData.goalDifference}"></td>
+            <td th:text="${teamData.points}"></td>
             <td>
                 <span th:each="result : ${teamData.lastFiveMatches}">
                     <span th:if="${result == 'W'}" class="badge bg-success">W</span>
