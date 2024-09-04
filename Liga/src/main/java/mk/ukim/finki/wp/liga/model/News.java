@@ -1,10 +1,11 @@
 package mk.ukim.finki.wp.liga.model;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-
+@Data
 @Getter
 @Setter
 public class News {

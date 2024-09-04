@@ -33,8 +33,8 @@ public class FootballTeamController{
     }
     List<FootballTeam> footballTeams = this.footballTeamService.findAllOrderByPointsDesc();
     model.addAttribute("footballTeams",footballTeams);
-    //model.addAttribute("bodyContent","football_teams");
-    return "football_teams";
+    model.addAttribute("bodyContent","football_teams");
+    return "master_template";
 }
 
 @GetMapping("team/{id}")
