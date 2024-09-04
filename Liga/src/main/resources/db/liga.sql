@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 16.2
--- Dumped by pg_dump version 16.2
+-- Dumped from database version 16.4
+-- Dumped by pg_dump version 16.4
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -898,14 +898,14 @@ COPY public.football_player_scored (football_player_id, assists_scored, goals_sc
 --
 
 COPY public.football_team (id, goal_difference, goals_against, goals_for, logo, team_draws, team_league_points, team_loses, team_matches_played, team_name, team_wins) FROM stdin;
-2	0	0	0	\N	0	0	0	0	Team 2	0
-3	0	0	0	\N	0	0	0	0	Team 3	0
-4	0	0	0	\N	0	0	0	0	Team 4	0
-5	0	0	0	\N	0	0	0	0	Team 5	0
-6	0	0	0	\N	0	0	0	0	Team 6	0
-7	0	0	0	\N	0	0	0	0	Team 7	0
-8	0	0	0	\N	0	0	0	0	Team 8	0
-1	0	0	0	\N	0	3	0	0	Team 1	0
+3	0	0	0	\N	0	0	0	0	Masinski Fakultet\n	0
+4	0	0	0	\N	0	0	0	0	FINKI	0
+5	0	0	0	\N	0	0	0	0	Stomatoloski	0
+6	0	0	0	\N	0	0	0	0	Medicina	0
+7	0	0	0	\N	0	0	0	0	DIV	0
+8	0	0	0	\N	0	0	0	0	FEIT	0
+1	0	0	0	\N	0	3	0	0	Turizam	0
+2	0	0	0	\N	0	0	0	0	Praven	0
 \.
 
 
