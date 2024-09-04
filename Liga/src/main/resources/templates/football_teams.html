@@ -31,7 +31,7 @@
         <tr th:each="team : ${footballTeams}">
             <td th:text="${team.teamName}"></td>
             <td>
-                <a th:href="@{/teams/details/{id}(id=${team.id})}" class="btn btn-info">Details</a>
+                <a th:href="@{/teams/team/{id}(id=${team.id})}" class="btn btn-info">Details</a>
 
             <td>
                 <!-- Edit button linking to the edit form -->
