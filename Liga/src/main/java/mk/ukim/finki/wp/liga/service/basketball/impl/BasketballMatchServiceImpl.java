@@ -9,13 +9,15 @@ import mk.ukim.finki.wp.liga.repository.basketball.BasketballMatchRepository;
 import mk.ukim.finki.wp.liga.repository.basketball.BasketballPlayerRepository;
 import mk.ukim.finki.wp.liga.repository.basketball.BasketballTeamRepository;
 import mk.ukim.finki.wp.liga.service.basketball.BasketballMatchService;
+import mk.ukim.finki.wp.liga.service.basketball.BasketballPlayerService;
 import mk.ukim.finki.wp.liga.service.basketball.BasketballTeamService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -25,6 +27,7 @@ public class BasketballMatchServiceImpl implements BasketballMatchService {
     private final BasketballTeamRepository basketballTeamRepository;
     private final BasketballPlayerRepository basketballPlayerRepository;
     private final BasketballTeamService basketballTeamService;
+    private final BasketballPlayerService basketballPlayerService;
 
 
     @Override
@@ -78,12 +81,12 @@ public class BasketballMatchServiceImpl implements BasketballMatchService {
         return bm;
     }
 
-    @Override
-    @Transactional
-    public void updateTeamStatistics(BasketballMatch match) {
-        basketballTeamService.updateStats(match.getHomeTeam().getId());
-        basketballTeamService.updateStats(match.getAwayTeam().getId());
-    }
+//    @Override
+//    @Transactional
+//    public void updateTeamStatistics(BasketballMatch match) {
+//        basketballTeamService.updateStats(match.getHomeTeam().getId());
+//        basketballTeamService.updateStats(match.getAwayTeam().getId());
+//    }
 
     @Override
     @Transactional
@@ -153,13 +156,47 @@ public class BasketballMatchServiceImpl implements BasketballMatchService {
 
     @Override
     @Transactional
-    public BasketballMatch updatePlayoffMatchPoints(Long id, BasketballTeam homeTeam, BasketballTeam awayTeam, int homeTeamPoints, int awayTeamPoints) {
+    public BasketballMatch updatePlayoffMatchPoints(Long id, BasketballTeam homeTeam, BasketballTeam awayTeam, int homeTeamPoints, int awayTeamPoints, List<BasketballPlayer> homeScorers, List<BasketballPlayer> awayScorers) {
         BasketballMatch match = basketballMatchRepository.findById(id).orElseThrow(InvalidBasketballMatchException::new);
         match.setHomeTeam(homeTeam);
         match.setAwayTeam(awayTeam);
         match.setHomeTeamPoints(homeTeamPoints);
         match.setAwayTeamPoints(awayTeamPoints);
+        distributeStats(homeScorers, homeTeamPoints);
+        distributeStats(awayScorers, awayTeamPoints);
         return basketballMatchRepository.save(match);
+    }
+    private void distributeStats(List<BasketballPlayer> selectedPlayers, int totalBaskets) {
+        if (selectedPlayers == null || selectedPlayers.isEmpty()) {
+            return;
+        }
+
+        int numberOfPlayers = selectedPlayers.size();
+
+        // Edge case: If there is only one player, assign all stats to that player
+        if (numberOfPlayers == 1) {
+            basketballPlayerService.addStats(selectedPlayers.get(0).getBasketball_player_id(), totalBaskets);
+            return;
+        }
+
+        // Calculate stats per player
+        int basketsPerPlayer = totalBaskets / numberOfPlayers;
+
+        // Handle remaining stats
+        int remainingBaskets = totalBaskets % numberOfPlayers;
+
+        // Distribute the stats
+        for (BasketballPlayer selectedPlayer : selectedPlayers) {
+            int basketsForThisPlayer = basketsPerPlayer;
+
+            // Distribute remaining stats across the first few players
+            if (remainingBaskets > 0) {
+                basketsForThisPlayer++;
+                remainingBaskets--;
+            }
+            // Use the addStats method from BasketballPlayerService to update stats
+            basketballPlayerService.addStats(selectedPlayer.getBasketball_player_id(), basketsForThisPlayer);
+        }
     }
 
     private BasketballTeam getWinner(BasketballMatch match) {
@@ -257,5 +294,66 @@ public class BasketballMatchServiceImpl implements BasketballMatchService {
         }
 
         basketballMatchRepository.save(match);
+    }
+    @Override
+    @Transactional
+    public  Map<LocalDate, List<BasketballMatch>> groupMatchesByDate(List<BasketballMatch> matches) {
+        Map<LocalDate, List<BasketballMatch>> groupedMatches = matches.stream()
+                .collect(Collectors.groupingBy(match -> match.getStartTime().toLocalDate()));
+
+        // Sort the entries by date in descending order and collect into a LinkedHashMap
+        return groupedMatches.entrySet()
+                .stream()
+                .sorted(Map.Entry.<LocalDate, List<BasketballMatch>>comparingByKey(Comparator.naturalOrder()))
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new
+                ));
+    }
+    @Override
+    @Transactional
+    public void finishMatch(Long matchId) {
+        BasketballMatch match = basketballMatchRepository.findById(matchId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid match Id:" + matchId));
+
+        match.setEndTime(LocalDateTime.now());
+        BasketballTeam homeTeam = match.getHomeTeam();
+        BasketballTeam awayTeam = match.getAwayTeam();
+
+        // Increment matches played for both teams
+        basketballTeamService.incrementMatchesPlayed(homeTeam.getId());
+        basketballTeamService.incrementMatchesPlayed(awayTeam.getId());
+
+        // Determine the winner and loser, and update stats accordingly
+        if (match.getHomeTeamPoints() > match.getAwayTeamPoints()) {
+            // Home team wins
+            updateBasketballTeamStats(homeTeam, true);  // Increment win for home team
+            updateBasketballTeamStats(awayTeam, false); // Increment loss for away team
+        } else if (match.getHomeTeamPoints() < match.getAwayTeamPoints()) {
+            // Away team wins
+            updateBasketballTeamStats(awayTeam, true);  // Increment win for away team
+            updateBasketballTeamStats(homeTeam, false); // Increment loss for home team
+        }
+
+        // Save the updated match after processing
+        basketballMatchRepository.save(match);
+    }
+    private void updateBasketballTeamStats(BasketballTeam team, boolean isWin) {
+        // Increment the number of matches played
+        team.setTeamMatchesPlayed(team.getTeamMatchesPlayed() + 1);
+
+        // Add a win or a loss
+        if (isWin) {
+            team.setTeamWins(team.getTeamWins() + 1);
+            team.setTeamLeaguePoints(team.getTeamLeaguePoints() + 3); // 3 points for a win
+        } else {
+            team.setTeamLoses(team.getTeamLoses() + 1);
+            // No points for a loss
+        }
+
+        // Save the updated team
+        basketballTeamRepository.save(team);
     }
 }

@@ -3,6 +3,7 @@ package mk.ukim.finki.wp.liga.service.volleyball.impl;
 import lombok.AllArgsConstructor;
 import mk.ukim.finki.wp.liga.model.Exceptions.InvalidVolleyballMatchException;
 import mk.ukim.finki.wp.liga.model.Exceptions.InvalidVolleyballTeamException;
+import mk.ukim.finki.wp.liga.model.FootballMatch;
 import mk.ukim.finki.wp.liga.model.VolleyballMatch;
 import mk.ukim.finki.wp.liga.model.VolleyballPlayer;
 import mk.ukim.finki.wp.liga.model.VolleyballTeam;
@@ -10,13 +11,15 @@ import mk.ukim.finki.wp.liga.repository.volleyball.VolleyballMatchRepository;
 import mk.ukim.finki.wp.liga.repository.volleyball.VolleyballPlayerRepository;
 import mk.ukim.finki.wp.liga.repository.volleyball.VolleyballTeamRepository;
 import mk.ukim.finki.wp.liga.service.volleyball.VolleyballMatchService;
+import mk.ukim.finki.wp.liga.service.volleyball.VolleyballPlayerService;
 import mk.ukim.finki.wp.liga.service.volleyball.VolleyballTeamService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -25,6 +28,7 @@ public class VolleyballMatchServiceImpl implements VolleyballMatchService {
     private final VolleyballTeamRepository teamRepository;
     private final VolleyballPlayerRepository playerRepository;
     private final VolleyballTeamService teamService;
+    private final VolleyballPlayerService playerService;
 
     @Override
     @Transactional(readOnly = true)
@@ -152,14 +156,53 @@ public class VolleyballMatchServiceImpl implements VolleyballMatchService {
 
     @Override
     @Transactional
-    public VolleyballMatch updatePlayoffMatchPoints(Long id, VolleyballTeam homeTeam, VolleyballTeam awayTeam, int homeTeamPoints, int awayTeamPoints) {
+    public VolleyballMatch updatePlayoffMatchPoints(Long id, VolleyballTeam homeTeam, VolleyballTeam awayTeam, int homeTeamPoints, int awayTeamPoints, List<VolleyballPlayer> homeScorers, List<VolleyballPlayer> awayScorers) {
         VolleyballMatch match = matchRepository.findById(id).orElseThrow(InvalidVolleyballMatchException::new);
         match.setHomeTeam(homeTeam);
         match.setAwayTeam(awayTeam);
         match.setHomeTeamPoints(homeTeamPoints);
         match.setAwayTeamPoints(awayTeamPoints);
+        match.setEndTime(LocalDateTime.now());
+
+        // Distribute points to home and away players
+        distributePoints(homeScorers, homeTeamPoints);
+        distributePoints(awayScorers, awayTeamPoints);
+
         return matchRepository.save(match);
     }
+
+    private void distributePoints(List<VolleyballPlayer> selectedPlayers, int totalPoints) {
+        if (selectedPlayers == null || selectedPlayers.isEmpty()) {
+            return;
+        }
+
+        int numberOfPlayers = selectedPlayers.size();
+
+        // Edge case: If there is only one player, assign all points to that player
+        if (numberOfPlayers == 1) {
+            playerService.addPoints(selectedPlayers.get(0).getVolleyball_player_id(), totalPoints);
+            return;
+        }
+
+        // Calculate points per player
+        int pointsPerPlayer = totalPoints / numberOfPlayers;
+        int remainingPoints = totalPoints % numberOfPlayers;
+
+        // Distribute the points
+        for (VolleyballPlayer selectedPlayer : selectedPlayers) {
+            int pointsForThisPlayer = pointsPerPlayer;
+
+            // Assign the remainder to the first few players
+            if (remainingPoints > 0) {
+                pointsForThisPlayer++;
+                remainingPoints--;
+            }
+
+            // Use the addPoints method from Volleyball Player Service
+            playerService.addPoints(selectedPlayer.getVolleyball_player_id(), pointsForThisPlayer);
+        }
+    }
+
 
     private VolleyballTeam getWinner(VolleyballMatch match) {
         if (match.getHomeTeamPoints() > match.getAwayTeamPoints()) {
@@ -257,4 +300,66 @@ public class VolleyballMatchServiceImpl implements VolleyballMatchService {
 
         matchRepository.save(match);
     }
+    @Override
+    @Transactional
+    public Map<LocalDate, List<VolleyballMatch>> groupMatchesByDate(List<VolleyballMatch> matches) {
+        Map<LocalDate, List<VolleyballMatch>> groupedMatches = matches.stream()
+                .collect(Collectors.groupingBy(match -> match.getStartTime().toLocalDate()));
+
+        // Sort the entries by date in descending order and collect into a LinkedHashMap
+        return groupedMatches.entrySet()
+                .stream().sorted(Map.Entry.<LocalDate, List<VolleyballMatch>>comparingByKey(Comparator.naturalOrder()))
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new
+                ));
+    }
+    @Override
+    @Transactional
+    public void finishMatch(Long matchId) {
+        VolleyballMatch match = matchRepository.findById(matchId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid match Id: " + matchId));
+
+        // Set the match as completed
+        match.setEndTime(LocalDateTime.now());
+
+        // Update statistics for both teams
+        VolleyballTeam homeTeam = match.getHomeTeam();
+        VolleyballTeam awayTeam = match.getAwayTeam();
+
+        // Assuming you have a method to get the winner and loser, or you compare team scores
+        if (match.getHomeTeamPoints() > match.getAwayTeamPoints()) {
+            // Home team wins
+            updateTeamStats(homeTeam, true);  // Increment win for home team
+            updateTeamStats(awayTeam, false); // Increment loss for away team
+        } else if (match.getHomeTeamPoints() < match.getAwayTeamPoints()) {
+            // Away team wins
+            updateTeamStats(awayTeam, true);  // Increment win for away team
+            updateTeamStats(homeTeam, false); // Increment loss for home team
+        }
+
+        // Save the updated match and teams
+        matchRepository.save(match);
+    }
+
+    private void updateTeamStats(VolleyballTeam team, boolean isWin) {
+        // Increment the number of matches played
+        team.setTeamMatchesPlayed(team.getTeamMatchesPlayed() + 1);
+
+        // Add a win or a loss
+        if (isWin) {
+            team.setTeamWins(team.getTeamWins() + 1);
+            team.setTeamLeaguePoints(team.getTeamLeaguePoints() + 3); // 3 points for a win
+        } else {
+            team.setTeamLoses(team.getTeamLoses() + 1);
+            // No points for a loss
+        }
+
+        // Save the updated team
+        teamRepository.save(team);
+    }
+
+
 }

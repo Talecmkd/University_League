@@ -11,6 +11,7 @@ import mk.ukim.finki.wp.liga.repository.basketball.BasketballPlayerRepository;
 import mk.ukim.finki.wp.liga.repository.basketball.BasketballTeamRepository;
 import mk.ukim.finki.wp.liga.service.basketball.BasketballPlayerService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -127,4 +128,15 @@ public class BasketballPlayerServiceImpl implements BasketballPlayerService {
                 .limit(5)
                 .collect(Collectors.toList());
     }
+    @Override
+    @Transactional
+    public void addStats(Long playerId, int basketsToAdd) {
+        // Find the player by ID
+        BasketballPlayer player = basketballPlayerRepository.findById(playerId).orElseThrow(InvalidBasketballPlayerException::new);
+            // Add the provided stats to the player's existing stats
+            player.setPoints(player.getPoints() + basketsToAdd);
+
+            // Save the updated player
+            basketballPlayerRepository.save(player);
+        }
 }

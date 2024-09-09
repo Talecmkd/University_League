@@ -4,12 +4,16 @@ import lombok.AllArgsConstructor;
 import mk.ukim.finki.wp.liga.model.*;
 import mk.ukim.finki.wp.liga.model.Exceptions.InvalidBasketballTeamException;
 import mk.ukim.finki.wp.liga.model.Exceptions.InvalidFootballTeamException;
+import mk.ukim.finki.wp.liga.model.dtos.BasketballTeamStandings;
+import mk.ukim.finki.wp.liga.model.dtos.TeamStandingsDTO;
 import mk.ukim.finki.wp.liga.repository.basketball.BasketballTeamRepository;
 import mk.ukim.finki.wp.liga.service.basketball.BasketballTeamService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -64,36 +68,36 @@ public class BasketballTeamServiceImpl implements BasketballTeamService {
         return basketballTeamRepository.save(team);
     }
 
-    @Override
-    @Transactional
-    public BasketballTeam updateStats(Long id) {
-        BasketballTeam team = basketballTeamRepository.findById(id).orElseThrow(InvalidBasketballTeamException::new);
-        int wins = 0;
-        int loses = 0;
-        int leaguePoints = 0;
-
-        for (BasketballMatch match : team.getBasketballResults()) {
-            if (match.getEndTime().isBefore(java.time.LocalDateTime.now())) { // Match has been played
-                boolean isHomeTeam = match.getHomeTeam().equals(team);
-                int teamPoints = isHomeTeam ? match.getHomeTeamPoints() : match.getAwayTeamPoints();
-                int opponentPoints = isHomeTeam ? match.getAwayTeamPoints() : match.getHomeTeamPoints();
-
-                if (teamPoints > opponentPoints) {
-                    wins++;
-                    leaguePoints += 3; // Assuming a win gives 3 points
-                } else {
-                    loses++;
-                }
-            }
-        }
-
-        team.setTeamMatchesPlayed(wins + loses);
-        team.setTeamWins(wins);
-        team.setTeamLoses(loses);
-        team.setTeamLeaguePoints(leaguePoints);
-
-        return basketballTeamRepository.save(team);
-    }
+//    @Override
+//    @Transactional
+//    public BasketballTeam updateStats(Long id) {
+//        BasketballTeam team = basketballTeamRepository.findById(id).orElseThrow(InvalidBasketballTeamException::new);
+//        int wins = 0;
+//        int loses = 0;
+//        int leaguePoints = 0;
+//
+//        for (BasketballMatch match : team.getBasketballResults()) {
+//            if (match.getEndTime().isBefore(java.time.LocalDateTime.now())) { // Match has been played
+//                boolean isHomeTeam = match.getHomeTeam().equals(team);
+//                int teamPoints = isHomeTeam ? match.getHomeTeamPoints() : match.getAwayTeamPoints();
+//                int opponentPoints = isHomeTeam ? match.getAwayTeamPoints() : match.getHomeTeamPoints();
+//
+//                if (teamPoints > opponentPoints) {
+//                    wins++;
+//                    leaguePoints += 3; // Assuming a win gives 3 points
+//                } else {
+//                    loses++;
+//                }
+//            }
+//        }
+//
+//        team.setTeamMatchesPlayed(wins + loses);
+//        team.setTeamWins(wins);
+//        team.setTeamLoses(loses);
+//        team.setTeamLeaguePoints(leaguePoints);
+//
+//        return basketballTeamRepository.save(team);
+//    }
 
     @Override
     @Transactional(readOnly = true)
@@ -114,4 +118,66 @@ public class BasketballTeamServiceImpl implements BasketballTeamService {
     public List<BasketballTeam> findAllOrderByPointsDesc() {
         return basketballTeamRepository.findAllByOrderByTeamLeaguePointsDesc();
     }
+    @Override
+    @Transactional
+    public void incrementMatchesPlayed(Long teamId) {
+        BasketballTeam team = basketballTeamRepository.findById(teamId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid team ID"));
+        team.setTeamMatchesPlayed(team.getTeamMatchesPlayed() + 1);
+        basketballTeamRepository.save(team);
+    }
+
+    @Override
+    @Transactional
+    public void addWin(Long teamId) {
+        BasketballTeam team = basketballTeamRepository.findById(teamId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid team ID"));
+
+        team.setTeamWins(team.getTeamWins() + 1);
+        basketballTeamRepository.save(team);
+    }
+
+    @Override
+    @Transactional
+    public void addLoss(Long teamId) {
+        BasketballTeam team = basketballTeamRepository.findById(teamId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid team ID"));
+
+        team.setTeamLoses(team.getTeamLoses() + 1);
+        basketballTeamRepository.save(team);
+    }
+
+//    @Override
+//    @Transactional
+//    public void addDraw(Long teamId) {
+//        BasketballTeam team = basketballTeamRepository.findById(teamId)
+//                .orElseThrow(() -> new IllegalArgumentException("Invalid team ID"));
+//
+//        team.setTeamDraws(team.getTeamDraws() + 1);
+//        basketballTeamRepository.save(team);
+//    }
+    @Override
+    @Transactional
+    public void addPoints(Long teamId, int points) {
+        BasketballTeam team = basketballTeamRepository.findById(teamId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid team ID"));
+
+        team.setTeamLeaguePoints(team.getTeamLeaguePoints() + points);
+        basketballTeamRepository.save(team);
+    }
+    @Override
+    @Transactional
+    public List<BasketballTeamStandings> getStandings() {
+        List<BasketballTeam> teams = basketballTeamRepository.findAll();
+
+        return teams.stream()
+                .map(team -> new BasketballTeamStandings(
+                        team.getTeamName(),
+                        team.getTeamMatchesPlayed(),
+                        team.getTeamWins(),
+                        team.getTeamLoses()))
+                .sorted(Comparator.comparingInt(BasketballTeamStandings::getWins).reversed())
+                .collect(Collectors.toList());
+    }
+
 }

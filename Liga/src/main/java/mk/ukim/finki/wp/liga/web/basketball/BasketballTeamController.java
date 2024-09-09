@@ -5,6 +5,8 @@ import mk.ukim.finki.wp.liga.model.BasketballPlayer;
 import mk.ukim.finki.wp.liga.model.BasketballTeam;
 import mk.ukim.finki.wp.liga.model.FootballPlayer;
 import mk.ukim.finki.wp.liga.model.FootballTeam;
+import mk.ukim.finki.wp.liga.model.dtos.BasketballTeamStandings;
+import mk.ukim.finki.wp.liga.model.dtos.TeamStandingsDTO;
 import mk.ukim.finki.wp.liga.service.basketball.BasketballPlayerService;
 import mk.ukim.finki.wp.liga.service.basketball.BasketballTeamService;
 import org.springframework.stereotype.Controller;
@@ -113,4 +115,13 @@ public class BasketballTeamController {
         basketballTeamService.delete(id);
         return "redirect:/basketball/teams";
     }
+    @GetMapping("/standings")
+    public String getStandings(Model model) {
+        List<BasketballTeamStandings> standings = basketballTeamService.getStandings();
+        model.addAttribute("standings", standings);
+        model.addAttribute("bodyContent", "basketball/basketball_standings"); // This should match the template file name
+        return "basketball/master_template"; // The master template should be in the same folder or adjust path if needed
+    }
+
+
 }

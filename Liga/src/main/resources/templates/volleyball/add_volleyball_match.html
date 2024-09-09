@@ -11,7 +11,7 @@
     </div>
 </header>
 <div class="container">
-    <form th:action="@{/volleyball/matches/add}" method="post">
+    <form th:action="@{/volleyball/matches/add}" method="post" onsubmit="return validateForm()">
         <div class="form-group">
             <label for="homeTeam">Home Team</label>
             <select id="homeTeam" name="homeTeamId" class="form-control" required>
@@ -26,15 +26,15 @@
         </div>
         <div class="form-group">
             <label for="homeTeamPoints">Home Team Points</label>
-            <input type="number" id="homeTeamPoints" name="homeTeamPoints" class="form-control" required>
+            <input type="number" id="homeTeamPoints" name="homeTeamPoints" class="form-control" value="0" required>
         </div>
         <div class="form-group">
             <label for="awayTeamPoints">Away Team Points</label>
-            <input type="number" id="awayTeamPoints" name="awayTeamPoints" class="form-control" required>
+            <input type="number" id="awayTeamPoints" name="awayTeamPoints" class="form-control" value="0" required>
         </div>
         <div class="form-group">
             <label for="startTime">Start Time</label>
-            <input type="datetime-local" id="startTime" name="startTime" class="form-control" required>
+            <input type="datetime-local" id="startTime" name="startTime" class="form-control" required onchange="checkEndTime()">
         </div>
         <div class="form-group">
             <label for="endTime">End Time</label>
@@ -44,5 +44,28 @@
     </form>
     <a th:href="@{/volleyball/matches}" class="btn btn-primary">Back to Matches</a>
 </div>
+
+<script>
+    function validateForm() {
+        const homeTeam = document.getElementById('homeTeam').value;
+        const awayTeam = document.getElementById('awayTeam').value;
+        const startTime = document.getElementById('startTime').value;
+        const endTime = document.getElementById('endTime').value;
+
+        // Check if home and away teams are the same
+        if (homeTeam === awayTeam) {
+            alert("Home and Away teams cannot be the same.");
+            return false;
+        }
+
+        // Check if end time is before start time
+        if (new Date(endTime) < new Date(startTime)) {
+            alert("End time cannot be before start time.");
+            return false;
+        }
+
+        return true;
+    }
+</script>
 </body>
 </html>

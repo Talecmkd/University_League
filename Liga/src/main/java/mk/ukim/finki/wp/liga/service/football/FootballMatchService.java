@@ -33,7 +33,7 @@ public interface FootballMatchService {
     FootballMatch updatePlayoffMatchPoints(Long id, FootballTeam homeTeam, FootballTeam awayTeam, int homeTeamPoints, int awayTeamPoints, List<FootballPlayer> homeScore, List<FootballPlayer> awayScore);
     List<FootballMatch> createSemiFinalMatches();
     List<FootballMatch> createFinalMatch();
-    boolean allTeamsHavePlayedFourMatches();
+    //boolean allTeamsHavePlayedFourMatches();
     void updateLiveStats(Long footballMatchId, int goalsScored, Long playerId);
     Map<LocalDate, List<FootballMatch>> groupMatchesByDate(List<FootballMatch> matches);
     void finishMatch(Long matchId);

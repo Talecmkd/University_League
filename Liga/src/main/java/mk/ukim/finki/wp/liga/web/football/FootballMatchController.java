@@ -296,8 +296,8 @@ public class FootballMatchController {
     public String getPlayoffMatches(Model model) {
         List<FootballMatch> matches = footballMatchService.listPlayoffMatches();
         model.addAttribute("matches", matches);
-        boolean allTeamsPlayedExactly4Matches = footballMatchService.allTeamsHavePlayedFourMatches();
-        model.addAttribute("allTeamsPlayedExactly4Matches", allTeamsPlayedExactly4Matches);
+       // boolean allTeamsPlayedExactly4Matches = footballMatchService.allTeamsHavePlayedFourMatches();
+       // model.addAttribute("allTeamsPlayedExactly4Matches", allTeamsPlayedExactly4Matches);
         model.addAttribute("bodyContent","playoff_bracket");
         return "master_template";
     }

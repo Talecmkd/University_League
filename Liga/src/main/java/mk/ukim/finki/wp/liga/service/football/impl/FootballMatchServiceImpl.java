@@ -120,9 +120,9 @@ public class FootballMatchServiceImpl implements FootballMatchService {
     @Override
     @Transactional
     public List<FootballMatch> createPlayoffMatches() {
-        if (!allTeamsHavePlayedFourMatches()) {
-            throw new RuntimeException("Cannot create playoff matches. All teams must have played exactly 8 matches.");
-        }
+//        if (!allTeamsHavePlayedFourMatches()) {
+//            throw new RuntimeException("Cannot create playoff matches. All teams must have played exactly 8 matches.");
+//        }
 
         List<FootballMatch> existingPlayoffMatches = matchRepository.findAllByIsPlayoffMatchTrue();
 
@@ -289,12 +289,12 @@ public class FootballMatchServiceImpl implements FootballMatchService {
 
         return finals;
     }
-    @Override
-    @Transactional
-    public boolean allTeamsHavePlayedFourMatches() {
-        List<FootballTeam> teams = teamRepository.findAllByOrderByTeamLeaguePointsDesc();
-        return  teams.stream().allMatch(footballTeam -> footballTeam.getTeamMatchesPlayed() == 1);
-    }
+//    @Override
+//    @Transactional
+//    public boolean allTeamsHavePlayedFourMatches() {
+//        List<FootballTeam> teams = teamRepository.findAllByOrderByTeamLeaguePointsDesc();
+//        return  teams.stream().allMatch(footballTeam -> footballTeam.getTeamMatchesPlayed() == 1);
+//    }
 
     @Override
     public void updateLiveStats(Long footballMatchId, int goalsScored, Long playerId) {

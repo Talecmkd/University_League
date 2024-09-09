@@ -66,7 +66,8 @@ public class VolleyballPlayerController {
                                       @RequestParam("index") int index,
                                       @RequestParam("city") String city,
                                       @RequestParam("position") String position,
-                                      @RequestParam(value = "teamId", required = false) Long teamId) {
+                                      @RequestParam(value = "teamId", required = false) Long teamId,
+                                      Model model) {
         byte[] imageBytes = null;
         try {
             if (!image.isEmpty()) {
@@ -80,12 +81,16 @@ public class VolleyballPlayerController {
         VolleyballTeam team = null;
         if (teamId != null) {
             team = volleyballTeamService.findById(teamId);
+
+            model.addAttribute("teams", volleyballTeamService.listAllTeams());
+            return "volleyball/add_volleyball_player"; // or the correct view
         }
 
         VolleyballPlayer player = volleyballPlayerService.create(imageBytes, name, surname, birthdate, index, city, position, team);
 
         return "redirect:/volleyball/players";
     }
+
 
 
 

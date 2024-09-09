@@ -100,10 +100,8 @@
                     <a href="/teams/standings" class="nav-link">Standings</a>
                 </li>
                 <li class="nav-item">
-                    <a th:if="${allTeamsPlayedExactly4Matches != null and allTeamsPlayedExactly4Matches}" th:href="@{/matches/playoffs/init}" class="nav-link">Playoffs</a>
-                    <a th:if="${allTeamsPlayedExactly4Matches == null or !allTeamsPlayedExactly4Matches}" class="nav-link disabled" href="#">Playoffs</a>
+                    <a href="/matches/playoffs/init" class="nav-link">Playoffs</a>
                 </li>
-
             </ul>
         </div>
     </div>

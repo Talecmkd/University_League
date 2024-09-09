@@ -41,7 +41,7 @@
             <label for="playerBirthDate" class="form-label">Birth Date</label>
             <input type="date" class="form-control" id="playerBirthDate" name="playerBirthDate"
                    th:value="${player != null} ? ${player.getBirthdate()} : ''" required placeholder="Player Birth date">
-            <div class="invalid-feedback">Please enter the player's birth date.</div>
+            <div class="invalid-feedback">Please enter a valid birth date.</div>
         </div>
 
         <!-- Player Index -->
@@ -99,6 +99,11 @@
             Array.prototype.filter.call(forms, function (form) {
                 form.addEventListener('submit', function (event) {
                     var indexField = document.getElementById('playerIndex');
+                    var birthdateField = document.getElementById('playerBirthDate');
+                    var currentDate = new Date();
+                    var birthDate = new Date(birthdateField.value);
+
+                    // Validate Index Length
                     if (indexField.value.length !== 6) {
                         indexField.setCustomValidity('The index must be exactly 6 digits long.');
                         event.preventDefault();
@@ -106,6 +111,16 @@
                     } else {
                         indexField.setCustomValidity('');
                     }
+
+                    // Validate Birth Date
+                    if (birthDate > currentDate) {
+                        birthdateField.setCustomValidity('The birth date cannot be in the future.');
+                        event.preventDefault();
+                        event.stopPropagation();
+                    } else {
+                        birthdateField.setCustomValidity('');
+                    }
+
                     if (form.checkValidity() === false) {
                         event.preventDefault();
                         event.stopPropagation();

@@ -12,10 +12,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -31,7 +33,8 @@ public class BasketballMatchController {
     @GetMapping
     public String showAllMatches(Model model) {
         List<BasketballMatch> basketballMatches = basketballMatchService.listAllBasketballMatches();
-        model.addAttribute("basketballMatches", basketballMatches);
+        Map<LocalDate, List<BasketballMatch>> groupedMatches = basketballMatchService.groupMatchesByDate(basketballMatches);
+        model.addAttribute("groupedMatches", groupedMatches);
         model.addAttribute("bodyContent","basketball/basketball_matches");
         return "/basketball/master_template";
     }
@@ -116,7 +119,7 @@ public class BasketballMatchController {
         List<BasketballMatch> results = basketballMatchService.listAllBasketballMatches().stream()
                 .filter(match -> match.getEndTime().isBefore(LocalDateTime.now()))
                 .collect(Collectors.toList());
-        results.forEach(basketballMatchService::updateTeamStatistics);
+        //results.forEach(basketballMatchService::updateTeamStatistics);
         model.addAttribute("results", results);
         model.addAttribute("bodyContent","basketball/basketball_results");
         return "/basketball/master_template";
@@ -147,12 +150,10 @@ public class BasketballMatchController {
             @RequestParam Long awayTeamId,
             @RequestParam int homeTeamPoints,
             @RequestParam int awayTeamPoints,
-            @RequestParam String startTime,
-            @RequestParam String endTime) {
+            @RequestParam String startTime) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
         LocalDateTime start = LocalDateTime.parse(startTime, formatter);
-        LocalDateTime end = LocalDateTime.parse(endTime, formatter);
 
         BasketballTeam homeTeam = basketballTeamService.findById(homeTeamId);
         BasketballTeam awayTeam = basketballTeamService.findById(awayTeamId);
@@ -178,12 +179,11 @@ public class BasketballMatchController {
             @RequestParam Long awayTeamId,
             @RequestParam int homeTeamPoints,
             @RequestParam int awayTeamPoints,
-            @RequestParam String startTime,
-            @RequestParam String endTime) {
+            @RequestParam String startTime) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
         LocalDateTime start = LocalDateTime.parse(startTime, formatter);
-        LocalDateTime end = LocalDateTime.parse(endTime, formatter);
+
 
         BasketballTeam homeTeam = basketballTeamService.findById(homeTeamId);
         BasketballTeam awayTeam = basketballTeamService.findById(awayTeamId);
@@ -255,7 +255,7 @@ public class BasketballMatchController {
         basketballPlayerService.addRebounds(playerId, reboundsScored);
 
         BasketballTeam team = basketballTeamService.listAllTeams().stream().filter(t -> t.getPlayers().contains(player)).findFirst().get();
-        basketballTeamService.updateStats(team.getId());
+        //basketballTeamService.updateStats(team.getId());
         basketballMatchService.updateLiveStats(basketballMatchId, pointsScored, playerId);
 
         return "redirect:/basketball/matches";
@@ -292,8 +292,12 @@ public class BasketballMatchController {
     public String editPlayoffMatch(@PathVariable Long id, Model model) {
         BasketballMatch match = basketballMatchService.findById(id);
         List<BasketballTeam> teams = basketballTeamService.listAllTeams();
+        BasketballTeam homeTeam = match.getHomeTeam();
+        BasketballTeam awayTeam = match.getAwayTeam();
         model.addAttribute("match", match);
         model.addAttribute("teams", teams);
+        model.addAttribute("homeScorers", homeTeam.getPlayers());
+        model.addAttribute("awayScorers", awayTeam.getPlayers());
         model.addAttribute("bodyContent","basketball/edit_basketball_playoff_match");
         return "/basketball/master_template";
     }
@@ -304,10 +308,12 @@ public class BasketballMatchController {
             @RequestParam Long homeTeamId,
             @RequestParam Long awayTeamId,
             @RequestParam int homeTeamPoints,
-            @RequestParam int awayTeamPoints) {
+            @RequestParam int awayTeamPoints,
+            @RequestParam(value = "homeScorers", required = false) List<BasketballPlayer> homeScorers,
+            @RequestParam(value = "awayScorers", required = false) List<BasketballPlayer> awayScorers) {
         BasketballTeam homeTeam = basketballTeamService.findById(homeTeamId);
         BasketballTeam awayTeam = basketballTeamService.findById(awayTeamId);
-        basketballMatchService.updatePlayoffMatchPoints(id, homeTeam, awayTeam, homeTeamPoints, awayTeamPoints);
+        basketballMatchService.updatePlayoffMatchPoints(id, homeTeam, awayTeam, homeTeamPoints, awayTeamPoints, homeScorers, awayScorers);
 
         return "redirect:/basketball/matches/playoffs";
     }
@@ -323,4 +329,17 @@ public class BasketballMatchController {
         basketballMatchService.createFinalMatch();
         return "redirect:/basketball/matches/playoffs"; // Redirect to view the updated playoff bracket
     }
+    @PostMapping("/finish/{id}")
+    public String finishMatch(@PathVariable Long id) {
+        try {
+            BasketballMatch match = basketballMatchService.findById(id);
+            basketballMatchService.finishMatch(id);
+            //footballMatchService.updateTeamStatistics(match);
+            return "redirect:/basketball/matches/results";
+
+        } catch (Exception e) {
+            return "redirect:/matches/error";
+        }
+    }
+
 }

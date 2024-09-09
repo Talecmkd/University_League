@@ -3,6 +3,8 @@ package mk.ukim.finki.wp.liga.web.volleyball;
 import lombok.AllArgsConstructor;
 import mk.ukim.finki.wp.liga.model.VolleyballPlayer;
 import mk.ukim.finki.wp.liga.model.VolleyballTeam;
+import mk.ukim.finki.wp.liga.model.dtos.TeamStandingsDTO;
+import mk.ukim.finki.wp.liga.model.dtos.VolleyBallStandings;
 import mk.ukim.finki.wp.liga.service.volleyball.VolleyballMatchService;
 import mk.ukim.finki.wp.liga.service.volleyball.VolleyballPlayerService;
 import mk.ukim.finki.wp.liga.service.volleyball.VolleyballTeamService;
@@ -115,5 +117,12 @@ public class VolleyballTeamController {
     public String deleteTeam(@PathVariable Long id) {
         volleyballTeamService.delete(id);
         return "redirect:/volleyball/teams";
+    }
+    @GetMapping("/standings")
+    public String getStandings(Model model) {
+        List<VolleyBallStandings> standings = volleyballTeamService.getStandings();
+        model.addAttribute("standings", standings);
+        model.addAttribute("bodyContent","volleyball/volleyball_standings");
+        return "volleyball/master_template";
     }
 }

@@ -1,8 +1,74 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Volleyball Matches</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        .match-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-decoration: none;
+            color: inherit;
+            transition: background-color 0.3s;
+        }
+        .match-row:hover {
+            background-color: #f8f9fa;
+        }
+        .match-link {
+            display: block;
+            width: 100%;
+            color: inherit;
+        }
+        .team-info {
+            display: flex;
+            align-items: center;
+        }
+        .team-info img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+        .match-time {
+            font-size: 1.2rem;
+            padding: 5px 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            color: #333;
+        }
+        .match-date {
+            font-size: 0.9rem;
+            color: #555;
+        }
+        .team-name {
+            font-size: 1.2rem;
+            color: #000;
+            font-weight: bold;
+        }
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+        .actions .btn {
+            font-size: 0.8rem;
+        }
+        .playoff-badge {
+            background-color: #ff6f61;
+            color: white;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+        }
+        .nav-link.disabled {
+            pointer-events: none;
+            color: #6c757d;
+        }
+    </style>
 </head>
 <body>
 <header class="bg-primary text-white p-3">
@@ -33,33 +99,57 @@
                 <li class="nav-item">
                     <a href="/volleyball/matches/playoffs/init" class="nav-link">Playoffs</a>
                 </li>
+                <li class="nav-item">
+                    <a href="/volleyball/teams/standings" class="nav-link">Standings</a>
+                </li>
             </ul>
         </div>
     </div>
 </nav>
 
-<div class="container">
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>Home Team</th>
-            <th>Away Team</th>
-            <th>Start Time</th>
-            <th>End Time</th>
-            <th>Details</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="match : ${volleyballMatches}">
-            <td th:text="${match.homeTeam.getTeamName()}">Home Team Name</td>
-            <td th:text="${match.awayTeam.getTeamName()}">Away Team Name</td>
-            <td th:text="${#temporals.format(match.startTime, 'dd-MM-yyyy HH:mm')}">Start Time</td>
-            <td th:text="${#temporals.format(match.endTime, 'dd-MM-yyyy HH:mm')}">End Time</td>
-            <td><a th:href="@{/volleyball/matches/details/{id}(id=${match.getVolleyball_match_id()})}" class="btn btn-primary">Details</a></td>
-        </tr>
-        </tbody>
-    </table>
-    <a th:href="@{/volleyball/matches/add-form}" class="btn btn-success">Add Match</a>
-</div>
+<section class="container mt-4">
+    <div th:each="entry : ${groupedMatches}">
+        <h3 class="match-date" th:text="${#temporals.format(entry.key, 'EEEE dd MMMM yyyy')}"></h3>
+        <div th:each="match : ${entry.value}">
+            <a th:href="@{/volleyball/matches/details/{id}(id=${match.volleyball_match_id})}" class="d-block match-link">
+                <div class="match-row">
+                    <div>
+                        <span class="team-name" th:text="${match.homeTeam.teamName}"></span>
+                        <span class="match-time" th:text="${#temporals.format(match.startTime, 'HH:mm')}"></span>
+                        <span class="team-name" th:text="${match.awayTeam.teamName}"></span>
+                        <span th:if="${match.isVolleyballPlayoffMatch}" class="playoff-badge">Playoff</span>
+                    </div>
+                    <div class="ml-auto actions">
+                        <a th:href="@{/volleyball/matches/edit-form/{id}(id=${match.volleyball_match_id})}" class="btn btn-warning btn-sm">Edit</a>
+                        <form th:if="${!match.isVolleyballPlayoffMatch}" th:method="POST" th:action="@{'/volleyball/matches/finish/{id}'(id=${match.volleyball_match_id})}" style="display:inline;" onsubmit="return confirmFinish(this)">
+                        <input id="homeTeamScoreInput" type="hidden" name="homeTeamScore" th:value="${match.homeTeamPoints}">
+                        <input id="awayTeamScoreInput" type="hidden" name="awayTeamScore" th:value="${match.awayTeamPoints}">
+                            <button  th:disabled="${match.homeTeamPoints == match.awayTeamPoints}" type="submit" class="btn btn-success btn-sm"
+                            >Finish</button>
+                        </form>
+                        <form th:method="POST" th:action="@{'/volleyball/matches/delete/{id}'(id=${match.volleyball_match_id})}" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<script>
+    function confirmFinish(form) {
+        if (form.dataset.isFinished) {
+            alert("This match has already been finished.");
+            return false;
+        }
+        form.dataset.isFinished = true;
+        return true;
+    }
+</script>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </body>
 </html>

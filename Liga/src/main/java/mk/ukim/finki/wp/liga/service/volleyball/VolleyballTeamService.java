@@ -1,6 +1,7 @@
 package mk.ukim.finki.wp.liga.service.volleyball;
 
 import mk.ukim.finki.wp.liga.model.*;
+import mk.ukim.finki.wp.liga.model.dtos.VolleyBallStandings;
 
 import java.util.List;
 
@@ -28,4 +29,5 @@ public interface VolleyballTeamService {
 
     VolleyballTeam saveTable(Long id, int teamPoints);
     List<VolleyballTeam> findAllOrderByPointsDesc();
+    List<VolleyBallStandings> getStandings();
 }

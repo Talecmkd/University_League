@@ -37,7 +37,7 @@ public class FootballTeamController{
     return "master_template";
 }
 
-@GetMapping("team/{id}")
+@GetMapping("details/{id}")
     public String getTeam(@PathVariable Long id, Model model){
     FootballTeam team = footballTeamService.findById(id);
     if (team != null) {

@@ -34,18 +34,26 @@
     <h2>Match Details</h2>
     <div class="match-container">
         <div class="team-container">
-            <div class="team-name" th:text="${match.homeTeam.teamName}">Home Team Name</div>
+            <div class="team-name">
+                <a th:href="@{/basketball/teams/team/{id}(id=${match.homeTeam.id})}" th:text="${match.homeTeam.teamName}">Home Team Name</a>
+            </div>
             <ul class="players-list">
-                <li th:each="player : ${match.homeTeam.players}" th:text="${player.name}">Player Name</li>
+                <li th:each="player : ${match.homeTeam.players}">
+                    <a th:href="@{/basketball/players/details/{id}(id=${player.basketball_player_id})}" th:text="${player.name}">Player Name</a>
+                </li>
             </ul>
         </div>
         <div class="points">
             <span th:text="${match.homeTeamPoints}">0</span> - <span th:text="${match.awayTeamPoints}">0</span>
         </div>
         <div class="team-container">
-            <div class="team-name" th:text="${match.awayTeam.teamName}">Away Team Name</div>
+            <div class="team-name">
+                <a th:href="@{/basketball/teams/team/{id}(id=${match.awayTeam.id})}" th:text="${match.awayTeam.teamName}">Away Team Name</a>
+            </div>
             <ul class="players-list">
-                <li th:each="player : ${match.awayTeam.players}" th:text="${player.name}">Player Name</li>
+                <li th:each="player : ${match.awayTeam.players}">
+                    <a th:href="@{/basketball/players/details/{id}(id=${player.basketball_player_id})}" th:text="${player.name}">Player Name</a>
+                </li>
             </ul>
         </div>
     </div>

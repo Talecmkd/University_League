@@ -11,8 +11,9 @@
     </div>
 </header>
 <div class="container">
-    <form th:action="@{/volleyball/matches/edit}" method="post">
+    <form th:action="@{/volleyball/matches/edit}" method="post" onsubmit="return validateForm()">
         <input type="hidden" name="id" th:value="${match.getVolleyball_match_id()}">
+
         <div class="form-group">
             <label for="homeTeam">Home Team</label>
             <select id="homeTeam" name="homeTeamId" class="form-control" required>
@@ -20,6 +21,7 @@
                         th:selected="${team.getVolleyball_team_id() == match.homeTeam.getVolleyball_team_id()}">Team Name</option>
             </select>
         </div>
+
         <div class="form-group">
             <label for="awayTeam">Away Team</label>
             <select id="awayTeam" name="awayTeamId" class="form-control" required>
@@ -27,26 +29,54 @@
                         th:selected="${team.getVolleyball_team_id() == match.awayTeam.getVolleyball_team_id()}">Team Name</option>
             </select>
         </div>
+
         <div class="form-group">
             <label for="homeTeamPoints">Home Team Points</label>
-            <input type="number" id="homeTeamPoints" name="homeTeamPoints" class="form-control" th:value="${match.homeTeamPoints}" required>
+            <input type="number" id="homeTeamPoints" name="homeTeamPoints" class="form-control" th:value="${match.homeTeamPoints}" value="0" required>
         </div>
+
         <div class="form-group">
             <label for="awayTeamPoints">Away Team Points</label>
-            <input type="number" id="awayTeamPoints" name="awayTeamPoints" class="form-control" th:value="${match.awayTeamPoints}" required>
+            <input type="number" id="awayTeamPoints" name="awayTeamPoints" class="form-control" th:value="${match.awayTeamPoints}" value="0" required>
         </div>
+
         <div class="form-group">
             <label for="startTime">Start Time</label>
-            <input type="datetime-local" id="startTime" name="startTime" class="form-control" th:value="${#temporals.format(match.startTime, 'yyyy-MM-dd''T''HH:mm')}" required>
+            <input type="datetime-local" id="startTime" name="startTime" class="form-control" th:value="${#temporals.format(match.startTime, 'yyyy-MM-dd''T''HH:mm')}" required onchange="checkEndTime()">
         </div>
+
         <div class="form-group">
             <label for="endTime">End Time</label>
-            <input type="datetime-local" id="endTime" name="endTime" class="form-control"  th:value="${#temporals.format(match.endTime, 'yyyy-MM-dd''T''HH:mm')}" required >
+            <input type="datetime-local" id="endTime" name="endTime" class="form-control"  th:value="${#temporals.format(match.endTime, 'yyyy-MM-dd''T''HH:mm')}" required>
         </div>
+
         <button type="submit" class="btn btn-warning">Update Match</button>
     </form>
     <a th:href="@{/volleyball/matches/details/{id}(id=${match.getVolleyball_match_id()})}" class="btn btn-primary">Back to Match Details</a>
 </div>
+
+<script>
+    function validateForm() {
+        const homeTeam = document.getElementById('homeTeam').value;
+        const awayTeam = document.getElementById('awayTeam').value;
+        const startTime = document.getElementById('startTime').value;
+        const endTime = document.getElementById('endTime').value;
+
+        // Check if home and away teams are the same
+        if (homeTeam === awayTeam) {
+            alert("Home and Away teams cannot be the same.");
+            return false;
+        }
+
+        // Check if end time is before start time
+        if (new Date(endTime) < new Date(startTime)) {
+            alert("End time cannot be before start time.");
+            return false;
+        }
+
+        return true;
+    }
+</script>
 
 </body>
 </html>

@@ -24,4 +24,5 @@ public interface BasketballPlayerService {
     List<BasketballPlayer> getPlayersByIds(List<Long> ids);
     List<BasketballPlayer> getTop5Players();
     List<BasketballPlayer> getTop5PlayersByTeam(Long teamId);
+    void addStats(Long playerId, int basketsToAdd);
 }

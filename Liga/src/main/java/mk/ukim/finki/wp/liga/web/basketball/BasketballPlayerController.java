@@ -58,7 +58,8 @@ public class BasketballPlayerController {
                             @RequestParam Integer playerIndex,
                             @RequestParam String playerCity,
                             @RequestParam String playerPosition,
-                            @RequestParam(required = false) Long team
+                            @RequestParam(required = false) Long team,
+                            Model model
     ) throws IOException {
         byte [] imageBytes=null;
         if (playerImage != null && !playerImage.isEmpty()) {

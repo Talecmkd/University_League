@@ -13,10 +13,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -31,7 +33,8 @@ public class VolleyballMatchController {
     @GetMapping
     public String showAllMatches(Model model) {
         List<VolleyballMatch> volleyballMatches = volleyballMatchService.listAllVolleyballMatches();
-        model.addAttribute("volleyballMatches", volleyballMatches);
+        Map<LocalDate, List<VolleyballMatch>> groupedMatches = volleyballMatchService.groupMatchesByDate(volleyballMatches);
+        model.addAttribute("groupedMatches", groupedMatches);
         model.addAttribute("bodyContent","volleyball/volleyball_matches");
         return "volleyball/master_template";
     }
@@ -122,7 +125,7 @@ public class VolleyballMatchController {
         List<VolleyballMatch> results = volleyballMatchService.listAllVolleyballMatches().stream()
                 .filter(match -> match.getEndTime().isBefore(LocalDateTime.now()))
                 .collect(Collectors.toList());
-        results.forEach(volleyballMatchService::updateTeamStatistics);
+        //results.forEach(volleyballMatchService::updateTeamStatistics);
         model.addAttribute("results", results);
         model.addAttribute("bodyContent","volleyball/volleyball_results");
         return "volleyball/master_template";
@@ -302,24 +305,34 @@ public class VolleyballMatchController {
     public String editPlayoffMatch(@PathVariable Long id, Model model) {
         VolleyballMatch match = volleyballMatchService.findById(id);
         List<VolleyballTeam> teams = volleyballTeamService.listAllTeams();
+        VolleyballTeam homeTeam = match.getHomeTeam();
+        VolleyballTeam awayTeam = match.getAwayTeam();
         model.addAttribute("match", match);
         model.addAttribute("teams", teams);
-        model.addAttribute("bodyContent","volleyball/edit_volleyball_playoff_match");
+        model.addAttribute("homeScorers", homeTeam.getPlayers());
+        model.addAttribute("awayScorers", awayTeam.getPlayers());
+        model.addAttribute("bodyContent", "volleyball/edit_volleyball_playoff_match");
         return "volleyball/master_template";
     }
+
     @PostMapping("/playoffs/edit")
     public String updatePlayoffMatchPoints(
             @RequestParam Long id,
             @RequestParam Long homeTeamId,
             @RequestParam Long awayTeamId,
             @RequestParam int homeTeamPoints,
-            @RequestParam int awayTeamPoints) {
+            @RequestParam int awayTeamPoints,
+            @RequestParam(value = "homeScorers", required = false) List<VolleyballPlayer> homeScorers,
+            @RequestParam(value = "awayScorers", required = false) List<VolleyballPlayer> awayScorers) {
+
         VolleyballTeam homeTeam = volleyballTeamService.findById(homeTeamId);
         VolleyballTeam awayTeam = volleyballTeamService.findById(awayTeamId);
-        volleyballMatchService.updatePlayoffMatchPoints(id, homeTeam, awayTeam, homeTeamPoints, awayTeamPoints);
 
-        return "redirect:/matches/playoffs";
+        volleyballMatchService.updatePlayoffMatchPoints(id, homeTeam, awayTeam, homeTeamPoints, awayTeamPoints, homeScorers, awayScorers);
+
+        return "redirect:/volleyball/matches/playoffs";
     }
+
     @GetMapping("/playoffs/semi-finals_Init")
     public String initializeSemiFinalMatches() {
         volleyballMatchService.createSemiFinalMatches();
@@ -329,5 +342,18 @@ public class VolleyballMatchController {
     public String initializeFinalMatches() {
         volleyballMatchService.createFinalMatch();
         return "redirect:/matches/playoffs"; // Redirect to view the updated playoff bracket
+    }
+    @PostMapping("/finish/{id}")
+    public String finishMatch(@PathVariable Long id)
+    {
+        try {
+            VolleyballMatch match = volleyballMatchService.findById(id);
+            volleyballMatchService.finishMatch(id);
+            //footballMatchService.updateTeamStatistics(match);
+            return "redirect:/volleyball/matches/results";
+
+        } catch (Exception e) {
+            return "redirect:/matches/error";
+        }
     }
 }

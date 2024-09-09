@@ -5,6 +5,7 @@ import mk.ukim.finki.wp.liga.model.Exceptions.InvalidVolleyballTeamException;
 import mk.ukim.finki.wp.liga.model.VolleyballMatch;
 import mk.ukim.finki.wp.liga.model.VolleyballPlayer;
 import mk.ukim.finki.wp.liga.model.VolleyballTeam;
+import mk.ukim.finki.wp.liga.model.dtos.VolleyBallStandings;
 import mk.ukim.finki.wp.liga.repository.volleyball.VolleyballMatchRepository;
 import mk.ukim.finki.wp.liga.repository.volleyball.VolleyballPlayerRepository;
 import mk.ukim.finki.wp.liga.repository.volleyball.VolleyballTeamRepository;
@@ -12,7 +13,9 @@ import mk.ukim.finki.wp.liga.service.volleyball.VolleyballTeamService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -116,5 +119,20 @@ public class VolleyballTeamServiceImpl implements VolleyballTeamService {
     @Transactional
     public List<VolleyballTeam> findAllOrderByPointsDesc() {
         return volleyballTeamRepository.findAllByOrderByTeamLeaguePointsDesc();
+    }
+    @Override
+    @Transactional
+    public List<VolleyBallStandings> getStandings() {
+        List<VolleyballTeam> teams = volleyballTeamRepository.findAll();
+
+        return teams.stream()
+                .map(team -> new VolleyBallStandings(
+                        team.getTeamName(),
+                        team.getTeamMatchesPlayed(),
+                        team.getTeamWins(),
+                        team.getTeamLoses(),
+                        team.getTeamLeaguePoints()))
+                .sorted(Comparator.comparingInt(VolleyBallStandings::getWins).reversed())
+                .collect(Collectors.toList());
     }
 }
