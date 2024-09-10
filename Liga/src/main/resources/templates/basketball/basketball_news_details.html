@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Baketball News Details</title>
+</head>
+<body>
+<div th:fragment="content">
+    <h1 th:text="${news.title}">News Title</h1>
+    <p><strong>Published Date:</strong> <span th:text="${news.publishedDate}"></span></p>
+
+    <div>
+        <h3>Content:</h3>
+        <p th:text="${news.content}">News Content</p>
+    </div>
+
+    <div>
+        <a th:href="@{/basketball/news/edit/{id}(id=${news.news_id})}">Edit</a>
+        <a th:href="@{/basketball/news}" th:text="'Back to News List'">Back to News List</a>
+    </div>
+</div>
+</body>
+</html>
