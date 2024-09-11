@@ -21,6 +21,7 @@
             <th>W</th>
             <th>L</th>
             <th>Pts</th>
+            <th>Last 5</th>
         </tr>
         </thead>
         <tbody>
@@ -30,6 +31,13 @@
             <td th:text="${teamData.wins}"></td>
             <td th:text="${teamData.loses}"></td>
             <td th:text="${teamData.points}"></td>
+            <td>
+                <span th:each="result : ${teamData.lastFiveMatches}">
+                    <span th:if="${result == 'W'}" class="badge bg-success">W</span>
+                    <span th:if="${result == 'D'}" class="badge bg-secondary">D</span>
+                    <span th:if="${result == 'L'}" class="badge bg-danger">L</span>
+                </span>
+            </td>
         </tr>
         </tbody>
     </table>

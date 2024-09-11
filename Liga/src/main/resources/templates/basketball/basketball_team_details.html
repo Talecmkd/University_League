@@ -4,15 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Team Details</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        a.player-link {
+            color: black;
+            text-decoration: none; /* This removes the underline, if needed */
+        }
+
+        a.player-link:hover {
+            color: grey; /* Optional: Change color on hover */
+        }
+    </style>
 </head>
 <body>
+<header class="bg-primary text-white p-3">
+    <div class="container">
+        <h1 class="mb-0">Basketball Team Details</h1>
+    </div>
+</header>
 <div class="container mt-5">
-    <h1>Team Details</h1>
     <div th:if="${team != null}">
         <div class="card">
             <div class="card-header">
                 <h2 th:text="${team.teamName}">Team Name</h2>
+                <img th:src="@{/basketball/teams/logo/{id}(id=${team.id})}" alt="Team Image" class="img-fluid mb-3" style="width:200px;height:200px;"/>
+
             </div>
             <div class="card-body">
                 <h3>Team Statistics</h3>
@@ -25,7 +41,7 @@
                 <h3>Players</h3>
                 <ul>
                     <li th:each="player : ${players}">
-                        <span th:text="${player.name}">Player Name</span>
+                        <a th:href="@{/basketball/players/details/{id}(id=${player.basketball_player_id})}" th:text="${player.name}" class="player-link">Player Name</a>
                     </li>
                 </ul>
             </div>
@@ -34,8 +50,9 @@
 
     <!-- Fixtures/Results button -->
     <a th:href="@{/basketball/teams/show/{id}(id=${team.id})}" class="btn btn-info mt-3">Fixtures/Results</a>
-    <a type="button" class="btn btn-secondary" href="/basketball/players/add-form">Add Player</a>
-
+    <div th:if="${players.size()} < 5">
+        <a type="button" class="btn btn-primary mt-3" href="/basketball/players/add-form">Add Player</a>
+    </div>
     <div th:if="${team == null}">
         <p>Team not found.</p>
     </div>
@@ -64,13 +81,17 @@
                     <td th:text="${player.points}"></td>
                     <td th:text="${player.assists}"></td>
                     <td th:text="${player.rebounds}"></td>
-                    <td th:text="${player.getTotalPoints()}"></td>
+                    <td th:text="${player.points * 2 + player.assists}"></td>
                 </tr>
                 </tbody>
             </table>
         </div>
-
     </section>
 </div>
+
+<!-- Bootstrap JS and jQuery -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

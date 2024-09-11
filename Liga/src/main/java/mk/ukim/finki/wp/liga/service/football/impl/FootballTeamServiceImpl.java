@@ -57,6 +57,17 @@ public class FootballTeamServiceImpl implements FootballTeamService {
     }
 
     @Override
+    public FootballTeam update(Long id, String teamName, byte[] logo) {
+        FootballTeam team = this.findById(id);
+        if(logo!=null && logo.length>0){
+            team.setLogo(logo);
+        }
+        team.setTeamName(teamName);
+        return footballTeamRepository.save(team);
+
+    }
+
+    @Override
     @Transactional
     public FootballTeam delete(Long id) {
         FootballTeam team = footballTeamRepository.findById(id).orElseThrow(InvalidFootballTeamException::new);
@@ -122,9 +133,9 @@ public class FootballTeamServiceImpl implements FootballTeamService {
 
     @Override
     @Transactional
-    public FootballTeam saveTable(Long id, int teamPoints) {
+    public FootballTeam saveTable(Long id, String teamName) {
         FootballTeam ft = footballTeamRepository.findById(id).orElseThrow(InvalidFootballTeamException::new);
-        ft.setTeamLeaguePoints(teamPoints);
+        ft.setTeamName(teamName);
         return footballTeamRepository.save(ft);
     }
     @Override

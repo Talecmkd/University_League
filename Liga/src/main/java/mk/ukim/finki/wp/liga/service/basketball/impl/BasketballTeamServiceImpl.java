@@ -107,9 +107,12 @@ public class BasketballTeamServiceImpl implements BasketballTeamService {
 
     @Override
     @Transactional
-    public BasketballTeam saveTable(Long id, int teamPoints) {
+    public BasketballTeam saveTable(Long id, String teamName, byte [] logo) {
         BasketballTeam bt = basketballTeamRepository.findById(id).orElseThrow(InvalidBasketballTeamException::new);
-        bt.setTeamLeaguePoints(teamPoints);
+        bt.setTeamName(teamName);
+        if(logo!=null && logo.length>0){
+            bt.setLogo(logo);
+        }
         return basketballTeamRepository.save(bt);
     }
 
@@ -175,7 +178,8 @@ public class BasketballTeamServiceImpl implements BasketballTeamService {
                         team.getTeamName(),
                         team.getTeamMatchesPlayed(),
                         team.getTeamWins(),
-                        team.getTeamLoses()))
+                        team.getTeamLoses(),
+                        team.getLastFiveMatches()))
                 .sorted(Comparator.comparingInt(BasketballTeamStandings::getWins).reversed())
                 .collect(Collectors.toList());
     }

@@ -1,6 +1,7 @@
 package mk.ukim.finki.wp.liga.web.football;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import mk.ukim.finki.wp.liga.model.FootballPlayer;
 import mk.ukim.finki.wp.liga.model.FootballTeam;
@@ -63,14 +64,12 @@ public class FootballPlayerController {
                             @RequestParam String playerCity,
                             @RequestParam String playerPosition,
                             @RequestParam(required = false) Long team,
-                            @RequestParam(value = "returnUrl", required = false, defaultValue = "/players") String returnUrl,
                             Model model
     ) throws IOException {
         if (playerName.isEmpty() || playerSurname.isEmpty() || playerBirthDate == null || playerIndex == null || playerCity.isEmpty() || playerPosition.isEmpty()) {
             model.addAttribute("errorMessage", "Please fill out all required fields.");
             List<FootballTeam> teams = this.footballTeamService.listAllTeams();
             model.addAttribute("teams", teams);
-            model.addAttribute("returnUrl", returnUrl);
             return "add_football_player"; // Return the view with the error message
         }
         byte [] imageBytes=null;
@@ -92,7 +91,7 @@ public class FootballPlayerController {
         this.footballPlayerService.create(imageBytes,playerName,playerSurname,
                 birthDate,playerIndex,playerCity,playerPosition,team1);
 
-        return "redirect:" + returnUrl;
+        return "redirect:/players" ;
     }
     @GetMapping("/edit/{id}")
     public String editFootballPlayer(@PathVariable Long id, Model model) {
@@ -126,7 +125,8 @@ public class FootballPlayerController {
             List<FootballTeam> teams = this.footballTeamService.listAllTeams();
             model.addAttribute("player", player);
             model.addAttribute("teams", teams);
-            return "edit_football_player"; // Return the view with the error message
+            model.addAttribute("bodyContent","edit_football_player");
+            return "master_template"; // Return the view with the error message
         }
 
 

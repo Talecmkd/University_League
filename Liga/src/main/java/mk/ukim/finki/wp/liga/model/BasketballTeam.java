@@ -37,7 +37,15 @@ public class BasketballTeam {
     private int teamLeaguePoints;
     private int teamWins;
     private int teamLoses;
+    @Lob
+    @Column(name="basketball_team_logo")
     private byte[] logo;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "basketball_team_last_five_matches", joinColumns = @JoinColumn(name = "basketball_team_id"))
+    @Column(name = "basketball_match_result")
+    private List<String> lastFiveMatches = new ArrayList<>();
+
 
     public BasketballTeam(String teamName, byte[] logo) {
         this.teamName = teamName;
@@ -51,6 +59,12 @@ public class BasketballTeam {
         this.logo = logo;
     }
 
+    public void addMatchResult(String result) {
+        if (lastFiveMatches.size() == 5) {
+            lastFiveMatches.remove(0);
+        }
+        lastFiveMatches.add(result);
+    }
 
     public BasketballTeam() {
 

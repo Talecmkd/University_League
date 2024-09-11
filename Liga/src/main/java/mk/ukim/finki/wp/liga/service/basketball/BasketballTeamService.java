@@ -17,7 +17,7 @@ public interface BasketballTeamService {
     BasketballTeam addFixtures(Long id, List<BasketballMatch> fixtures);
    // BasketballTeam updateStats(Long id);
     BasketballTeam findByName(String teamName);
-    BasketballTeam saveTable(Long id, int teamPoints);
+    BasketballTeam saveTable(Long id, String teamName, byte [] logo);
     List<BasketballTeam> findAllOrderByPointsDesc();
     void incrementMatchesPlayed(Long teamId);
     void addWin(Long teamId);

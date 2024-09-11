@@ -56,25 +56,29 @@
     </script>
 </head>
 <body>
-<h1>Edit Volleyball Playoff Match</h1>
+<header class="bg-primary text-white p-3">
+    <div class="container">
+        <h1 class="mb-0">Edit Volleyball Playoff Match</h1>
+    </div>
+</header>
 <form th:action="@{/volleyball/matches/playoffs/edit}" method="post" onsubmit="validateForm(event)">
     <!-- Hidden input for match ID -->
     <input type="hidden" name="id" th:value="${match.volleyball_match_id}" />
 
     <!-- Hidden inputs for team IDs -->
-    <input type="hidden" name="homeTeamId" th:value="${match.homeTeam.volleyball_team_id}" />
-    <input type="hidden" name="awayTeamId" th:value="${match.awayTeam.volleyball_team_id}" />
+    <input type="hidden" name="homeTeamId" th:value="${match.homeTeam.getVolleyball_team_id()}" />
+    <input type="hidden" name="awayTeamId" th:value="${match.awayTeam.getVolleyball_team_id()}" />
 
     <!-- Display Home Team -->
     <label for="homeTeam">Home Team:</label>
     <select id="homeTeam" name="homeTeamId" disabled>
-        <option th:value="${match.homeTeam.volleyball_team_id}" th:text="${match.homeTeam.teamName}"></option>
+        <option th:value="${match.homeTeam.getVolleyball_team_id()}" th:text="${match.homeTeam.teamName}"></option>
     </select>
 
     <!-- Display Away Team -->
     <label for="awayTeam">Away Team:</label>
     <select id="awayTeam" name="awayTeamId" disabled>
-        <option th:value="${match.awayTeam.volleyball_team_id}" th:text="${match.awayTeam.teamName}"></option>
+        <option th:value="${match.awayTeam.getVolleyball_team_id()}" th:text="${match.awayTeam.teamName}"></option>
     </select>
 
     <!-- Input fields for match points -->

@@ -58,8 +58,12 @@
     </style>
 </head>
 <body>
+<header class="bg-primary text-white p-3">
+    <div class="container">
+        <h1 class="mb-0">Football Match Details</h1>
+    </div>
+</header>
 <div class="container mt-4">
-    <h2>Match Details</h2>
     <div class="match-date-time">
         <div th:text="${#temporals.format(match.startTime.toLocalDate(), 'EEEE dd MMMM yyyy')}"></div>
         <div th:text="${#temporals.format(match.startTime, 'HH:mm')}"></div>

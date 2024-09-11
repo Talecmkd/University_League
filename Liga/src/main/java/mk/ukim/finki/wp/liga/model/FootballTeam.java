@@ -43,6 +43,8 @@ public class FootballTeam {
     private int teamWins;
     private int teamLoses;
     private int teamDraws;
+    @Lob
+    @Column(name="football_team_logo")
     private byte [] logo;
     private int goalsFor;
     private int goalsAgainst;
@@ -74,5 +76,12 @@ public class FootballTeam {
 
     public FootballTeam() {
 
+    }
+    @Override
+    public String toString() {
+        return "FootballTeam{" +
+                "id=" + id +
+                ", teamName='" + teamName + '\'' +
+                '}';
     }
 }

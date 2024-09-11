@@ -35,6 +35,7 @@ public class BasketballPlayerServiceImpl implements BasketballPlayerService {
     }
 
     @Override
+    @Transactional
     public BasketballPlayer create(byte[] image, String name, String surname, Date birthdate, int index, String city, String position, BasketballTeam team) {
         BasketballTeam playerTeam;
         if(team!=null)
@@ -45,6 +46,7 @@ public class BasketballPlayerServiceImpl implements BasketballPlayerService {
     }
 
     @Override
+    @Transactional
     public BasketballPlayer update(Long id, byte[] image, String name, String surname, Date birthdate, int index, String city, String position, BasketballTeam team) {
         BasketballPlayer p = this.findById(id);
         if(image!=null && image.length>0)
@@ -61,6 +63,7 @@ public class BasketballPlayerServiceImpl implements BasketballPlayerService {
     }
 
     @Override
+    @Transactional
     public BasketballPlayer delete(Long id) {
         BasketballPlayer p = this.findById(id);
         basketballPlayerRepository.delete(p);

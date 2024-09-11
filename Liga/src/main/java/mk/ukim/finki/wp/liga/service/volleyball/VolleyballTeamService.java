@@ -27,7 +27,11 @@ public interface VolleyballTeamService {
 
     VolleyballTeam findByName(String teamName);
 
-    VolleyballTeam saveTable(Long id, int teamPoints);
+    VolleyballTeam saveTable(Long id, String teamName, byte [] logo);
     List<VolleyballTeam> findAllOrderByPointsDesc();
     List<VolleyBallStandings> getStandings();
+    void incrementMatchesPlayed(Long teamId);
+    void addWin(Long teamId);
+    void addLoss(Long teamId);
+    void addPoints(Long teamId, int points);
 }

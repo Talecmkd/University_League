@@ -1,5 +1,6 @@
 package mk.ukim.finki.wp.liga.service.football;
 
+import jakarta.transaction.Transactional;
 import mk.ukim.finki.wp.liga.model.FootballPlayer;
 import mk.ukim.finki.wp.liga.model.FootballTeam;
 

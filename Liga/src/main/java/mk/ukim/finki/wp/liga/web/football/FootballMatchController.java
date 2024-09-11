@@ -180,7 +180,7 @@ public class FootballMatchController {
     }
 
     @GetMapping("/edit_live/{id}")
-    public String editLiveMatch(@PathVariable Long id, Model model) throws JsonProcessingException {
+    public String editLiveMatch(@PathVariable Long id, Model model){
         FootballMatch match = footballMatchService.findById(id);
 
         List<FootballPlayer> players = match.getHomeTeam().getPlayers();

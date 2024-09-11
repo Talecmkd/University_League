@@ -25,4 +25,6 @@ public interface BasketballMatchService {
     void updateLiveStats(Long basketballMatchId, int pointsScored, Long playerId);
     Map<LocalDate, List<BasketballMatch>> groupMatchesByDate(List<BasketballMatch> matches);
     void finishMatch(Long matchId);
-}
+    public void processMatchStats(Long matchId);
+
+    }

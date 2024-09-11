@@ -20,8 +20,7 @@ public interface FootballTeamService {
 
 
     FootballTeam update(Long id, String teamName, List<FootballPlayer> players, byte [] logo);
-
-
+    FootballTeam update(Long id, String teamName, byte [] logo);
     FootballTeam delete(Long id);
 
     FootballTeam addFixtures(Long id, List<FootballMatch> fixtures);
@@ -30,7 +29,7 @@ public interface FootballTeamService {
 
     FootballTeam findByName(String teamName);
 
-    FootballTeam saveTable(Long id, int teamPoints);
+    FootballTeam saveTable(Long id, String teamName);
     List<FootballTeam> findAllOrderByPointsDesc();
     List<TeamStandingsDTO> getStandings();
 //  List<String> getLastFiveMatchesForm(FootballTeam team);

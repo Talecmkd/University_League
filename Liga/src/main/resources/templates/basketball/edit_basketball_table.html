@@ -6,17 +6,26 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 </head>
 <body>
+<header class="bg-primary text-white p-3">
+    <div class="container">
+        <h1 class="mb-0">Edit Basketball Team</h1>
+    </div>
+</header>
 <div class="container mt-5">
-    <h1>Edit Team</h1>
 
     <form th:action="@{/basketball/teams/edit/{id}(id=${team.id})}" method="post">
+        <div class="mb-3">
+            <label for="logo" class="form-label">Team Logo</label>
+            <input type="file" class="form-control" id="logo" name="logo"
+                   th:value="${team != null ? team.getLogo() : ''}" placeholder="Upload Team Logo">
+        </div>
         <div class="form-group">
             <label for="teamName">Team Name:</label>
-            <input type="text" id="teamName" class="form-control" th:field="*{team.teamName}" readonly />
+            <input type="text" id="teamName" class="form-control" th:field="*{team.teamName}"  />
         </div>
         <div class="form-group">
             <label for="teamLeaguePoints">League Points:</label>
-            <input type="number" id="teamLeaguePoints" class="form-control" th:field="*{team.teamLeaguePoints}" />
+            <input type="number" id="teamLeaguePoints" class="form-control" th:field="*{team.teamLeaguePoints}" readonly/>
         </div>
         <div class="form-group">
             <label for="teamMatchesPlayed">Matches Played:</label>

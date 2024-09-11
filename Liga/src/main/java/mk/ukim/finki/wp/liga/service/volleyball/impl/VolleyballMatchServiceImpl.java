@@ -1,12 +1,9 @@
 package mk.ukim.finki.wp.liga.service.volleyball.impl;
 
 import lombok.AllArgsConstructor;
+import mk.ukim.finki.wp.liga.model.*;
 import mk.ukim.finki.wp.liga.model.Exceptions.InvalidVolleyballMatchException;
 import mk.ukim.finki.wp.liga.model.Exceptions.InvalidVolleyballTeamException;
-import mk.ukim.finki.wp.liga.model.FootballMatch;
-import mk.ukim.finki.wp.liga.model.VolleyballMatch;
-import mk.ukim.finki.wp.liga.model.VolleyballPlayer;
-import mk.ukim.finki.wp.liga.model.VolleyballTeam;
 import mk.ukim.finki.wp.liga.repository.volleyball.VolleyballMatchRepository;
 import mk.ukim.finki.wp.liga.repository.volleyball.VolleyballPlayerRepository;
 import mk.ukim.finki.wp.liga.repository.volleyball.VolleyballTeamRepository;
@@ -321,27 +318,46 @@ public class VolleyballMatchServiceImpl implements VolleyballMatchService {
     public void finishMatch(Long matchId) {
         VolleyballMatch match = matchRepository.findById(matchId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid match Id: " + matchId));
-
-        // Set the match as completed
         match.setEndTime(LocalDateTime.now());
+        processMatchStats(matchId);
+        matchRepository.save(match);
+    }
+    @Override
+    @Transactional
+    public void processMatchStats(Long matchId) {
+        VolleyballMatch match = matchRepository.findById(matchId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid match ID"));
 
-        // Update statistics for both teams
         VolleyballTeam homeTeam = match.getHomeTeam();
         VolleyballTeam awayTeam = match.getAwayTeam();
 
-        // Assuming you have a method to get the winner and loser, or you compare team scores
+        // Increment matches played
+        teamService.incrementMatchesPlayed(homeTeam.getVolleyball_team_id());
+        teamService.incrementMatchesPlayed(awayTeam.getVolleyball_team_id());
+
         if (match.getHomeTeamPoints() > match.getAwayTeamPoints()) {
             // Home team wins
-            updateTeamStats(homeTeam, true);  // Increment win for home team
-            updateTeamStats(awayTeam, false); // Increment loss for away team
+            teamService.addWin(homeTeam.getVolleyball_team_id());
+            teamService.addLoss(awayTeam.getVolleyball_team_id());
+            teamService.addPoints(homeTeam.getVolleyball_team_id(), 3);
         } else if (match.getHomeTeamPoints() < match.getAwayTeamPoints()) {
             // Away team wins
-            updateTeamStats(awayTeam, true);  // Increment win for away team
-            updateTeamStats(homeTeam, false); // Increment loss for home team
+            teamService.addLoss(homeTeam.getVolleyball_team_id());
+            teamService.addWin(awayTeam.getVolleyball_team_id());
+            teamService.addPoints(awayTeam.getVolleyball_team_id(), 3);
         }
-
-        // Save the updated match and teams
-        matchRepository.save(match);
+        if (match.getHomeTeamPoints() > match.getAwayTeamPoints()) {
+            homeTeam.addMatchResult("W");
+            awayTeam.addMatchResult("L");
+        } else if (match.getHomeTeamPoints() < match.getAwayTeamPoints()) {
+            homeTeam.addMatchResult("L");
+            awayTeam.addMatchResult("W");
+        } else {
+            homeTeam.addMatchResult("D");
+            awayTeam.addMatchResult("D");
+        }
+        teamRepository.save(homeTeam);
+        teamRepository.save(awayTeam);
     }
 
     private void updateTeamStats(VolleyballTeam team, boolean isWin) {

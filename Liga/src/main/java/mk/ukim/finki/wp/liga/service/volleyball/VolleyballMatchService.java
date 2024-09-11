@@ -32,5 +32,7 @@ public interface VolleyballMatchService {
     List<VolleyballMatch> createFinalMatch();
     void updateLiveStats(Long volleyballMatchId, int pointsScored, Long playerId);
     void finishMatch(Long matchId);
-    Map<LocalDate, List<VolleyballMatch>> groupMatchesByDate(List<VolleyballMatch> matches);
+    public void processMatchStats(Long matchId);
+
+        Map<LocalDate, List<VolleyballMatch>> groupMatchesByDate(List<VolleyballMatch> matches);
 }

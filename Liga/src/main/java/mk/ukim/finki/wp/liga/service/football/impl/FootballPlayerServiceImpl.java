@@ -1,5 +1,6 @@
 package mk.ukim.finki.wp.liga.service.football.impl;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import mk.ukim.finki.wp.liga.model.Exceptions.InvalidFootballPlayerException;
 import mk.ukim.finki.wp.liga.model.Exceptions.InvalidFootballTeamException;
@@ -33,6 +34,7 @@ public class FootballPlayerServiceImpl implements FootballPlayerService {
     }
 
     @Override
+    @Transactional
     public FootballPlayer create(byte [] image, String name, String surname, Date birthdate, int index, String city, String position, FootballTeam team) {
         FootballTeam playerTeam;
         if(team!=null)
@@ -43,6 +45,7 @@ public class FootballPlayerServiceImpl implements FootballPlayerService {
     }
 
     @Override
+    @Transactional
     public FootballPlayer update(Long id, byte [] image, String name, String surname, Date birthdate, int index, String city, String position, FootballTeam team) {
         FootballPlayer p = this.findById(id);
         if(image!=null && image.length>0)
@@ -59,6 +62,7 @@ public class FootballPlayerServiceImpl implements FootballPlayerService {
     }
 
     @Override
+    @Transactional
     public FootballPlayer delete(Long id) {
         FootballPlayer p = this.findById(id);
         footballPlayerRepository.delete(p);

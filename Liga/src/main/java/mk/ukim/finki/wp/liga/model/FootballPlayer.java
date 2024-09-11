@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 
 
 import java.awt.*;
@@ -58,6 +59,13 @@ public class FootballPlayer {
     }
     public int getPoints(){
         return goals*2 + assists;
+    }
+    @Override
+    public String toString() {
+        return "Football Player{" +
+                "id=" + football_player_id +
+                ", teamName='" + name + '\'' +
+                '}';
     }
 
 }

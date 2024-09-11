@@ -1,5 +1,6 @@
 package mk.ukim.finki.wp.liga.service.volleyball.impl;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import mk.ukim.finki.wp.liga.model.Exceptions.InvalidVolleyballPlayerException;
 import mk.ukim.finki.wp.liga.model.Exceptions.InvalidVolleyballTeamException;
@@ -32,6 +33,7 @@ public class VolleyballPlayerServiceImpl implements VolleyballPlayerService {
     }
 
     @Override
+    @Transactional
     public VolleyballPlayer create(byte[] image, String name, String surname, Date birthdate, int index, String city, String position, VolleyballTeam team) {
         VolleyballTeam playerTeam;
         if (team != null)
@@ -43,6 +45,7 @@ public class VolleyballPlayerServiceImpl implements VolleyballPlayerService {
     }
 
     @Override
+    @Transactional
     public VolleyballPlayer update(Long id, byte[] image, String name, String surname, Date birthdate, int index, String city, String position, VolleyballTeam team) {
         VolleyballPlayer p = this.findById(id);
         if (image != null && image.length > 0)
@@ -59,6 +62,7 @@ public class VolleyballPlayerServiceImpl implements VolleyballPlayerService {
     }
 
     @Override
+    @Transactional
     public VolleyballPlayer delete(Long id) {
         VolleyballPlayer p = this.findById(id);
         volleyballPlayerRepository.delete(p);
@@ -113,6 +117,19 @@ public class VolleyballPlayerServiceImpl implements VolleyballPlayerService {
                     int score1 = p1.getTotalPoints();
                     int score2 = p2.getTotalPoints();
                     return Integer.compare(score2, score1);
+                })
+                .limit(5)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<VolleyballPlayer> getTop5PlayersByTeam(Long teamId) {
+        return this.volleyballPlayerRepository.findByTeamId(teamId)
+                .stream()
+                .sorted((p1, p2) -> {
+                    int score1 = p1.getTotalPoints();
+                    int score2 = p2.getTotalPoints();
+                    return Integer.compare(score2, score1); // Descending order
                 })
                 .limit(5)
                 .collect(Collectors.toList());

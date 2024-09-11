@@ -278,7 +278,7 @@ public class VolleyballMatchController {
     @PostMapping("/delete/{id}")
     public String deleteMatch(@PathVariable Long id) {
         volleyballMatchService.delete(id);
-        return "redirect:/volleyball_matches";
+        return "redirect:/volleyball/matches";
     }
 
     @GetMapping("/{teamId}/players")

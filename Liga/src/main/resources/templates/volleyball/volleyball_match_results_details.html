@@ -5,8 +5,12 @@
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
 </head>
 <body>
+<header class="bg-primary text-white p-3">
+    <div class="container">
+        <h1 class="mb-0">Volleyball Match Results Details</h1>
+    </div>
+</header>
 <div class="container">
-    <h1>Match Results Details</h1>
     <p><strong>Home Team:</strong> <span th:text="${match.homeTeam.getTeamName()}">Home Team Name</span></p>
     <p><strong>Away Team:</strong> <span th:text="${match.awayTeam.getTeamName()}">Away Team Name</span></p>
     <p><strong>Home Team Points:</strong> <span th:text="${match.homeTeamPoints}">0</span></p>

@@ -9,6 +9,10 @@ import mk.ukim.finki.wp.liga.model.dtos.BasketballTeamStandings;
 import mk.ukim.finki.wp.liga.model.dtos.TeamStandingsDTO;
 import mk.ukim.finki.wp.liga.service.basketball.BasketballPlayerService;
 import mk.ukim.finki.wp.liga.service.basketball.BasketballTeamService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +42,7 @@ public class BasketballTeamController {
         return "/basketball/master_template";
     }
 
-    @GetMapping("team/{id}")
+    @GetMapping("/team/{id}")
     public String getTeam(@PathVariable Long id, Model model){
         BasketballTeam team = basketballTeamService.findById(id);
         if (team != null) {
@@ -67,14 +71,32 @@ public class BasketballTeamController {
 
     @PostMapping("/edit/{id}")
     public String editTeam(@PathVariable Long id,
-                           @RequestParam int teamLeaguePoints) {
+                           @RequestParam String teamName,
+                           @RequestParam(value = "logo", required = false) MultipartFile logo,
+                           Model model) throws IOException {
         BasketballTeam existingTeam = basketballTeamService.findById(id);
         if (existingTeam == null) {
             return "redirect:/basketball/teams";
         }
-
-        basketballTeamService.saveTable(id, teamLeaguePoints);
+        byte[] imageBytes = existingTeam.getLogo();
+        if (logo != null && !logo.isEmpty()) {
+            imageBytes = logo.getBytes();
+        }
+        basketballTeamService.saveTable(id, teamName,imageBytes);
+        String imageUrl = "/basketball/teams/logo/" + id;
+        model.addAttribute("teamLogoUrl", imageUrl);
         return "redirect:/basketball/teams";
+    }
+    @GetMapping("/logo/{id}")
+    public ResponseEntity<byte[]> getTeamLogo(@PathVariable Long id) {
+        BasketballTeam team = basketballTeamService.findById(id);
+        if (team != null && team.getLogo() != null) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_JPEG);
+            return new ResponseEntity<>(team.getLogo(), headers, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/add")
@@ -87,11 +109,13 @@ public class BasketballTeamController {
 
     @PostMapping("/add")
     public String addTeam(@RequestParam("teamName") String teamName,
-                          @RequestParam(value = "logo", required = false) MultipartFile playerImage) throws IOException {
-        byte [] imageBytes=null;
-
+                          @RequestParam(value = "logo", required = false) MultipartFile logo) throws IOException {
+        byte[] imageBytes = null;
+        if (logo != null && !logo.isEmpty()) {
+            imageBytes = logo.getBytes();
+        }
         // Create the team
-        basketballTeamService.create(teamName, null);
+        basketballTeamService.create(teamName, imageBytes);
 
         // Redirect to the teams list page
         return "redirect:/basketball/teams";

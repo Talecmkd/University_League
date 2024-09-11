@@ -23,12 +23,16 @@
     <table class="table table-striped">
         <thead>
         <tr>
+            <th scope="col">Team Logo</th>
             <th scope="col">Team Name</th>
             <th scope="col">Details</th> <!-- New column for details button -->
         </tr>
         </thead>
         <tbody>
         <tr th:each="team : ${footballTeams}">
+            <td>
+                <img th:src="@{/teams/logo/{id}(id=${team.id})}" alt="Team Image" style="width:50px;height:50px;"/>
+            </td>
             <td th:text="${team.teamName}"></td>
             <td>
                 <a th:href="@{/teams/team/{id}(id=${team.id})}" class="btn btn-info">Details</a>

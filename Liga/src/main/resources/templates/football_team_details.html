@@ -18,12 +18,17 @@
     </style>
 </head>
 <body>
+<header class="bg-primary text-white p-3">
+    <div class="container">
+        <h1 class="mb-0">Football Team Details</h1>
+    </div>
+</header>
 <div class="container mt-5">
-    <h1>Team Details</h1>
     <div th:if="${team != null}">
         <div class="card">
             <div class="card-header">
                 <h2 th:text="${team.teamName}">Team Name</h2>
+                <img th:src="@{/teams/logo/{id}(id=${team.id})}" alt="Team Image" class="img-fluid mb-3" style="width:200px;height:200px;"/>
             </div>
             <div class="card-body">
                 <h3>Team Statistics</h3>
@@ -45,16 +50,9 @@
     </div>
 
     <!-- Conditionally show Add Player button -->
+    <a th:href="@{/teams/show/{id}(id=${team.id})}" class="btn btn-info mt-3">Fixtures/Results</a>
     <div th:if="${players.size()} < 5">
-        <a th:href="@{/players/add-form(returnUrl=${'/teams/details/' + team.id})}" class="btn btn-primary mt-3">Add Player</a>
-        <a th:if="${referer?.contains('/matches/details')}"
-           th:href="${referer}"
-           class="btn btn-primary mt-3">Back to Match</a>
-
-        <!-- "Back to List" Button -->
-        <a th:if="${referer?.contains('/teams')}"
-           th:href="@{/teams}"
-           class="btn btn-primary mt-3">Back to List</a>
+        <a th:href="@{/players/add-form}" class="btn btn-primary mt-3">Add Player</a>
     </div>
 
     <div th:if="${team == null}">
@@ -89,6 +87,7 @@
             </table>
         </div>
     </section>
+
     <a type="button" class="btn btn-secondary" onclick="window.history.back()">Back</a>
 
 </div>

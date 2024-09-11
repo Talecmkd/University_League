@@ -321,24 +321,47 @@ public class BasketballMatchServiceImpl implements BasketballMatchService {
         match.setEndTime(LocalDateTime.now());
         BasketballTeam homeTeam = match.getHomeTeam();
         BasketballTeam awayTeam = match.getAwayTeam();
+        processMatchStats(matchId);
+        basketballMatchRepository.save(match);
+    }
+    @Override
+    @Transactional
+    public void processMatchStats(Long matchId) {
+        BasketballMatch match = basketballMatchRepository.findById(matchId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid match ID"));
 
-        // Increment matches played for both teams
+        BasketballTeam homeTeam = match.getHomeTeam();
+        BasketballTeam awayTeam = match.getAwayTeam();
+
+        // Increment matches played
         basketballTeamService.incrementMatchesPlayed(homeTeam.getId());
         basketballTeamService.incrementMatchesPlayed(awayTeam.getId());
 
-        // Determine the winner and loser, and update stats accordingly
+
         if (match.getHomeTeamPoints() > match.getAwayTeamPoints()) {
             // Home team wins
-            updateBasketballTeamStats(homeTeam, true);  // Increment win for home team
-            updateBasketballTeamStats(awayTeam, false); // Increment loss for away team
+            basketballTeamService.addWin(homeTeam.getId());
+            basketballTeamService.addLoss(awayTeam.getId());
+            basketballTeamService.addPoints(homeTeam.getId(), 3);
         } else if (match.getHomeTeamPoints() < match.getAwayTeamPoints()) {
             // Away team wins
-            updateBasketballTeamStats(awayTeam, true);  // Increment win for away team
-            updateBasketballTeamStats(homeTeam, false); // Increment loss for home team
+            basketballTeamService.addLoss(homeTeam.getId());
+            basketballTeamService.addWin(awayTeam.getId());
+            basketballTeamService.addPoints(awayTeam.getId(), 3);
         }
 
-        // Save the updated match after processing
-        basketballMatchRepository.save(match);
+        if (match.getHomeTeamPoints() > match.getAwayTeamPoints()) {
+            homeTeam.addMatchResult("W");
+            awayTeam.addMatchResult("L");
+        } else if (match.getHomeTeamPoints() < match.getAwayTeamPoints()) {
+            homeTeam.addMatchResult("L");
+            awayTeam.addMatchResult("W");
+        } else {
+            homeTeam.addMatchResult("D");
+            awayTeam.addMatchResult("D");
+        }
+        basketballTeamRepository.save(homeTeam);
+        basketballTeamRepository.save(awayTeam);
     }
     private void updateBasketballTeamStats(BasketballTeam team, boolean isWin) {
         // Increment the number of matches played
@@ -356,4 +379,5 @@ public class BasketballMatchServiceImpl implements BasketballMatchService {
         // Save the updated team
         basketballTeamRepository.save(team);
     }
+
 }

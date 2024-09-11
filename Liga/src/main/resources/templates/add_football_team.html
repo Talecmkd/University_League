@@ -6,8 +6,12 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 </head>
 <body>
+<header class="bg-primary text-white p-3">
+    <div class="container">
+        <h1 class="mb-0">Add Football Team</h1>
+    </div>
+</header>
 <div class="container mt-5">
-    <h1>Add Football Team</h1>
     <form th:action="@{/teams/add}" method="post" enctype="multipart/form-data">
         <div class="form-group">
             <label for="teamName">Team Name</label>
@@ -15,7 +19,7 @@
         </div>
         <div class="form-group">
             <label for="logo">Team Logo</label>
-            <input type="file" class="form-control" id="logo" name="logo" accept="image/*" required>
+            <input type="file" class="form-control" id="logo" name="logo" placeholder="Upload team logo" >
         </div>
         <button type="submit" class="btn btn-primary">Add Team</button>
         <a type="button" class="btn btn-secondary" onclick="window.history.back()">Back</a>

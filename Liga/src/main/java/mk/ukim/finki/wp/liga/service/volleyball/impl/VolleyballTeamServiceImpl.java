@@ -2,6 +2,7 @@ package mk.ukim.finki.wp.liga.service.volleyball.impl;
 
 import lombok.AllArgsConstructor;
 import mk.ukim.finki.wp.liga.model.Exceptions.InvalidVolleyballTeamException;
+import mk.ukim.finki.wp.liga.model.FootballTeam;
 import mk.ukim.finki.wp.liga.model.VolleyballMatch;
 import mk.ukim.finki.wp.liga.model.VolleyballPlayer;
 import mk.ukim.finki.wp.liga.model.VolleyballTeam;
@@ -109,9 +110,12 @@ public class VolleyballTeamServiceImpl implements VolleyballTeamService {
 
     @Override
     @Transactional
-    public VolleyballTeam saveTable(Long id, int teamPoints) {
+    public VolleyballTeam saveTable(Long id, String teamName, byte [] logo) {
         VolleyballTeam vt = volleyballTeamRepository.findById(id).orElseThrow(InvalidVolleyballTeamException::new);
-        vt.setTeamLeaguePoints(teamPoints);
+        if(logo!=null && logo.length>0){
+            vt.setLogo(logo);
+        }
+        vt.setTeamName(teamName);
         return volleyballTeamRepository.save(vt);
     }
 
@@ -131,8 +135,46 @@ public class VolleyballTeamServiceImpl implements VolleyballTeamService {
                         team.getTeamMatchesPlayed(),
                         team.getTeamWins(),
                         team.getTeamLoses(),
-                        team.getTeamLeaguePoints()))
+                        team.getTeamLeaguePoints(),
+                        team.getLastFiveMatches()))
                 .sorted(Comparator.comparingInt(VolleyBallStandings::getWins).reversed())
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void incrementMatchesPlayed(Long teamId) {
+        VolleyballTeam team = volleyballTeamRepository.findById(teamId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid team ID"));
+        team.setTeamMatchesPlayed(team.getTeamMatchesPlayed() + 1);
+        volleyballTeamRepository.save(team);
+    }
+    @Override
+    @Transactional
+    public void addWin(Long teamId) {
+        VolleyballTeam team = volleyballTeamRepository.findById(teamId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid team ID"));
+
+        team.setTeamWins(team.getTeamWins() + 1);
+        volleyballTeamRepository.save(team);
+    }
+
+    @Override
+    @Transactional
+    public void addLoss(Long teamId) {
+        VolleyballTeam team = volleyballTeamRepository.findById(teamId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid team ID"));
+
+        team.setTeamLoses(team.getTeamLoses() + 1);
+        volleyballTeamRepository.save(team);
+    }
+
+    @Override
+    @Transactional
+    public void addPoints(Long teamId, int points) {
+        VolleyballTeam team = volleyballTeamRepository.findById(teamId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid team ID"));
+
+        team.setTeamLeaguePoints(team.getTeamLeaguePoints() + points);
+        volleyballTeamRepository.save(team);
     }
 }

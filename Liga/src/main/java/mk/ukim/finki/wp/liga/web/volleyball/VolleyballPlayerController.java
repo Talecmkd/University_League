@@ -59,14 +59,14 @@ public class VolleyballPlayerController {
     }
 
     @PostMapping("/add")
-    public String addVolleyballPlayer(@RequestParam("image") MultipartFile image,
-                                      @RequestParam("name") String name,
-                                      @RequestParam("surname") String surname,
-                                      @RequestParam("birthdate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date birthdate,
-                                      @RequestParam("index") int index,
-                                      @RequestParam("city") String city,
-                                      @RequestParam("position") String position,
-                                      @RequestParam(value = "teamId", required = false) Long teamId,
+    public String addVolleyballPlayer(@RequestParam(value = "playerImage", required = false) MultipartFile image,
+                                      @RequestParam("playerName") String name,
+                                      @RequestParam("playerSurname") String surname,
+                                      @RequestParam("playerBirthDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date birthdate,
+                                      @RequestParam("playerIndex") int index,
+                                      @RequestParam("playerCity") String city,
+                                      @RequestParam("playerPosition") String position,
+                                      @RequestParam(value = "team", required = false) Long teamId,
                                       Model model) {
         byte[] imageBytes = null;
         try {
@@ -83,7 +83,8 @@ public class VolleyballPlayerController {
             team = volleyballTeamService.findById(teamId);
 
             model.addAttribute("teams", volleyballTeamService.listAllTeams());
-            return "volleyball/add_volleyball_player"; // or the correct view
+            model.addAttribute("bodyContent","volleyball/add_volleyball_player");
+            return "volleyball/master_template"; // or the correct view
         }
 
         VolleyballPlayer player = volleyballPlayerService.create(imageBytes, name, surname, birthdate, index, city, position, team);
@@ -146,10 +147,10 @@ public class VolleyballPlayerController {
     public String getPlayerDetails(@PathVariable Long id, Model model){
         VolleyballPlayer volleyballPlayer = volleyballPlayerService.findById(id);
         if (volleyballPlayer == null) {
-            return "redirect:/basketball/players"; // Redirect to the list of players or another appropriate page
+            return "redirect:/volleyball/players"; // Redirect to the list of players or another appropriate page
         }
         model.addAttribute("volleyballPlayer", volleyballPlayer);
-        String imageUrl = "basketball/players/image/" + id;
+        String imageUrl = "volleyball/players/image/" + id;
         model.addAttribute("playerImageUrl", imageUrl);
         model.addAttribute("bodyContent","volleyball/volleyball_player_details");
         return "/volleyball/master_template";

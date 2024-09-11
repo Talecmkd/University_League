@@ -45,7 +45,7 @@
             <p class="card-text"><strong>Index:</strong> <span th:text="${volleyballPlayer.index}">Player Index</span></p>
             <p class="card-text"><strong>City:</strong> <span th:text="${volleyballPlayer.city}">Player City</span></p>
             <p class="card-text"><strong>Position:</strong> <span th:text="${volleyballPlayer.position}">Player Position</span></p>
-            <p class="card-text"><strong>Team:</strong> <span th:text="${volleyballPlayer.team.teamName}">Player Team</span></p>
+            <p class="card-text"><strong>Team:</strong> <span th:text="${volleyballPlayer.getTeam().getTeamName()}">Player Team</span></p>
             <p class="card-text"><strong>Appearances:</strong> <span th:text="${volleyballPlayer.appearances}">Player Appearances</span></p>
             <p class="card-text"><strong>Goals:</strong> <span th:text="${volleyballPlayer.servings}">Player Servings</span></p>
             <p class="card-text"><strong>Assists:</strong> <span th:text="${volleyballPlayer.assists}">Player Assists</span></p>

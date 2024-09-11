@@ -43,7 +43,11 @@
     </script>
 </head>
 <body>
-<h1>Edit Live Football Match</h1>
+<header class="bg-primary text-white p-3">
+    <div class="container">
+        <h1 class="mb-0">Edit Live Basketball Match</h1>
+    </div>
+</header>
 <form action="/basketball/matches/edit_live" method="post">
     <input type="hidden" name="basketballMatchId" th:value="${match.basketball_match_id}">
 

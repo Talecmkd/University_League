@@ -65,7 +65,12 @@
     </script>
 </head>
 <body>
-<h1>Edit Live Football Match</h1>
+<header class="bg-primary text-white p-3">
+    <div class="container">
+        <h1 class="mb-0">Edit Live Football Match</h1>
+    </div>
+</header>
+
 <form action="/matches/edit_live" method="post">
     <input type="hidden" name="footballMatchId" th:value="${match.football_match_id}">
 
@@ -78,7 +83,6 @@
     <label for="playerId">Select Player:</label>
     <select id="playerId" name="playerId">
         <option value="">Select Player</option>
-        <!-- Options are dynamically populated by JavaScript -->
     </select>
 
     <div id="playerForm" style="display: none;">

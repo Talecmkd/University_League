@@ -8,6 +8,10 @@ import mk.ukim.finki.wp.liga.service.football.FootballMatchService;
 import mk.ukim.finki.wp.liga.service.football.FootballPlayerScoredService;
 import mk.ukim.finki.wp.liga.service.football.FootballPlayerService;
 import mk.ukim.finki.wp.liga.service.football.FootballTeamService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +41,7 @@ public class FootballTeamController{
     return "master_template";
 }
 
-@GetMapping("details/{id}")
+@GetMapping("/team/{id}")
     public String getTeam(@PathVariable Long id, Model model){
     FootballTeam team = footballTeamService.findById(id);
     if (team != null) {
@@ -52,6 +56,7 @@ public class FootballTeamController{
     model.addAttribute("bodyContent","football_team_details");
     return "master_template";
 }
+
 
 //@GetMapping("teams/team/{id}")
 //    public String getTeam(@PathVariable Long id, Model model){
@@ -74,19 +79,34 @@ public class FootballTeamController{
         }
         model.addAttribute("team", team);
         model.addAttribute("bodyContent","edit_football_table");
-        return "master_template";
+        return "edit_football_table";
     }
 
     @PostMapping("/edit/{id}")
     public String editTeam(@PathVariable Long id,
-                           @RequestParam int teamLeaguePoints) {
+                           @RequestParam String teamName,
+                           @RequestParam(value = "logo", required = false) MultipartFile logo,
+                           Model model) throws IOException {
         FootballTeam existingTeam = footballTeamService.findById(id);
-        if (existingTeam == null) {
-            return "redirect:/teams";
+        byte[] imageBytes = existingTeam.getLogo();
+        if (logo != null && !logo.isEmpty()) {
+            imageBytes = logo.getBytes();
         }
-
-        footballTeamService.saveTable(id, teamLeaguePoints);
+        footballTeamService.update(id, teamName, imageBytes);
+        String imageUrl = "/teams/logo/" + id;
+        model.addAttribute("teamLogoUrl", imageUrl);
         return "redirect:/teams";
+    }
+    @GetMapping("/logo/{id}")
+    public ResponseEntity<byte[]> getTeamLogo(@PathVariable Long id) {
+        FootballTeam team = footballTeamService.findById(id);
+        if (team != null && team.getLogo() != null) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_JPEG);
+            return new ResponseEntity<>(team.getLogo(), headers, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/add")
@@ -99,13 +119,12 @@ public class FootballTeamController{
 
     @PostMapping("/add")
     public String addTeam(@RequestParam("teamName") String teamName,
-                          @RequestParam(value = "logo", required = false) MultipartFile playerImage) throws IOException {
-        byte [] imageBytes=null;
-
-        // Create the team
-        footballTeamService.create(teamName, null);
-
-        // Redirect to the teams list page
+                          @RequestParam(value = "logo", required = false) MultipartFile logo) throws IOException {
+        byte[] imageBytes = null;
+        if (logo != null && !logo.isEmpty()) {
+            imageBytes = logo.getBytes();
+        }
+        footballTeamService.create(teamName, imageBytes);
         return "redirect:/teams";
     }
 

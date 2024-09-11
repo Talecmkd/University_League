@@ -60,8 +60,12 @@
 
 </head>
 <body>
+<header class="bg-primary text-white p-3">
+    <div class="container">
+        <h1 class="mb-0">Edit Volleyball Player</h1>
+    </div>
+</header>
 <div class="container mt-5">
-    <h2>Edit Player</h2>
     <form th:action="@{/volleyball/players/edit/{id}(id=${player.getVolleyball_player_id()})}" th:method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
         <div class="form-group">
             <label for="image">Image</label>
@@ -98,7 +102,7 @@
                         th:value="${team.getVolleyball_team_id()}"
                         th:text="${team.teamName}"
                         th:attr="data-player-count=${team.getPlayers().size()}"
-                        th:selected="${team.getVolleyball_team_id() == player.team.getVolleyball_team_id()}">
+                        th:selected="${team.getVolleyball_team_id() == player.getTeam().getVolleyball_team_id()}">
                 </option>
             </select>
         </div>

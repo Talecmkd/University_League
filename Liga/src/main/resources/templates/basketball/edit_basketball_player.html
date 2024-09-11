@@ -62,8 +62,12 @@
 
 </head>
 <body>
+<header class="bg-primary text-white p-3">
+    <div class="container">
+        <h1 class="mb-0">Edit Basketball Player</h1>
+    </div>
+</header>
 <div class="container mt-5">
-    <h2>Edit Basketball Player</h2>
     <form th:action="'/basketball/players/edit/'+${player.getBasketball_player_id()}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
         <div class="form-group">
             <label for="playerImage">Player Image</label>

@@ -4,18 +4,59 @@
     <meta charset="UTF-8">
     <title>Team Details</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        a.player-link {
+            color: black;
+            text-decoration: none; /* This removes the underline, if needed */
+        }
+
+        a.player-link:hover {
+            color: grey; /* Optional: Change color on hover */
+        }
+    </style>
 </head>
 <body>
-<div class="container">
-    <h1 class="mt-5" th:text="${team.getTeamName()}">Team Name</h1>
+<header class="bg-primary text-white p-3">
+    <div class="container">
+        <h1 class="mb-0" th:text="${team.getTeamName()}">Team Name</h1>
+    </div>
+</header>
+<div class="container mt-5">
+    <div th:if="${team != null}">
+        <div class="card">
+            <div class="card-header">
+                <h2 th:text="${team.getTeamName()}">Team Name</h2>
+                <img th:src="@{/volleyball/teams/logo/{id}(id=${team.id})}" alt="Team Image" class="img-fluid mb-3" style="width:200px;height:200px;"/>
 
-    <h2>Players</h2>
-    <ul class="list-group">
-        <th:block th:each="player : ${players}">
-            <li class="list-group-item" th:text="${player.name} + ' ' + ${player.surname}">Player Name</li>
-        </th:block>
-    </ul>
+            </div>
+            <div class="card-body">
+                <h3>Team Statistics</h3>
+                <ul>
+                    <li>Matches Played: <span th:text="${team.teamMatchesPlayed}"></span></li>
+                    <li>League Points: <span th:text="${team.teamLeaguePoints}"></span></li>
+                    <li>Wins: <span th:text="${team.teamWins}"></span></li>
+                    <li>Losses: <span th:text="${team.teamLoses}"></span></li>
+                </ul>
+                <h3>Players</h3>
+                <ul>
+                    <li th:each="player : ${players}">
+                        <a th:href="@{volleyball/players/details/{id}(id=${player.volleyball_player_id})}" th:text="${player.name}" class="player-link">Player Name</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 
+    <a th:href="@{/volleyball/teams/show/{id}(id=${team.getVolleyball_team_id()})}" class="btn btn-info mt-3">Fixtures/Results</a>
+    <div th:if="${players.size()} < 5">
+        <a th:href="@{/volleyball/players/add-form}" class="btn btn-primary mt-3">Add Player</a>
+    </div>
+
+    <div th:if="${team == null}">
+        <p>Team not found.</p>
+    </div>
+
+    <!-- Top Players Section -->
     <section class="container mt-4">
         <h2>Top Players</h2>
         <div class="table-responsive">
@@ -24,30 +65,35 @@
                 <tr>
                     <th>Image</th>
                     <th>Player Name</th>
-                    <th>Points</th>
+                    <th>Scored Points</th>
                     <th>Assists</th>
-                    <th>Rebounds</th>
-                    <th>Points Contribution</th>
+                    <th>Blocks</th>
+                    <th>Total Points</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="player : ${topPlayers}">
                     <td>
-                        <img th:src="@{/players/image/{id}(id=${player.basketball_player_id})}" alt="Player Image" style="width:50px;height:50px;"/>
+                        <img th:src="@{/volleyball/players/image/{id}(id=${player.volleyball_player_id})}" alt="Player Image" style="width:50px;height:50px;"/>
                     </td>
                     <td th:text="${player.name} + ' ' + ${player.surname}"></td>
-                    <td th:text="${player.points}"></td>
+                    <td th:text="${player.scoredPoints}"></td>
                     <td th:text="${player.assists}"></td>
-                    <td th:text="${player.rebounds}"></td>
+                    <td th:text="${player.blocks}"></td>
                     <td th:text="${player.getTotalPoints()}"></td>
                 </tr>
                 </tbody>
             </table>
         </div>
-
     </section>
 
     <a href="/volleyball/teams" class="btn btn-secondary mt-4">Back to Teams</a>
+
 </div>
+
+<!-- Bootstrap JS and jQuery -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
