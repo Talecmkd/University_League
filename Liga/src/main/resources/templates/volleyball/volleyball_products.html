@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Football Products</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+<body>
+
+<h1>Volleyball Products</h1>
+
+<!-- Link to Create New Product -->
+<a th:href="@{/volleyball/products/new}" class="btn btn-primary">Add New Product</a>
+
+<table>
+  <thead>
+  <tr>
+    <th>Image</th>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Price</th>
+    <th>Team</th>
+    <th>Actions</th>
+    <th>Add to Cart</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="product : ${products}">
+    <td><img th:src="@{${product.getImage()}}" alt="Product Image" width="100"/></td>
+    <td th:text="${product.getName()}">Product Name</td>
+    <td th:text="${product.getDescription()}">Product Description</td>
+    <td th:text="${product.getPrice()}">Product Price</td>
+    <td th:text="${product.volleyballMerch.getTeamName()}">Team Name</td>
+    <td>
+      <a th:href="@{/volleyball/products/{id}(id=${product.getId()})}">Details</a> |
+      <a th:href="@{/volleyball/products/edit/{id}(id=${product.getId()})}">Edit</a> |
+      <a th:href="@{/volleyball/products/delete/{id}(id=${product.getId()})}">Delete</a>
+    </td>
+    <td>
+      <form th:action="@{/cart/add/volleyball/{productId}(productId=${product.getId()})}" method="post">
+        <button class="btn btn-primary" type="submit">Add to Cart</button>
+      </form>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+</body>
+</html>

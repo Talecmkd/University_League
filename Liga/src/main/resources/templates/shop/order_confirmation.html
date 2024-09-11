@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Confirmation</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+  <div class="alert alert-success" role="alert">
+    <h4 class="alert-heading">Thank you for your purchase!</h4>
+    <p>Your order has been successfully placed and paid for.</p>
+    <hr>
+    <p class="mb-0">Order ID: <strong th:text="${order.getOrderId()}">12345</strong></p>
+    <p>Total Price: <strong th:text="${order.getTotalPrice()}">€100.00</strong></p>
+  </div>
+
+  <h4 class="mt-4">Order Details:</h4>
+  <table class="table">
+    <thead>
+    <tr>
+      <th scope="col">Product Name</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">Price</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Iterate through orderedFootballProducts if available -->
+    <tr th:each="product : ${order.getOrderedFootballProducts()}">
+      <td th:text="${product.getName()}">Football Shirt</td>
+      <td>1</td>
+      <td th:text="${product.getPrice()}">€30.00</td>
+    </tr>
+
+    <!-- Iterate through orderedBasketballProducts if available -->
+    <tr th:each="product : ${order.getOrderedBasketballProducts()}">
+      <td th:text="${product.getName()}">Basketball Jersey</td>
+      <td>1</td>
+      <td th:text="${product.getPrice()}">€25.00</td>
+    </tr>
+
+    <!-- Iterate through orderedVolleyballProducts if available -->
+    <tr th:each="product : ${order.getOrderedVolleyballProducts()}">
+      <td th:text="${product.getName()}">Volleyball Shorts</td>
+      <td>1</td>
+      <td th:text="${product.getPrice()}">€20.00</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div>
+    <a th:href="@{/football/products}">Buy More Football Merch</a>
+  </div>
+  <div>
+    <a th:href="@{/basketball/products}">Buy More Basketball Merch</a>
+  </div>
+  <div>
+    <a th:href="@{/volleyball/products}">Buy More Volleyball Merch</a>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

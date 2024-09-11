@@ -75,4 +75,10 @@ public class FootballTeam {
     public FootballTeam() {
 
     }
+
+    @Override
+    public String toString() {
+        return teamName;
+    }
+
 }

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Orders</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+  <h1>Orders</h1>
+
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>Order ID</th>
+      <th>Total Price</th>
+      <th>Paid</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="order : ${orders}">
+      <td th:text="${order.getOrderId()}">Order ID</td>
+      <td th:text="${order.getTotalPrice()}">$0.00</td>
+      <td>
+        <span th:text="${order.isPaid} ? 'Yes' : 'No'">No</span>
+      </td>
+      <td>
+        <a th:href="@{/orders/{orderId}(orderId=${order.getOrderId()})}" class="btn btn-primary">View</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>

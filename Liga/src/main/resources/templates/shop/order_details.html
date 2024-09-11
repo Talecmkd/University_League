@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Order Details</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+  <h1>Order #<span th:text="${order.getOrderId()}"></span></h1>
+
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>Product Name</th>
+      <th>Product Type</th>
+      <th>Price</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Football Products -->
+    <tr th:each="product : ${order.getOrderedFootballProducts()}">
+      <td th:text="${product.getName()}">Product Name</td>
+      <td>Football</td>
+      <td th:text="${product.getPrice()}">$0.00</td>
+    </tr>
+
+    <!-- Basketball Products -->
+    <tr th:each="product : ${order.getOrderedBasketballProducts()}">
+      <td th:text="${product.getName()}">Product Name</td>
+      <td>Basketball</td>
+      <td th:text="${product.getPrice()}">$0.00</td>
+    </tr>
+
+    <!-- Volleyball Products -->
+    <tr th:each="product : ${order.getOrderedVolleyballProducts()}">
+      <td th:text="${product.getName()}">Product Name</td>
+      <td>Volleyball</td>
+      <td th:text="${product.getPrice()}">$0.00</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <h3>Total Price: $<span th:text="${order.getTotalPrice()}"></span></h3>
+
+  <div class="text-right">
+    <form th:action="@{/orders/{orderId}/pay(orderId=${order.orderId})}" method="post">
+      <button class="btn btn-success" type="submit" th:disabled="${order.isPaid()}">Pay</button>
+    </form>
+  </div>
+  <div>
+    <a th:href="@{/football/products}">Buy More Football Merch</a>
+  </div>
+  <div>
+    <a th:href="@{/basketball/products}">Buy More Basketball Merch</a>
+  </div>
+  <div>
+    <a th:href="@{/volleyball/products}">Buy More Volleyball Merch</a>
+  </div>
+</div>
+</body>
+</html>
