@@ -70,7 +70,8 @@ public class FootballPlayerController {
             model.addAttribute("errorMessage", "Please fill out all required fields.");
             List<FootballTeam> teams = this.footballTeamService.listAllTeams();
             model.addAttribute("teams", teams);
-            return "add_football_player"; // Return the view with the error message
+            model.addAttribute("bodyContent","add_football_player");
+            return "master_template"; // Return the view with the error message
         }
         byte [] imageBytes=null;
         if (playerImage != null && !playerImage.isEmpty()) {
@@ -134,7 +135,7 @@ public class FootballPlayerController {
         if (existingPlayer == null) {
             return "redirect:/players";
         }
-        FootballTeam existingTeam = footballTeamService.findById(id);
+        FootballTeam existingTeam = footballTeamService.findById(team);
         if(existingTeam.getPlayers().size() >= 5){
             return "redirect:/players/edit/" + id + "?error=Teamfull";
         }

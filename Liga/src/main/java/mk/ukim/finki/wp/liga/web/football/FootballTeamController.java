@@ -79,7 +79,7 @@ public class FootballTeamController{
         }
         model.addAttribute("team", team);
         model.addAttribute("bodyContent","edit_football_table");
-        return "edit_football_table";
+        return "master_template";
     }
 
     @PostMapping("/edit/{id}")
@@ -90,8 +90,13 @@ public class FootballTeamController{
         FootballTeam existingTeam = footballTeamService.findById(id);
         byte[] imageBytes = existingTeam.getLogo();
         if (logo != null && !logo.isEmpty()) {
-            imageBytes = logo.getBytes();
-        }
+            try {
+                imageBytes = logo.getBytes();
+                System.out.println(imageBytes);
+            } catch(IOException e){
+                e.printStackTrace();
+            }
+            }
         footballTeamService.update(id, teamName, imageBytes);
         String imageUrl = "/teams/logo/" + id;
         model.addAttribute("teamLogoUrl", imageUrl);
@@ -122,8 +127,13 @@ public class FootballTeamController{
                           @RequestParam(value = "logo", required = false) MultipartFile logo) throws IOException {
         byte[] imageBytes = null;
         if (logo != null && !logo.isEmpty()) {
-            imageBytes = logo.getBytes();
-        }
+            try {
+                imageBytes = logo.getBytes();
+            }catch (IOException e){
+                e.printStackTrace();
+                throw new RuntimeException("Failed to read the image file",e);
+            }
+            }
         footballTeamService.create(teamName, imageBytes);
         return "redirect:/teams";
     }

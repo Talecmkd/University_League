@@ -67,7 +67,7 @@ public class VolleyballTeamController {
         }
         model.addAttribute("team", team);
         model.addAttribute("bodyContent","volleyball/edit_volleyball_team");
-        return "volleyball/edit_volleyball_team";
+        return "volleyball/master_template";
     }
 
     @PostMapping("/edit/{id}")
@@ -84,6 +84,8 @@ public class VolleyballTeamController {
             imageBytes = logo.getBytes();
         }
         volleyballTeamService.saveTable(id, teamName,imageBytes);
+        String imageUrl = "/volleyball/teams/logo/" + id;
+        model.addAttribute("teamLogoUrl", imageUrl);
         return "redirect:/volleyball/teams";
     }
     @GetMapping("/logo/{id}")

@@ -27,7 +27,7 @@
         <tbody>
         <tr th:each="team : ${volleyballTeams}">
             <td>
-                <img th:src="@{/volleyball/teams/logo/{id}(id=${team.id})}" alt="Team Image" style="width:50px;height:50px;"/>
+                <img th:src="@{/volleyball/teams/logo/{id}(id=${team.getVolleyball_team_id})}" alt="Team Image" style="width:50px;height:50px;"/>
             </td>
             <td th:text="${team.teamName}"></td>
             <td>

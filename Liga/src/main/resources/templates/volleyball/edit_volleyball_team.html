@@ -13,7 +13,7 @@
 </header>
 <div class="container mt-5">
 
-    <form th:action="@{/volleyball/teams/edit/{id}(id=${team.getVolleyball_team_id()})}" method="post">
+    <form th:action="@{/volleyball/teams/edit/{id}(id=${team.getVolleyball_team_id()})}" method="post" enctype="multipart/form-data">
         <div class="mb-3">
             <label for="logo" class="form-label">Team Logo</label>
             <input type="file" class="form-control" id="logo" name="logo"

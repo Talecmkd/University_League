@@ -26,7 +26,7 @@
         <div class="card">
             <div class="card-header">
                 <h2 th:text="${team.getTeamName()}">Team Name</h2>
-                <img th:src="@{/volleyball/teams/logo/{id}(id=${team.id})}" alt="Team Image" class="img-fluid mb-3" style="width:200px;height:200px;"/>
+                <img th:src="@{/volleyball/teams/logo/{id}(id=${team.getVolleyball_team_id})}" alt="Team Image" class="img-fluid mb-3" style="width:200px;height:200px;"/>
 
             </div>
             <div class="card-body">
