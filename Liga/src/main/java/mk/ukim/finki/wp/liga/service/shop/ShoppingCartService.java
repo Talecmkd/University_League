@@ -4,9 +4,9 @@ import mk.ukim.finki.wp.liga.model.shop.ShoppingCart;
 
 public interface ShoppingCartService {
     ShoppingCart getShoppingCart();
-    void addFootballProductToCart(Long productId);
-    void addBasketballProductToCart(Long productId);
-    void addVolleyballProductToCart(Long productId);
+    void addFootballProductToCart(Long productId, int quantity);
+    void addBasketballProductToCart(Long productId, int quantity);
+    void addVolleyballProductToCart(Long productId, int quantity);
     void removeFootballProductFromCart(Long productId);
     void removeBasketballProductFromCart(Long productId);
     void removeVolleyballProductFromCart(Long productId);

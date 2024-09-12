@@ -14,6 +14,7 @@
       <th>Product Name</th>
       <th>Product Type</th>
       <th>Price</th>
+      <th>Quantity</th>
     </tr>
     </thead>
     <tbody>
@@ -22,6 +23,7 @@
       <td th:text="${product.getName()}">Product Name</td>
       <td>Football</td>
       <td th:text="${product.getPrice()}">$0.00</td>
+      <td th:text="${product.getQuantity()}">1</td>
     </tr>
 
     <!-- Basketball Products -->
@@ -29,6 +31,7 @@
       <td th:text="${product.getName()}">Product Name</td>
       <td>Basketball</td>
       <td th:text="${product.getPrice()}">$0.00</td>
+      <td th:text="${product.getQuantity()}">1</td>
     </tr>
 
     <!-- Volleyball Products -->
@@ -36,11 +39,15 @@
       <td th:text="${product.getName()}">Product Name</td>
       <td>Volleyball</td>
       <td th:text="${product.getPrice()}">$0.00</td>
+      <td th:text="${product.getQuantity()}">1</td>
     </tr>
     </tbody>
   </table>
 
-  <h3>Total Price: $<span th:text="${order.getTotalPrice()}"></span></h3>
+<!--  <h3>Total Price: $<span th:text="${order.getTotalPrice()}"></span></h3>-->
+
+  <h3>Total Price: $<span th:text="${#numbers.formatDecimal(order.getTotalPrice(), 0, 2)}"></span></h3>
+
 
   <div class="text-right">
     <form th:action="@{/orders/{orderId}/pay(orderId=${order.orderId})}" method="post">

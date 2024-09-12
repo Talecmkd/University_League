@@ -23,6 +23,9 @@ public class FootballProduct extends Product {
     @JoinColumn(name = "order_id")
     private Order order;
 
+    @Column(name = "quantity", nullable = false, columnDefinition = "integer default 1")
+    private int quantity;
+
     public FootballProduct() {
         super();
     }
@@ -30,5 +33,6 @@ public class FootballProduct extends Product {
     public FootballProduct(String name, String description, double price, String image, FootballTeam footballMerch) {
         super(name, description, price, image);
         this.footballMerch = footballMerch;
+        this.quantity = 1;
     }
 }

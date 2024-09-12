@@ -26,22 +26,22 @@ public class ShoppingCartController {
 
 
     @PostMapping("/add/football/{productId}")
-    public String addFootballProductToCart(@PathVariable Long productId) {
-        shoppingCartService.addFootballProductToCart(productId);
+    public String addFootballProductToCart(@PathVariable Long productId, @RequestParam int quantity) {
+        shoppingCartService.addFootballProductToCart(productId, quantity);
         return "redirect:/cart";
     }
 
 
     @PostMapping("/add/basketball/{productId}")
-    public String addBasketballProductToCart(@PathVariable Long productId) {
-        shoppingCartService.addBasketballProductToCart(productId);
+    public String addBasketballProductToCart(@PathVariable Long productId, @RequestParam int quantity) {
+        shoppingCartService.addBasketballProductToCart(productId,quantity);
         return "redirect:/cart";
     }
 
 
     @PostMapping("/add/volleyball/{productId}")
-    public String addVolleyballProductToCart(@PathVariable Long productId) {
-        shoppingCartService.addVolleyballProductToCart(productId);
+    public String addVolleyballProductToCart(@PathVariable Long productId, @RequestParam int quantity) {
+        shoppingCartService.addVolleyballProductToCart(productId,quantity);
         return "redirect:/cart";
     }
 

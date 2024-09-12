@@ -13,7 +13,7 @@
     <p>Your order has been successfully placed and paid for.</p>
     <hr>
     <p class="mb-0">Order ID: <strong th:text="${order.getOrderId()}">12345</strong></p>
-    <p>Total Price: <strong th:text="${order.getTotalPrice()}">€100.00</strong></p>
+    <p>Total Price: $<span th:text="${#numbers.formatDecimal(order.getTotalPrice(), 0, 2)}"></span></p>
   </div>
 
   <h4 class="mt-4">Order Details:</h4>
@@ -29,21 +29,21 @@
     <!-- Iterate through orderedFootballProducts if available -->
     <tr th:each="product : ${order.getOrderedFootballProducts()}">
       <td th:text="${product.getName()}">Football Shirt</td>
-      <td>1</td>
+      <td th:text="${product.getQuantity()}">1</td>
       <td th:text="${product.getPrice()}">€30.00</td>
     </tr>
 
     <!-- Iterate through orderedBasketballProducts if available -->
     <tr th:each="product : ${order.getOrderedBasketballProducts()}">
       <td th:text="${product.getName()}">Basketball Jersey</td>
-      <td>1</td>
+      <td th:text="${product.getQuantity()}">1</td>
       <td th:text="${product.getPrice()}">€25.00</td>
     </tr>
 
     <!-- Iterate through orderedVolleyballProducts if available -->
     <tr th:each="product : ${order.getOrderedVolleyballProducts()}">
       <td th:text="${product.getName()}">Volleyball Shorts</td>
-      <td>1</td>
+      <td th:text="${product.getQuantity()}">1</td>
       <td th:text="${product.getPrice()}">€20.00</td>
     </tr>
     </tbody>

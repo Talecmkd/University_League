@@ -53,15 +53,15 @@ public class OrderServiceImpl implements OrderService {
     public double calculateTotalPrice(ShoppingCart cart) {
 
         double footballTotal = cart.getItemsFootball().stream()
-                .mapToDouble(FootballProduct::getPrice)
+                .mapToDouble(product -> product.getPrice() * product.getQuantity())
                 .sum();
 
         double basketballTotal = cart.getItemsBasketball().stream()
-                .mapToDouble(BasketballProduct::getPrice)
+                .mapToDouble(product -> product.getPrice() * product.getQuantity())
                 .sum();
 
         double volleyballTotal = cart.getItemsVolleyball().stream()
-                .mapToDouble(VolleyballProduct::getPrice)
+                .mapToDouble(product -> product.getPrice() * product.getQuantity())
                 .sum();
 
         return footballTotal + basketballTotal + volleyballTotal;

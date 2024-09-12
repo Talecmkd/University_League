@@ -24,6 +24,8 @@ public class BasketballProduct extends Product{
     @JoinColumn(name = "order_id")
     private Order order;
 
+    @Column(name = "quantity", nullable = false, columnDefinition = "integer default 1")
+    private int quantity;
 
     public BasketballProduct() {
         super();
