@@ -31,6 +31,11 @@ public class VolleyballProductServiceImpl implements VolleyballProductService {
     }
 
     @Override
+    public List<VolleyballProduct> findByTeamName(String teamName) {
+        return volleyballProductRepository.findByVolleyballMerch_TeamName(teamName);
+    }
+
+    @Override
     public List<VolleyballProduct> findAll() {
         return volleyballProductRepository.findAll();
     }

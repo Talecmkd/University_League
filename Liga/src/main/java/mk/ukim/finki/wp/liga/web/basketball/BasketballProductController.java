@@ -2,6 +2,7 @@ package mk.ukim.finki.wp.liga.web.basketball;
 
 
 import mk.ukim.finki.wp.liga.model.shop.BasketballProduct;
+import mk.ukim.finki.wp.liga.model.shop.FootballProduct;
 import mk.ukim.finki.wp.liga.service.basketball.BasketballProductService;
 import mk.ukim.finki.wp.liga.service.basketball.BasketballTeamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +26,17 @@ public class BasketballProductController {
     }
 
     @GetMapping
-    public String getAllBasketballProducts(Model model) {
-        List<BasketballProduct> products = basketballProductService.findAll();
+    public String getAllBasketballProducts(@RequestParam(value = "team", required = false) String team, Model model) {
+        List<BasketballProduct> products;
+
+        if (team != null && !team.isEmpty()) {
+            products = basketballProductService.findByTeamName(team);
+        } else {
+            products = basketballProductService.findAll();
+        }
+        model.addAttribute("teams", basketballTeamService.listAllTeams());
         model.addAttribute("products", products);
+
         return "basketball/basketball_products";
     }
 

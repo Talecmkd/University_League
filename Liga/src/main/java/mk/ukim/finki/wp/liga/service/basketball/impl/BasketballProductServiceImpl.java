@@ -32,6 +32,11 @@ public class BasketballProductServiceImpl implements BasketballProductService {
     }
 
     @Override
+    public List<BasketballProduct> findByTeamName(String teamName) {
+        return basketballProductRepository.findByBasketballMerch_TeamName(teamName);
+    }
+
+    @Override
     public List<BasketballProduct> findAll() {
         return basketballProductRepository.findAll();
     }

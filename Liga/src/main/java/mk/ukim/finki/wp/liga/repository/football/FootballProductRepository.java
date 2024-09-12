@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface FootballProductRepository extends JpaRepository<FootballProduct, Long> {
     List<FootballProduct> findByFootballMerch(FootballTeam footballTeam);
+
+    List<FootballProduct> findByFootballMerch_TeamName(String teamName);
 }

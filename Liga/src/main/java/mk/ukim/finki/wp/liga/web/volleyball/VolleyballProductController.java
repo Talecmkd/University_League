@@ -1,6 +1,7 @@
 package mk.ukim.finki.wp.liga.web.volleyball;
 
 
+import mk.ukim.finki.wp.liga.model.shop.BasketballProduct;
 import mk.ukim.finki.wp.liga.model.shop.VolleyballProduct;
 import mk.ukim.finki.wp.liga.service.volleyball.VolleyballProductService;
 import mk.ukim.finki.wp.liga.service.volleyball.VolleyballTeamService;
@@ -25,8 +26,15 @@ public class VolleyballProductController {
     }
 
     @GetMapping
-    public String getAllVolleyballProducts(Model model) {
-        List<VolleyballProduct> products = volleyballProductService.findAll();
+    public String getAllVolleyballProducts(@RequestParam(value = "team", required = false) String team, Model model) {
+        List<VolleyballProduct> products;
+
+        if (team != null && !team.isEmpty()) {
+            products = volleyballProductService.findByTeamName(team);
+        } else {
+            products = volleyballProductService.findAll();
+        }
+        model.addAttribute("teams", volleyballTeamService.listAllTeams());
         model.addAttribute("products", products);
         return "volleyball/volleyball_products";
     }

@@ -11,6 +11,8 @@ import java.util.Optional;
 public interface VolleyballProductService {
     List<VolleyballProduct> findByTeam(VolleyballTeam team);
 
+    List<VolleyballProduct> findByTeamName(String teamName);
+
     List<VolleyballProduct> findAll();
 
     List<VolleyballProduct> findByTeamId(Long teamId);

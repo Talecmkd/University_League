@@ -8,6 +8,15 @@
 
 <h1>Football Products</h1>
 
+<form th:action="@{/football/products}" method="get">
+    <label for="team">Filter by Team:</label>
+    <select name="team" id="team">
+        <option value="">All Teams</option>
+        <option th:each="team : ${teams}" th:value="${team.getTeamName()}" th:text="${team.getTeamName()}"></option>
+    </select>
+    <button type="submit" class="btn btn-primary">Filter</button>
+</form>
+
 <!-- Link to Create New Product -->
 <a th:href="@{/football/products/new}" class="btn btn-primary">Add New Product</a>
 
@@ -43,6 +52,13 @@
     </tr>
     </tbody>
 </table>
+
+<div class="text-center my-4">
+    <a th:href="@{/shop}" class="btn btn-secondary btn-lg">
+        Back to Shop Home
+    </a>
+</div>
+
 
 </body>
 </html>

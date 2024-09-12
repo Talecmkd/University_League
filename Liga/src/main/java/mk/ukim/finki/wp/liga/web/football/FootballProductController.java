@@ -1,5 +1,6 @@
 package mk.ukim.finki.wp.liga.web.football;
 
+import mk.ukim.finki.wp.liga.model.FootballTeam;
 import mk.ukim.finki.wp.liga.model.shop.FootballProduct;
 import mk.ukim.finki.wp.liga.service.football.FootballProductService;
 import mk.ukim.finki.wp.liga.service.football.FootballTeamService;
@@ -23,15 +24,20 @@ public class FootballProductController {
         this.footballTeamService = footballTeamService;
     }
 
-    // Display all football products
     @GetMapping
-    public String getAllFootballProducts(Model model) {
-        List<FootballProduct> products = footballProductService.findAll();
-        model.addAttribute("products", products);  // Add the products to the model
-        return "football_products";  // Return Thymeleaf template
+    public String getAllFootballProducts(@RequestParam(value = "team", required = false) String team, Model model) {
+        List<FootballProduct> products;
+
+        if (team != null && !team.isEmpty()) {
+            products = footballProductService.findByTeamName(team);
+        } else {
+            products = footballProductService.findAll();
+        }
+        model.addAttribute("teams", footballTeamService.listAllTeams());
+        model.addAttribute("products", products);
+        return "football_products";
     }
 
-    // Display football products by team
     @GetMapping("/team/{teamId}")
     public String getFootballProductsByTeam(@PathVariable Long teamId, Model model) {
         List<FootballProduct> products = footballProductService.findByTeamId(teamId);
@@ -44,17 +50,17 @@ public class FootballProductController {
     public String getFootballProductById(@PathVariable Long id, Model model) {
         FootballProduct product = footballProductService.findById(id);
         model.addAttribute("product", product);
-        return "football_product_detail";  // Return product detail template
+        return "football_product_detail";
     }
 
-    // Display form to create a new football product
+
     @GetMapping("/new")
     public String showCreateProductForm(Model model) {
         model.addAttribute("teams", footballTeamService.listAllTeams());
         return "football_product_add";  // Return form template
     }
 
-    // Handle form submission for creating a new product
+
     @PostMapping
     public String createFootballProduct(
             @RequestParam String name,
@@ -64,20 +70,18 @@ public class FootballProductController {
             @RequestParam Long team) {
 
         footballProductService.createNewFootballProduct(name,description,price,imageUrl,team);
-        return "redirect:/football/products";  // Redirect to the list after saving
+        return "redirect:/football/products";
     }
 
 
-    // Display form to update an existing football product
     @GetMapping("/edit/{id}")
     public String showUpdateProductForm(@PathVariable Long id, Model model) {
         FootballProduct product = footballProductService.findById(id);
         model.addAttribute("product", product);
         model.addAttribute("teams", footballTeamService.listAllTeams());
-        return "football_product_edit";  // Return form template with existing product
+        return "football_product_edit";
     }
 
-    // Handle form submission for updating an existing product
     @PostMapping("/edit/{id}")
     public String updateFootballProduct(
                                         @PathVariable Long id,
@@ -87,14 +91,13 @@ public class FootballProductController {
                                         @RequestParam String imageUrl,
                                         @RequestParam Long team){
         footballProductService.update(id, name, description, price, imageUrl, team);
-        return "redirect:/football/products";  // Redirect to the list after updating
+        return "redirect:/football/products";
     }
 
-    // Delete a football product
     @GetMapping("/delete/{id}")
     public String deleteFootballProduct(@PathVariable Long id) {
         footballProductService.deleteById(id);
-        return "redirect:/football/products";  // Redirect to the list after deleting
+        return "redirect:/football/products";
     }
 }
 

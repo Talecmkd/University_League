@@ -21,4 +21,6 @@ public interface FootballProductService {
     void createNewFootballProduct(String name, String description, double price, String imageUrl, Long team);
 
     void update(Long id, String name, String description, double price, String imageUrl, Long team);
+
+    List<FootballProduct> findByTeamName(String team);
 }

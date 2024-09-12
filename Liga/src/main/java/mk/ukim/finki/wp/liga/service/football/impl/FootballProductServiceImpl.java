@@ -53,7 +53,7 @@ public class FootballProductServiceImpl implements FootballProductService {
     @Override
     public void createNewFootballProduct(String name, String description, double price, String imageUrl, Long teamId) {
         FootballTeam team = footballTeamRepository.findById(teamId).orElseThrow(InvalidFootballProductException::new);
-        FootballProduct product = new FootballProduct(name,description,price,imageUrl,team);
+        FootballProduct product = new FootballProduct(name, description, price, imageUrl, team);
         footballProductRepository.save(product);
     }
 
@@ -68,4 +68,10 @@ public class FootballProductServiceImpl implements FootballProductService {
         product.setFootballMerch(team);
         footballProductRepository.save(product);
     }
+
+    @Override
+    public List<FootballProduct> findByTeamName(String teamName) {
+        return footballProductRepository.findByFootballMerch_TeamName(teamName);
+    }
+
 }

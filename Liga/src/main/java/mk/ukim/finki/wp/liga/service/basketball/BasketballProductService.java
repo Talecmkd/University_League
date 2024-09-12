@@ -11,6 +11,8 @@ import java.util.Optional;
 public interface BasketballProductService {
     List<BasketballProduct> findByTeam(BasketballTeam team);
 
+    List<BasketballProduct> findByTeamName(String teamName);
+
     List<BasketballProduct> findAll();
 
     List<BasketballProduct> findByTeamId(Long teamId);
