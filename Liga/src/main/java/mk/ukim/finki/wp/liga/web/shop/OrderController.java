@@ -33,7 +33,8 @@ public class OrderController {
     public String viewOrder(@PathVariable Long orderId, Model model) {
         Order order = orderService.findOrderById(orderId);
         model.addAttribute("order", order);
-        return "shop/order_details";
+        model.addAttribute("bodyContent","shop/order_details");
+        return "master_template";
     }
 
 
@@ -46,12 +47,14 @@ public class OrderController {
     @GetMapping("/order_confirmation/{orderId}")
     public String orderConfirmation(@PathVariable Long orderId, Model model) {
         model.addAttribute("order", orderService.findOrderById(orderId));
-        return "shop/order_confirmation";
+        model.addAttribute("bodyContent","shop/order_confirmation");
+        return "master_template";
     }
 
     @GetMapping
     public String listAllOrders(Model model) {
         model.addAttribute("orders", orderService.findAll());
-        return "shop/orders";
+        model.addAttribute("bodyContent","shop/orders");
+        return "master_template";
     }
 }

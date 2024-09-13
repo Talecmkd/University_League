@@ -1,66 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Order Confirmation</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css">
+  <title>Order Details</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<div class="container mt-5">
-  <div class="alert alert-success" role="alert">
-    <h4 class="alert-heading">Thank you for your purchase!</h4>
-    <p>Your order has been successfully placed and paid for.</p>
-    <hr>
-    <p class="mb-0">Order ID: <strong th:text="${order.getOrderId()}">12345</strong></p>
-    <p>Total Price: $<span th:text="${#numbers.formatDecimal(order.getTotalPrice(), 0, 2)}"></span></p>
+<header class="bg-primary text-white p-3">
+  <div class="container">
+    <h1 class="mb-0">Order #<span th:text="${order.getOrderId()}">12345</span></h1>
   </div>
+</header>
 
-  <h4 class="mt-4">Order Details:</h4>
-  <table class="table">
-    <thead>
+<div class="container mt-5">
+  <table class="table table-striped">
+    <thead class="table-dark">
     <tr>
-      <th scope="col">Product Name</th>
-      <th scope="col">Quantity</th>
-      <th scope="col">Price</th>
+      <th>Product Name</th>
+      <th>Product Type</th>
+      <th>Price</th>
+      <th>Quantity</th>
     </tr>
     </thead>
     <tbody>
-    <!-- Iterate through orderedFootballProducts if available -->
+    <!-- Football Products -->
     <tr th:each="product : ${order.getOrderedFootballProducts()}">
-      <td th:text="${product.getName()}">Football Shirt</td>
+      <td th:text="${product.getName()}">Product Name</td>
+      <td>Football</td>
+      <td th:text="${product.getPrice()}">$0.00</td>
       <td th:text="${product.getQuantity()}">1</td>
-      <td th:text="${product.getPrice()}">€30.00</td>
     </tr>
 
-    <!-- Iterate through orderedBasketballProducts if available -->
+    <!-- Basketball Products -->
     <tr th:each="product : ${order.getOrderedBasketballProducts()}">
-      <td th:text="${product.getName()}">Basketball Jersey</td>
+      <td th:text="${product.getName()}">Product Name</td>
+      <td>Basketball</td>
+      <td th:text="${product.getPrice()}">$0.00</td>
       <td th:text="${product.getQuantity()}">1</td>
-      <td th:text="${product.getPrice()}">€25.00</td>
     </tr>
 
-    <!-- Iterate through orderedVolleyballProducts if available -->
+    <!-- Volleyball Products -->
     <tr th:each="product : ${order.getOrderedVolleyballProducts()}">
-      <td th:text="${product.getName()}">Volleyball Shorts</td>
+      <td th:text="${product.getName()}">Product Name</td>
+      <td>Volleyball</td>
+      <td th:text="${product.getPrice()}">$0.00</td>
       <td th:text="${product.getQuantity()}">1</td>
-      <td th:text="${product.getPrice()}">€20.00</td>
     </tr>
     </tbody>
   </table>
 
-  <div>
-    <a th:href="@{/football/products}">Buy More Football Merch</a>
+  <h3>Total Price: $<span th:text="${#numbers.formatDecimal(order.getTotalPrice(), 0, 2)}">50.00</span></h3>
+
+  <div class="text-end mb-4">
+    <form th:action="@{/orders/{orderId}/pay(orderId=${order.orderId})}" method="post">
+      <button class="btn btn-success" type="submit" th:disabled="${order.isPaid()}">Pay</button>
+    </form>
   </div>
-  <div>
-    <a th:href="@{/basketball/products}">Buy More Basketball Merch</a>
-  </div>
-  <div>
-    <a th:href="@{/volleyball/products}">Buy More Volleyball Merch</a>
+
+  <div class="text-center my-4">
+    <h4 class="my-4">Buy More</h4>
+    <a th:href="@{/football/products}" class="btn btn-primary btn-lg mx-2">Football Merch</a>
+    <a th:href="@{/basketball/products}" class="btn btn-success btn-lg mx-2">Basketball Merch</a>
+    <a th:href="@{/volleyball/products}" class="btn btn-warning btn-lg mx-2">Volleyball Merch</a>
   </div>
 </div>
+</div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

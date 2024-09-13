@@ -2,36 +2,51 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>Edit Product</title>
-  <link rel="stylesheet" th:href="@{/css/styles.css}" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body>
+<header class="bg-primary text-white p-3">
+  <div class="container">
+    <h1 class="mb-0">Edit Product</h1>
+  </div>
+</header>
+<div class="container mt-5">
 
-<h1>Edit Product</h1>
+  <form th:action="@{/football/products/edit/{id}(id=${product.getId()})}" method="post" class="bg-light p-4 rounded border">
+    <div class="mb-3">
+      <label for="name" class="form-label">Name</label>
+      <input type="text" id="name" name="name" th:value="${product.getName()}" placeholder="Product Name" class="form-control" required />
+    </div>
 
-<form th:action="@{/football/products/edit/{id}(id=${product.getId()})}" method="post">
+    <div class="mb-3">
+      <label for="description" class="form-label">Description</label>
+      <textarea id="description" name="description" th:text="${product.getDescription()}" placeholder="Product Description" class="form-control" required></textarea>
+    </div>
 
-  <label for="name">Name</label>
-  <input type="text" id="name" name="name" th:value="${product.getName()}" placeholder="Product Name" required />
+    <div class="mb-3">
+      <label for="price" class="form-label">Price</label>
+      <input type="number" id="price" name="price" th:value="${product.getPrice()}" placeholder="Price" step="0.01" class="form-control" required />
+    </div>
 
-  <label for="description">Description</label>
-  <textarea id="description" name="description" th:text="${product.getDescription()}" placeholder="Product Description" required></textarea>
+    <div class="mb-3">
+      <label for="imageUrl" class="form-label">Image URL</label>
+      <input type="text" id="imageUrl" name="imageUrl" th:value="${product.getImage()}" placeholder="Image URL" class="form-control" required />
+    </div>
 
-  <label for="price">Price</label>
-  <input type="number" id="price" name="price" th:value="${product.getPrice()}" placeholder="Price" step="0.01" required />
+    <div class="mb-3">
+      <label for="team" class="form-label">Team</label>
+      <select id="team" name="team" class="form-select" required>
+        <option th:each="team : ${teams}" th:value="${team.getId()}" th:text="${team.getTeamName()}" th:selected="${team.getId() == product.getFootballMerch().getId()}">Team Name</option>
+      </select>
+    </div>
 
-  <label for="imageUrl">Image URL</label>
-  <input type="text" id="imageUrl" name="imageUrl" th:value="${product.getImage()}" placeholder="Image URL" required />
+    <button type="submit" class="btn btn-success">Update</button>
+  </form>
 
-  <label for="team">Team</label>
-  <select id="team" name="team" required>
-    <option th:each="team : ${teams}" th:value="${team.getId()}" th:text="${team.getTeamName()}" th:selected="${team.getId() == product.getFootballMerch().getId()}">Team Name</option>
-  </select>
+  <a th:href="@{/football/products}" class="btn btn-secondary mt-3">Back to Products</a>
+</div>
 
-  <button type="submit" class="btn btn-success">Update</button>
-
-</form>
-
-<a th:href="@{/football/products}">Back to Products</a>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

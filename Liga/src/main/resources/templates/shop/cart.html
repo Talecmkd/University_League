@@ -1,75 +1,83 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <title>Shopping Cart</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<div class="container">
-    <h1>Shopping Cart</h1>
-
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>Product Name</th>
-            <th>Product Type</th>
-            <th>Price</th>
-            <th>Quantity</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <!-- Football Products -->
-        <tr th:each="product : ${cart.getItemsFootball()}">
-            <td th:text="${product.getName()}">Product Name</td>
-            <td>Football</td>
-            <td th:text="${product.getPrice()}">$0.00</td>
-            <td th:text="${product.getQuantity()}">1</td>
-            <td>
-                <form th:action="@{/cart/remove/football/{productId}(productId=${product.getId()})}" method="post">
-                    <button class="btn btn-danger" type="submit">Remove</button>
-                </form>
-            </td>
-        </tr>
-
-        <!-- Basketball Products -->
-        <tr th:each="product : ${cart.getItemsBasketball()}">
-            <td th:text="${product.getName()}">Product Name</td>
-            <td>Basketball</td>
-            <td th:text="${product.getPrice()}">$0.00</td>
-            <td th:text="${product.getQuantity()}">1</td>
-            <td>
-                <form th:action="@{/cart/remove/basketball/{productId}(productId=${product.getId()})}" method="post">
-                    <button class="btn btn-danger" type="submit">Remove</button>
-                </form>
-            </td>
-        </tr>
-
-        <!-- Volleyball Products -->
-        <tr th:each="product : ${cart.getItemsVolleyball()}">
-            <td th:text="${product.getName()}">Product Name</td>
-            <td>Volleyball</td>
-            <td th:text="${product.getPrice()}">$0.00</td>
-            <td th:text="${product.getQuantity()}">1</td>
-            <td>
-                <form th:action="@{/cart/remove/volleyball/{productId}(productId=${product.getId()})}" method="post">
-                    <button class="btn btn-danger" type="submit">Remove</button>
-                </form>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-
-    <div class="text-right pb-1">
-        <form th:action="@{/cart/clear}" method="post" >
-            <button class="btn btn-danger" type="submit">Clear Cart</button>
-        </form>
+<header class="bg-primary text-white p-3">
+    <div class="container">
+        <h1 class="mb-0">Shopping Cart</h1>
     </div>
+</header>
+<div class="container mt-5">
+    <div class="row">
+        <!-- Cart Section (Full width) -->
+        <div class="col-md-12">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Product Type</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Football Products -->
+                <tr th:each="product : ${cart.getItemsFootball()}">
+                    <td th:text="${product.getName()}">Product Name</td>
+                    <td>Football</td>
+                    <td th:text="${product.getPrice()}">$0.00</td>
+                    <td th:text="${product.getQuantity()}">1</td>
+                    <td>
+                        <form th:action="@{/cart/remove/football/{productId}(productId=${product.getId()})}" method="post">
+                            <button class="btn btn-danger" type="submit">Remove</button>
+                        </form>
+                    </td>
+                </tr>
 
-    <div class="text-right pt-1">
-        <form th:action="@{/orders/create}" method="post">
-            <button class="btn btn-primary" type="submit">Create Order</button>
-        </form>
+                <!-- Basketball Products -->
+                <tr th:each="product : ${cart.getItemsBasketball()}">
+                    <td th:text="${product.getName()}">Product Name</td>
+                    <td>Basketball</td>
+                    <td th:text="${product.getPrice()}">$0.00</td>
+                    <td th:text="${product.getQuantity()}">1</td>
+                    <td>
+                        <form th:action="@{/cart/remove/basketball/{productId}(productId=${product.getId()})}" method="post">
+                            <button class="btn btn-danger" type="submit">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+
+                <!-- Volleyball Products -->
+                <tr th:each="product : ${cart.getItemsVolleyball()}">
+                    <td th:text="${product.getName()}">Product Name</td>
+                    <td>Volleyball</td>
+                    <td th:text="${product.getPrice()}">$0.00</td>
+                    <td th:text="${product.getQuantity()}">1</td>
+                    <td>
+                        <form th:action="@{/cart/remove/volleyball/{productId}(productId=${product.getId()})}" method="post">
+                            <button class="btn btn-danger" type="submit">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="text-right pb-1">
+                <form th:action="@{/cart/clear}" method="post">
+                    <button class="btn btn-danger" type="submit">Clear Cart</button>
+                </form>
+            </div>
+
+            <div class="text-right pt-1">
+                <form th:action="@{/orders/create}" method="post">
+                    <button class="btn btn-primary" type="submit">Create Order</button>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 </body>

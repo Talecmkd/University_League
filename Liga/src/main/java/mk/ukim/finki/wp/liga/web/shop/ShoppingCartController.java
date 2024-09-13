@@ -21,7 +21,8 @@ public class ShoppingCartController {
     public String viewCart(Model model) {
         ShoppingCart cart = shoppingCartService.getShoppingCart();
         model.addAttribute("cart", cart);
-        return "shop/cart";
+        model.addAttribute("bodyContent","shop/cart");
+        return "master_template";
     }
 
 
