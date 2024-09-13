@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Edit Product</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+<body>
+
+<h1>Edit Product</h1>
+
+<form th:action="@{/volleyball/products/edit/{id}(id=${product.getId()})}" method="post">
+
+  <label for="name">Name</label>
+  <input type="text" id="name" name="name" th:value="${product.getName()}" placeholder="Product Name" required />
+
+  <label for="description">Description</label>
+  <textarea id="description" name="description" th:text="${product.getDescription()}" placeholder="Product Description" required></textarea>
+
+  <label for="price">Price</label>
+  <input type="number" id="price" name="price" th:value="${product.getPrice()}" placeholder="Price" step="0.01" required />
+
+  <label for="imageUrl">Image URL</label>
+  <input type="text" id="imageUrl" name="imageUrl" th:value="${product.getImage()}" placeholder="Image URL" required />
+
+  <label for="team">Team</label>
+  <select id="team" name="team" required>
+    <option th:each="team : ${teams}" th:value="${team.getVolleyball_team_id()}" th:text="${team.getTeamName()}" th:selected="${team.getVolleyball_team_id() == product.getVolleyballMerch().getVolleyball_team_id()}">Team Name</option>
+  </select>
+
+  <button type="submit" class="btn btn-success">Update</button>
+
+</form>
+
+<a th:href="@{/volleyball/products}">Back to Products</a>
+
+</body>
+</html>

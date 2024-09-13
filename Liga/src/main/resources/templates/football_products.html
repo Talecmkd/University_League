@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Football Products</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+<body>
+
+<h1>Football Products</h1>
+
+<form th:action="@{/football/products}" method="get">
+    <label for="team">Filter by Team:</label>
+    <select name="team" id="team">
+        <option value="">All Teams</option>
+        <option th:each="team : ${teams}" th:value="${team.getTeamName()}" th:text="${team.getTeamName()}"></option>
+    </select>
+    <button type="submit" class="btn btn-primary">Filter</button>
+</form>
+
+<!-- Link to Create New Product -->
+<a th:href="@{/football/products/new}" class="btn btn-primary">Add New Product</a>
+
+<table>
+    <thead>
+    <tr>
+        <th>Image</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Price</th>
+        <th>Team</th>
+        <th>Actions</th>
+        <th>Add to Cart</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="product : ${products}">
+        <td><img th:src="@{${product.getImage()}}" alt="Product Image" width="100"/></td>
+        <td th:text="${product.name}"></td>
+        <td th:text="${product.description}"></td>
+        <td th:text="${product.price}"></td>
+        <td th:text="${product.footballMerch.getTeamName()}"></td>
+        <td>
+            <a th:href="@{/football/products/{id}(id=${product.getId()})}">Details</a> |
+            <a th:href="@{/football/products/edit/{id}(id=${product.getId()})}">Edit</a> |
+            <a th:href="@{/football/products/delete/{id}(id=${product.getId()})}">Delete</a>
+        </td>
+        <td>
+            <form th:action="@{/cart/add/football/{productId}(productId=${product.getId()})}" method="post">
+
+                <label for="quantity">
+                    <input type="number" name="quantity" id="quantity" class="form-control" value="1" min="1" />
+                </label>
+
+                <button class="btn btn-primary" type="submit">Add to Cart</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div class="text-center my-4">
+    <a th:href="@{/shop}" class="btn btn-secondary btn-lg">
+        Back to Shop Home
+    </a>
+</div>
+
+
+</body>
+</html>
