@@ -18,13 +18,13 @@
             const teamSelect = document.getElementById("teamId");
             const playerSelect = document.getElementById("playerId");
             const playerForm = document.getElementById("playerForm");
-            const timeScoredInput = document.getElementById("timeScored");
-            const startTimeDisplay = document.getElementById("startTimeDisplay");
-            const endTimeDisplay = document.getElementById("endTimeDisplay");
+            // const timeScoredInput = document.getElementById("timeScored");
+            // const startTimeDisplay = document.getElementById("startTimeDisplay");
+            // const endTimeDisplay = document.getElementById("endTimeDisplay");
 
             // Display the formatted start and end times
-            startTimeDisplay.textContent = startTime.toLocaleString();
-            endTimeDisplay.textContent = endTime.toLocaleString();
+            // startTimeDisplay.textContent = startTime.toLocaleString();
+            // endTimeDisplay.textContent = endTime.toLocaleString();
 
             function updatePlayerOptions() {
                 const selectedTeamId = teamSelect.value;
@@ -86,6 +86,9 @@
     </select>
 
     <div id="playerForm" style="display: none;">
+<!--        <p><strong>Match Start Time:</strong> <span id="startTimeDisplay"></span></p>-->
+<!--        <p><strong>Match End Time:</strong> <span id="endTimeDisplay"></span></p>-->
+
 <!--        <label for="timeScored">Time Scored:</label>-->
 <!--        <input type="datetime-local" id="timeScored" name="timeScored" required>-->
 
