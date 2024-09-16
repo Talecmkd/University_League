@@ -25,10 +25,11 @@
 
     <!-- Link to Create New Product -->
     <a th:href="@{/basketball/products/new}" class="btn btn-primary mb-4">Add New Product</a>
+    <a th:href="@{/shop}" class="btn btn-secondary btn-lg">Back to Shop Home</a>
 
     <!-- Products Table -->
     <table class="table table-striped">
-        <thead>
+        <thead class="table-dark">
         <tr>
             <th>Image</th>
             <th>Name</th>
@@ -52,8 +53,8 @@
                 <a th:href="@{/basketball/products/delete/{id}(id=${product.getId()})}" class="btn btn-danger btn-sm">Delete</a>
             </td>
             <td>
-                <form th:action="@{/cart/add/basketball/{productId}(productId=${product.getId()})}" method="post" class="d-flex">
-                    <input type="number" name="quantity" id="quantity" class="form-control me-2" value="1" min="1" />
+                <form th:action="@{/cart/add/basketball/{productId}(productId=${product.getId()})}" method="post" class="d-flex align-items-center">
+                    <input type="number" name="quantity" id="quantity" class="form-control" value="1" min="1" />
                     <button class="btn btn-primary" type="submit">Add to Cart</button>
                 </form>
             </td>

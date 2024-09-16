@@ -40,7 +40,7 @@
                 <h3>Players</h3>
                 <ul>
                     <li th:each="player : ${players}">
-                        <a th:href="@{volleyball/players/details/{id}(id=${player.volleyball_player_id})}" th:text="${player.name}" class="player-link">Player Name</a>
+                        <a th:href="@{/volleyball/players/details/{id}(id=${player.volleyball_player_id})}" th:text="${player.name}" class="player-link">Player Name</a>
                     </li>
                 </ul>
             </div>

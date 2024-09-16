@@ -25,9 +25,9 @@
 
   <!-- Link to Create New Product -->
   <a th:href="@{/volleyball/products/new}" class="btn btn-primary mb-4">Add New Product</a>
-
+    <a th:href="@{/shop}" class="btn btn-secondary btn-lg">Back to Shop Home</a>
   <table class="table table-striped">
-    <thead>
+    <thead class="table-dark">
     <tr>
       <th>Image</th>
       <th>Name</th>
@@ -46,16 +46,14 @@
       <td th:text="${product.getPrice()}">Product Price</td>
       <td th:text="${product.volleyballMerch.getTeamName()}">Team Name</td>
       <td>
-        <a th:href="@{/volleyball/products/{id}(id=${product.getId()})}" class="btn btn-info btn-sm">Details</a>
-        <a th:href="@{/volleyball/products/edit/{id}(id=${product.getId()})}" class="btn btn-warning btn-sm">Edit</a>
+        <a th:href="@{/volleyball/products/{id}(id=${product.getId()})}" class="btn btn-info btn-sm">Details</a> |
+        <a th:href="@{/volleyball/products/edit/{id}(id=${product.getId()})}" class="btn btn-warning btn-sm">Edit</a> |
         <a th:href="@{/volleyball/products/delete/{id}(id=${product.getId()})}" class="btn btn-danger btn-sm">Delete</a>
       </td>
       <td>
-        <form th:action="@{/cart/add/volleyball/{productId}(productId=${product.getId()})}" method="post">
-          <div class="input-group">
+        <form th:action="@{/cart/add/volleyball/{productId}(productId=${product.getId()})}" method="post" class="d-flex align-items-center">
             <input type="number" name="quantity" id="quantity" class="form-control" value="1" min="1" />
             <button class="btn btn-primary" type="submit">Add to Cart</button>
-          </div>
         </form>
       </td>
     </tr>

@@ -25,6 +25,7 @@
 
     <!-- Link to Create New Product -->
     <a th:href="@{/football/products/new}" class="btn btn-primary mb-4">Add New Product</a>
+    <a th:href="@{/shop}" class="btn btn-secondary btn-lg">Back to Shop Home</a>
 
     <!-- Products Table -->
     <table class="table table-bordered">
@@ -53,9 +54,7 @@
             </td>
             <td>
                 <form th:action="@{/cart/add/football/{productId}(productId=${product.getId()})}" method="post" class="d-flex align-items-center">
-                    <div class="input-group me-2">
                         <input type="number" name="quantity" id="quantity" class="form-control" value="1" min="1" />
-                    </div>
                     <button class="btn btn-primary" type="submit">Add to Cart</button>
                 </form>
             </td>
