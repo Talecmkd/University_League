@@ -42,11 +42,10 @@
         </div>
 
         <!-- Player Birth Date -->
-        <div class="mb-3">
-            <label for="playerBirthDate" class="form-label">Birth Date</label>
-            <input type="date" class="form-control" id="playerBirthDate" name="playerBirthDate"
-                   th:value="${player != null ? player.getBirthdate() : ''}" required placeholder="Player Birth date">
-            <div class="invalid-feedback">Please enter the player's birth date.</div>
+        <div class="form-group">
+            <label for="playerBirthDate">Birth Date</label>
+            <input type="date" class="form-control" id="playerBirthDate" name="playerBirthDate" th:value="${#dates.format(player.getBirthdate(), 'yyyy-MM-dd')}" required>
+            <div class="invalid-feedback">Please enter a valid birth date.</div>
         </div>
 
         <!-- Player Index -->
