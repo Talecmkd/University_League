@@ -18,10 +18,10 @@ public interface FootballPlayerScoredService {
     FootballPlayerScored findById(Long id);
 
 
-    FootballPlayerScored create(FootballPlayer player, LocalDateTime timeScored, FootballMatch match);
+    FootballPlayerScored create(FootballPlayer player, FootballMatch match);
 
 
-    FootballPlayerScored update(Long id, FootballPlayer player, LocalDateTime timeScored, FootballMatch match);
+    FootballPlayerScored update(Long id, FootballPlayer player, FootballMatch match);
     FootballPlayerScored findByPlayerAndMatch(FootballPlayer player, FootballMatch match);
     FootballPlayerScored delete(Long id);
     FootballPlayerScored save(FootballPlayerScored player);

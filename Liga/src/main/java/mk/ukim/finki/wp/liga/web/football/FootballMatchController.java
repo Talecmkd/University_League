@@ -210,7 +210,7 @@ public class FootballMatchController {
 
     @PostMapping("/edit_live")
     public String editLiveMatchPost(@RequestParam Long playerId,
-                               @RequestParam LocalDateTime timeScored,
+//                               @RequestParam LocalDateTime timeScored,
                                @RequestParam Long footballMatchId,
                                @RequestParam int goalsScored,
                                @RequestParam int assistsScored,
@@ -227,7 +227,7 @@ public class FootballMatchController {
             existingPlayerScored.setAssistsScored(existingPlayerScored.getAssistsScored() + assistsScored);
             footballPlayerScoredService.save(existingPlayerScored);
         } else {
-            FootballPlayerScored newPlayerScored = new FootballPlayerScored(player, timeScored, footballMatch);
+            FootballPlayerScored newPlayerScored = new FootballPlayerScored(player, footballMatch);
             newPlayerScored.setSaves(saves);
             newPlayerScored.setGoalsScored(goalsScored);
             newPlayerScored.setAssistsScored(assistsScored);

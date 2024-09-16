@@ -209,7 +209,7 @@ public class VolleyballMatchController {
 
     @PostMapping("/edit_live")
     public String editLiveMatchPost(@RequestParam Long playerId,
-                                    @RequestParam LocalDateTime timeScored,
+//                                    @RequestParam LocalDateTime timeScored,
                                     @RequestParam Long volleyballMatchId,
                                     @RequestParam int points,
                                     @RequestParam int assists,

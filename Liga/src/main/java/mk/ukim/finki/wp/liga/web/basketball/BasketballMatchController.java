@@ -224,7 +224,7 @@ public class BasketballMatchController {
 
     @PostMapping("/edit_live")
     public String editLiveMatchPost(@RequestParam Long playerId,
-                                    @RequestParam LocalDateTime timeScored,
+//                                    @RequestParam LocalDateTime timeScored,
                                     @RequestParam Long basketballMatchId,
                                     @RequestParam int pointsScored,
                                     @RequestParam int assistsScored,

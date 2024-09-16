@@ -33,16 +33,15 @@ public class FootballPlayerScoredServiceImpl implements FootballPlayerScoredServ
     }
 
     @Override
-    public FootballPlayerScored create(FootballPlayer player, LocalDateTime timeScored, FootballMatch match) {
-        FootballPlayerScored playerScored = new FootballPlayerScored(player, timeScored, match);
+    public FootballPlayerScored create(FootballPlayer player, FootballMatch match) {
+        FootballPlayerScored playerScored = new FootballPlayerScored(player, match);
         return footballPlayerScoredRepository.save(playerScored);
     }
 
     @Override
-    public FootballPlayerScored update(Long id, FootballPlayer player, LocalDateTime timeScored, FootballMatch match) {
+    public FootballPlayerScored update(Long id, FootballPlayer player, FootballMatch match) {
         FootballPlayerScored playerScored = footballPlayerScoredRepository.findById(id).orElseThrow(InvalidFootballPlayerWhoScoredException::new);
         playerScored.setPlayer(player);
-        playerScored.setTimeScored(timeScored);
         playerScored.setFootballMatch(match);
         return footballPlayerScoredRepository.save(playerScored);
     }

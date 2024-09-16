@@ -19,7 +19,6 @@ public class FootballPlayerScored {
     @MapsId
     @JoinColumn(name = "football_player_id")
     private FootballPlayer player;
-    private LocalDateTime timeScored;
     private int goalsScored;
     private int assistsScored;
     private int saves;
@@ -27,9 +26,8 @@ public class FootballPlayerScored {
     @JoinColumn(name = "football_match_id")
     private FootballMatch footballMatch;
 
-    public FootballPlayerScored(FootballPlayer player, LocalDateTime timeScored, FootballMatch match) {
+    public FootballPlayerScored(FootballPlayer player, FootballMatch match) {
         this.player = player;
-        this.timeScored = timeScored;
         this.footballMatch = match;
         this.goalsScored = 0;
         this.assistsScored = 0;
