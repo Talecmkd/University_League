@@ -58,5 +58,12 @@ public class VolleyballPlayer {
     public int getTotalPoints(){
         return scoredPoints + assists + blocks +servings;
     }
+    @Override
+    public String toString() {
+        return "Volleyball Player{" +
+                "id=" + volleyball_player_id +
+                ", playerName='" + name + '\'' +
+                '}';
+    }
 
 }

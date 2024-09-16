@@ -184,7 +184,6 @@ public class VolleyballMatchController {
 
         List<VolleyballPlayer> players = match.getHomeTeam().getPlayers();
         players.addAll(match.getAwayTeam().getPlayers());
-        System.out.println(players);
         List<VolleyballPlayerDTO> dtoPlayers= new ArrayList<>();
         for (VolleyballPlayer player : players) {
             VolleyballPlayerDTO dtoPlayer=new VolleyballPlayerDTO();
@@ -218,7 +217,6 @@ public class VolleyballMatchController {
                                     @RequestParam int servings) {
 
 
-        System.out.println(playerId+" "+volleyballMatchId+" ");
         VolleyballPlayer player = volleyballPlayerService.findById(playerId);
         VolleyballMatch volleyballMatch = volleyballMatchService.findById(volleyballMatchId);
 

@@ -199,7 +199,6 @@ public class BasketballMatchController {
 
         List<BasketballPlayer> players = match.getHomeTeam().getPlayers();
         players.addAll(match.getAwayTeam().getPlayers());
-        System.out.println(players);
         List<BasketballPlayerDTO> dtoPlayers= new ArrayList<>();
         for (BasketballPlayer player : players) {
             BasketballPlayerDTO dtoPlayer=new BasketballPlayerDTO();

@@ -52,6 +52,13 @@ public class BasketballPlayer {
     public BasketballPlayer() {
 
     }
+    @Override
+    public String toString() {
+        return "Basketball Player{" +
+                "id=" + basketball_player_id +
+                ", playerName='" + name + '\'' +
+                '}';
+    }
 
     public int getTotalPoints(){
         return points*2 + assists + rebounds;

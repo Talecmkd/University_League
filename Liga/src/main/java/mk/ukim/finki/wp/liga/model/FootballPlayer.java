@@ -64,7 +64,7 @@ public class FootballPlayer {
     public String toString() {
         return "Football Player{" +
                 "id=" + football_player_id +
-                ", teamName='" + name + '\'' +
+                ", playerName='" + name + '\'' +
                 '}';
     }
 
