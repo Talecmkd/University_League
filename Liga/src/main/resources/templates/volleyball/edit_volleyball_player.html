@@ -91,10 +91,18 @@
             <label for="city">City</label>
             <input type="text" class="form-control" id="city" name="city" th:value="${player.city}" required>
         </div>
-        <div class="form-group">
-            <label for="position">Position</label>
-            <input type="text" class="form-control" id="position" name="position" th:value="${player.position}" required>
+        <div class="mb-3">
+            <label for="playerPosition" class="form-label">Position</label>
+            <select class="form-select" id="playerPosition" name="playerPosition" required>
+                <option value="" disabled selected>Select Position</option>
+                <option th:value="'Libero'" th:selected="${player != null && player.getPosition() == 'Libero'}">Libero</option>
+                <option th:value="'Setter'" th:selected="${player != null && player.getPosition() == 'Setter'}">Setter</option>
+                <option th:value="'Blocker'" th:selected="${player != null && player.getPosition() == 'Blocker'}">Blocker</option>
+                <option th:value="'Hitter'" th:selected="${player != null && player.getPosition() == 'Hitter'}">Hitter</option>
+            </select>
+            <div class="invalid-feedback">Please select the player's position.</div>
         </div>
+
         <div class="form-group">
             <label>Team</label>
             <select class="form-control" id="teamSelect" name="teamId" required onchange="checkTeamPlayerCount()">

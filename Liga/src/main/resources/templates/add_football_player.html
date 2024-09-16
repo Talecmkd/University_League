@@ -67,10 +67,16 @@
         <!-- Player Position -->
         <div class="mb-3">
             <label for="playerPosition" class="form-label">Position</label>
-            <input type="text" class="form-control" id="playerPosition" name="playerPosition"
-                   th:value="${player != null} ? ${player.getPosition()} : ''" required placeholder="Player Position">
-            <div class="invalid-feedback">Please enter the player's position.</div>
+            <select class="form-select" id="playerPosition" name="playerPosition" required>
+                <option value="" disabled selected>Select Position</option>
+                <option th:value="'Goalkeeper'" th:selected="${player != null && player.getPosition() == 'Goalkeeper'}">Goalkeeper</option>
+                <option th:value="'Defense'" th:selected="${player != null && player.getPosition() == 'Defense'}">Defense</option>
+                <option th:value="'Center'" th:selected="${player != null && player.getPosition() == 'Center'}">Center</option>
+                <option th:value="'Offense'" th:selected="${player != null && player.getPosition() == 'Offense'}">Offense</option>
+            </select>
+            <div class="invalid-feedback">Please select the player's position.</div>
         </div>
+
 
         <!-- Team Selection -->
         <div class="mb-3">

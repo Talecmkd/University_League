@@ -104,10 +104,18 @@
             <div class="invalid-feedback">Please enter the player's city.</div>
         </div>
 
-        <div class="form-group">
-            <label for="playerPosition">Position</label>
-            <input type="text" class="form-control" id="playerPosition" name="playerPosition" th:value="${player.getPosition()}" required>
-            <div class="invalid-feedback">Please enter the player's position.</div>
+        <div class="mb-3">
+            <label for="playerPosition" class="form-label">Position</label>
+            <select class="form-select" id="playerPosition" name="playerPosition" required>
+                <option value="" disabled selected>Select Position</option>
+                <option th:value="'Point Guard'" th:selected="${player != null && player.getPosition() == 'Point Guard'}">Point Guard</option>
+                <option th:value="'Shooting Guard'" th:selected="${player != null && player.getPosition() == 'Shooting Guard'}">Shooting Guard</option>
+                <option th:value="'Small Forward'" th:selected="${player != null && player.getPosition() == 'Small Forward'}">Small Forward</option>
+                <option th:value="'Power Forward'" th:selected="${player != null && player.getPosition() == 'Power Forward'}">Power Forward</option>
+                <option th:value="'Center'" th:selected="${player != null && player.getPosition() == 'Center'}">Center</option>
+
+            </select>
+            <div class="invalid-feedback">Please select the player's position.</div>
         </div>
 
         <div class="form-group">
