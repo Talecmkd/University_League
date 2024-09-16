@@ -8,6 +8,7 @@ import mk.ukim.finki.wp.liga.repository.football.FootballTeamRepository;
 import mk.ukim.finki.wp.liga.service.football.FootballProductService;
 import mk.ukim.finki.wp.liga.service.football.FootballTeamService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,11 +26,13 @@ public class FootballProductServiceImpl implements FootballProductService {
     }
 
     @Override
+    @Cacheable("football-products_by_team")
     public List<FootballProduct> findByTeam(FootballTeam team) {
         return footballProductRepository.findByFootballMerch(team);
     }
 
     @Override
+    @Cacheable("football-products")
     public List<FootballProduct> findAll() {
         return footballProductRepository.findAll();
     }

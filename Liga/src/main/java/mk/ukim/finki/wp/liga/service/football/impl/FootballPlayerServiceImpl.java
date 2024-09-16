@@ -9,6 +9,7 @@ import mk.ukim.finki.wp.liga.model.FootballTeam;
 import mk.ukim.finki.wp.liga.repository.football.FootballPlayerRepository;
 import mk.ukim.finki.wp.liga.repository.football.FootballTeamRepository;
 import mk.ukim.finki.wp.liga.service.football.FootballPlayerService;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
@@ -24,6 +25,8 @@ public class FootballPlayerServiceImpl implements FootballPlayerService {
     private final FootballTeamRepository footballTeamRepository;
 
     @Override
+    @Transactional
+    @Cacheable("football-players")
     public List<FootballPlayer> listAllPlayers() {
         return footballPlayerRepository.findAll();
     }

@@ -14,6 +14,7 @@ import mk.ukim.finki.wp.liga.repository.football.FootballTeamRepository;
 import mk.ukim.finki.wp.liga.service.football.FootballMatchService;
 import mk.ukim.finki.wp.liga.service.football.FootballPlayerService;
 import mk.ukim.finki.wp.liga.service.football.FootballTeamService;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +35,7 @@ public class FootballMatchServiceImpl implements FootballMatchService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable("football-matches")
     public List<FootballMatch> listAllFootballMatches() {
         return matchRepository.findAll();
     }
