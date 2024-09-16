@@ -130,16 +130,7 @@ public class FootballPlayerController {
             return "master_template"; // Return the view with the error message
         }
 
-
-        FootballPlayer existingPlayer = footballPlayerService.findById(id);
-        if (existingPlayer == null) {
-            return "redirect:/players";
-        }
-        FootballTeam existingTeam = footballTeamService.findById(team);
-        if(existingTeam.getPlayers().size() >= 5){
-            return "redirect:/players/edit/" + id + "?error=Teamfull";
-        }
-        byte[] imageBytes = existingPlayer.getImage();
+        byte[] imageBytes = null;
         if (playerImage != null && !playerImage.isEmpty()) {
             try {
                 imageBytes = playerImage.getBytes();
@@ -150,7 +141,6 @@ public class FootballPlayerController {
         }
         FootballTeam team1 = footballTeamService.findById(team);
         Date birthDate = Date.from(playerBirthDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        // Update the player's details
         footballPlayerService.update(id, imageBytes, playerName, playerSurname, birthDate, playerIndex, playerCity, playerPosition, team1);
         String imageUrl = "/players/image/" + id;
         model.addAttribute("playerImageUrl", imageUrl);

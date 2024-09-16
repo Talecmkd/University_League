@@ -68,7 +68,7 @@ public class VolleyballPlayerController {
                                       @RequestParam("playerBirthDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate birthdate,
                                       @RequestParam("playerIndex") int index,
                                       @RequestParam("playerCity") String city,
-                                      @RequestParam("playerPosition") String position,
+                                      @RequestParam("playerPosition") String playerPosition,
                                       @RequestParam(required = false) Long team,
                                       Model model) throws IOException {
         byte[] imageBytes = null;
@@ -89,7 +89,7 @@ public class VolleyballPlayerController {
                 team1=null;
             Date birthDate = Date.from(birthdate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-            this.volleyballPlayerService.create(imageBytes, name, surname, birthDate, index, city, position, team1);
+            this.volleyballPlayerService.create(imageBytes, name, surname, birthDate, index, city, playerPosition, team1);
 
         return "redirect:/volleyball/players";
     }
@@ -116,7 +116,7 @@ public class VolleyballPlayerController {
                                          @RequestParam("birthdate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date birthdate,
                                          @RequestParam("index") int index,
                                          @RequestParam("city") String city,
-                                         @RequestParam("position") String position,
+                                         @RequestParam("playerPosition") String position,
                                          @RequestParam(value = "teamId", required = false) Long teamId) {
         byte[] imageBytes = null;
         try {

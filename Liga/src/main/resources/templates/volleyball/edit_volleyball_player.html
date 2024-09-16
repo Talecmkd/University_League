@@ -49,8 +49,8 @@
             const playerCount = selectedTeam.getAttribute('data-player-count');
             const submitButton = document.getElementById('submitButton');
 
-            if (parseInt(playerCount) >= 5) {
-                alert('This team already has 5 players. You cannot add more.');
+            if (parseInt(playerCount) >= 6) {
+                alert('This team already has 6 players. You cannot add more.');
                 submitButton.disabled = true;
             } else {
                 submitButton.disabled = false;
