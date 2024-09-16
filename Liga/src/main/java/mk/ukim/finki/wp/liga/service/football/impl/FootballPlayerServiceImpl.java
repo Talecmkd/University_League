@@ -110,8 +110,8 @@ public class FootballPlayerServiceImpl implements FootballPlayerService {
     public List<FootballPlayer> getTop5Players(){
         return this.footballPlayerRepository.findAll()
                 .stream().sorted((p1,p2)->{
-                    int score1 = p1.getGoals()*2 + p1.getAssists();
-                    int score2 = p2.getGoals()*2 + p2.getAssists();
+                    int score1 = p1.getPoints();
+                    int score2 = p2.getPoints();
                     return Integer.compare(score2,score1);
                 })
                 .limit(5)

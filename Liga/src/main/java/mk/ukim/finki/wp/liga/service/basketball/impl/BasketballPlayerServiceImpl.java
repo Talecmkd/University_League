@@ -124,8 +124,8 @@ public class BasketballPlayerServiceImpl implements BasketballPlayerService {
         return this.basketballPlayerRepository.findByTeamId(teamId)
                 .stream()
                 .sorted((p1, p2) -> {
-                    int score1 = p1.getPoints();
-                    int score2 = p2.getPoints();
+                    int score1 = p1.getTotalPoints();
+                    int score2 = p2.getTotalPoints();
                     return Integer.compare(score2, score1); // Descending order
                 })
                 .limit(5)
