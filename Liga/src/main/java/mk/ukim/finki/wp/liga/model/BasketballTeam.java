@@ -19,7 +19,7 @@ public class BasketballTeam {
     private String teamName;
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<BasketballPlayer> players;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinTable(
             name = "basketball_team_fixtures",
             joinColumns = @JoinColumn(name = "basketball_team_id"),

@@ -156,12 +156,10 @@ public class VolleyballMatchController {
             @RequestParam Long awayTeamId,
             @RequestParam int homeTeamPoints,
             @RequestParam int awayTeamPoints,
-            @RequestParam String startTime,
-            @RequestParam String endTime) {
+            @RequestParam String startTime) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
         LocalDateTime start = LocalDateTime.parse(startTime, formatter);
-        LocalDateTime end = LocalDateTime.parse(endTime, formatter);
 
         VolleyballTeam homeTeam = volleyballTeamService.findById(homeTeamId);
         VolleyballTeam awayTeam = volleyballTeamService.findById(awayTeamId);

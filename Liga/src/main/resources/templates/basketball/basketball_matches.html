@@ -124,15 +124,8 @@
                     </div>
                     <div class="ml-auto actions">
                         <a th:href="@{/basketball/matches/edit-form/{id}(id=${match.basketball_match_id})}" class="btn btn-warning btn-sm">Edit</a>
-                        <form th:if="${!match.isPlayoffMatch}" th:method="POST"
-                              th:action="@{'/basketball/matches/finish/{id}'(id=${match.basketball_match_id})}" style="display:inline;"
-                              onsubmit="return confirmFinish(this)">
-                            <input id="homeTeamScoreInput" type="hidden" name="homeTeamScore" th:value="${match.homeTeamPoints}">
-                            <input id="awayTeamScoreInput" type="hidden" name="awayTeamScore" th:value="${match.awayTeamPoints}">
-
-                            <!-- Initially disable button if match is a draw (homeTeamPoints == awayTeamPoints) -->
-                            <button id="finish-button" type="submit" class="btn btn-success btn-sm"
-                                    th:disabled="${match.homeTeamPoints == match.awayTeamPoints}">Finish</button>
+                        <form th:if="${!match.isPlayoffMatch}" th:method="POST" th:action="@{'/basketball/matches/finish/{id}'(id=${match.basketball_match_id})}" style="display:inline;" onsubmit="return confirmFinish(this)">
+                            <button type="submit" class="btn btn-success btn-sm">Finish</button>
                         </form>
 
                         <form th:method="POST" th:action="@{'/basketball/matches/delete/{id}'(id=${match.basketball_match_id})}" style="display:inline;">

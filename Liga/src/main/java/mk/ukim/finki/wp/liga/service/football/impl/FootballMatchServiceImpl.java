@@ -337,7 +337,10 @@ public class FootballMatchServiceImpl implements FootballMatchService {
         FootballMatch match = matchRepository.findById(matchId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid match Id:" + matchId));
 
+
         match.setEndTime(LocalDateTime.now());
+        match.getHomeTeam().getFootballFixtures().remove(match);
+        match.getAwayTeam().getFootballFixtures().remove(match);
         matchRepository.save(match);
         processMatchStats(matchId);
     }

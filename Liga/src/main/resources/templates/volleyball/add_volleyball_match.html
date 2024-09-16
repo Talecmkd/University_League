@@ -10,7 +10,7 @@
         <h1 class="mb-0">Add Volleyball Match</h1>
     </div>
 </header>
-<div class="container">
+<div class="container mt-5">
     <form th:action="@{/volleyball/matches/add}" method="post" onsubmit="return validateForm()">
         <div class="form-group">
             <label for="homeTeam">Home Team</label>
@@ -36,13 +36,9 @@
             <label for="startTime">Start Time</label>
             <input type="datetime-local" id="startTime" name="startTime" class="form-control" required onchange="checkEndTime()">
         </div>
-        <div class="form-group">
-            <label for="endTime">End Time</label>
-            <input type="datetime-local" id="endTime" name="endTime" class="form-control" required>
-        </div>
-        <button type="submit" class="btn btn-success">Add Match</button>
+        <button type="submit" class="btn btn-primary">Add Match</button>
     </form>
-    <a th:href="@{/volleyball/matches}" class="btn btn-primary">Back to Matches</a>
+
 </div>
 
 <script>

@@ -17,10 +17,10 @@ public class VolleyballMatch {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long volleyball_match_id;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "volleyball_home_id")
     private VolleyballTeam homeTeam;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "volleyball_away_id")
     private VolleyballTeam awayTeam;
     private int homeTeamPoints;

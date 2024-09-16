@@ -16,19 +16,19 @@ public class FootballMatch {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long football_match_id;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "football_home_id")
     private FootballTeam homeTeam;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "football_away_id")
     private FootballTeam awayTeam;
     private int homeTeamPoints;
     private int awayTeamPoints;
     @OneToMany(mappedBy = "footballMatch", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FootballPlayerScored> playersWhoScored;
-    @ManyToMany(mappedBy = "footballFixtures",cascade = CascadeType.REMOVE)
+    @ManyToMany(mappedBy = "footballFixtures")
     private List<FootballTeam> upcomingMatches;
-    @ManyToMany(mappedBy = "footballResults",cascade = CascadeType.REMOVE)
+    @ManyToMany(mappedBy = "footballResults")
     private List<FootballTeam> playedMatches;
     private LocalDateTime startTime;
     private LocalDateTime endTime;

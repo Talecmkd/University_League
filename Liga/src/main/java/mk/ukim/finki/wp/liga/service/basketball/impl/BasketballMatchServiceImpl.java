@@ -319,8 +319,8 @@ public class BasketballMatchServiceImpl implements BasketballMatchService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid match Id:" + matchId));
 
         match.setEndTime(LocalDateTime.now());
-        BasketballTeam homeTeam = match.getHomeTeam();
-        BasketballTeam awayTeam = match.getAwayTeam();
+        match.getHomeTeam().getBasketballFixtures().remove(match);
+        match.getAwayTeam().getBasketballFixtures().remove(match);
         processMatchStats(matchId);
         basketballMatchRepository.save(match);
     }

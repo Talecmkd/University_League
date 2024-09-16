@@ -319,8 +319,10 @@ public class VolleyballMatchServiceImpl implements VolleyballMatchService {
         VolleyballMatch match = matchRepository.findById(matchId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid match Id: " + matchId));
         match.setEndTime(LocalDateTime.now());
-        processMatchStats(matchId);
+        match.getHomeTeam().getVolleyballFixtures().remove(match);
+        match.getAwayTeam().getVolleyballFixtures().remove(match);
         matchRepository.save(match);
+        processMatchStats(matchId);
     }
     @Override
     @Transactional
