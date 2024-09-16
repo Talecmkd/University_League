@@ -290,9 +290,9 @@ public class VolleyballMatchServiceImpl implements VolleyballMatchService {
         VolleyballTeam homeOrAway = match.getHomeTeam();
 
         if (team != homeOrAway) {
-            match.setAwayTeamPoints(pointsScored);
+            match.setAwayTeamPoints( match.getAwayTeamPoints() +pointsScored);
         } else {
-            match.setHomeTeamPoints(pointsScored);
+            match.setHomeTeamPoints(match.getHomeTeamPoints() + pointsScored);
         }
 
         matchRepository.save(match);

@@ -307,9 +307,9 @@ public class FootballMatchServiceImpl implements FootballMatchService {
         FootballTeam homeOrAway = match.getHomeTeam();
 
         if (team != homeOrAway) {
-            match.setAwayTeamPoints(goalsScored);
+            match.setAwayTeamPoints(match.getAwayTeamPoints()+goalsScored);
         } else {
-            match.setHomeTeamPoints(goalsScored);
+            match.setHomeTeamPoints(match.getHomeTeamPoints()+goalsScored);
         }
 
         matchRepository.save(match);
