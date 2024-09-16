@@ -12,12 +12,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.server.DelegatingServerHttpResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -59,38 +62,38 @@ public class VolleyballPlayerController {
     }
 
     @PostMapping("/add")
-    public String addVolleyballPlayer(@RequestParam(value = "playerImage", required = false) MultipartFile image,
+    public String addVolleyballPlayer(@RequestParam(value = "playerImage", required = false) MultipartFile playerImage,
                                       @RequestParam("playerName") String name,
                                       @RequestParam("playerSurname") String surname,
-                                      @RequestParam("playerBirthDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date birthdate,
+                                      @RequestParam("playerBirthDate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate birthdate,
                                       @RequestParam("playerIndex") int index,
                                       @RequestParam("playerCity") String city,
                                       @RequestParam("playerPosition") String position,
-                                      @RequestParam(value = "team", required = false) Long teamId,
-                                      Model model) {
+                                      @RequestParam(required = false) Long team,
+                                      Model model) throws IOException {
         byte[] imageBytes = null;
-        try {
-            if (!image.isEmpty()) {
-                imageBytes = image.getBytes();
+        if (playerImage != null && !playerImage.isEmpty()) {
+            try {
+
+                imageBytes = playerImage.getBytes();
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new RuntimeException("Failed to read the image file", e);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            // Handle the exception as needed
         }
 
-        VolleyballTeam team = null;
-        if (teamId != null) {
-            team = volleyballTeamService.findById(teamId);
+            VolleyballTeam team1;
+            if (team != null)
+                team1 = volleyballTeamService.findById(team);
+            else
+                team1=null;
+            Date birthDate = Date.from(birthdate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-            model.addAttribute("teams", volleyballTeamService.listAllTeams());
-            model.addAttribute("bodyContent","volleyball/add_volleyball_player");
-            return "volleyball/master_template"; // or the correct view
-        }
-
-        VolleyballPlayer player = volleyballPlayerService.create(imageBytes, name, surname, birthdate, index, city, position, team);
+            this.volleyballPlayerService.create(imageBytes, name, surname, birthDate, index, city, position, team1);
 
         return "redirect:/volleyball/players";
     }
+
 
 
 
