@@ -65,7 +65,7 @@ public class VolleyballProductController {
                                           @RequestParam double price,
                                           @RequestParam String imageUrl,
                                           @RequestParam Long team) {
-        volleyballProductService.createNewFootballProduct(name,description,price,imageUrl,team);
+        volleyballProductService.createNewVolleyballProduct(name,description,price,imageUrl,team);
         return "redirect:/volleyball/products";
     }
 

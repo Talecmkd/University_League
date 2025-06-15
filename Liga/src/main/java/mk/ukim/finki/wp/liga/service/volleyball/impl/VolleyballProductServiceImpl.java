@@ -56,7 +56,7 @@ public class VolleyballProductServiceImpl implements VolleyballProductService {
     }
 
     @Override
-    public void createNewFootballProduct(String name, String description, double price, String imageUrl, Long teamId) {
+    public void createNewVolleyballProduct(String name, String description, double price, String imageUrl, Long teamId) {
         VolleyballTeam team = volleyballTeamRepository.findById(teamId).orElseThrow(InvalidFootballProductException::new);
         VolleyballProduct product = new VolleyballProduct(name,description,price,imageUrl,team);
         volleyballProductRepository.save(product);

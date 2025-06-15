@@ -21,7 +21,7 @@ public interface VolleyballProductService {
 
     void deleteById(Long id);
 
-    void createNewFootballProduct(String name, String description, double price, String imageUrl, Long team);
+    void createNewVolleyballProduct(String name, String description, double price, String imageUrl, Long team);
 
     void update(Long id, String name, String description, double price, String imageUrl, Long team);
 }
